@@ -1,32 +1,33 @@
     <div class="demo-content__drawer demo-content__drawer--persistent">
       <mdc-drawer #persistent drawer='persistent'>
-        <mdc-drawer-spacer></mdc-drawer-spacer>
+        <mdc-drawer-spacer>
+          <mdc-text-field #searchText [box]="false" formControlName="searchTitle" label="Title" maxlength="30" (change)="submitSearch(searchText.value)" (keyup)="onSearching($event)">
+            <mdc-icon trailing #searchicon type="submit" [clickable]="true">search</mdc-icon>
+          </mdc-text-field>
+        </mdc-drawer-spacer>
         <mdc-list-group>
-          <mdc-list>
-            <mdc-list-item>
-              <mdc-icon mdcListItemGraphic>home</mdc-icon>Home
+          <mdc-list #proposals *ngFor="let proposal of proposalList; let i = index">
+            <mdc-list-item (click)="submitSearch(i)">
+              {{proposal.title}}<mdc-icon mdcListItemGraphic>lens</mdc-icon>
             </mdc-list-item>
-            <mdc-list-item>
-              <mdc-icon mdcListItemGraphic>star</mdc-icon>Star
-            </mdc-list-item>
-            <mdc-list-item>
-              <mdc-icon mdcListItemGraphic>send</mdc-icon>Sent Mail
-            </mdc-list-item>
-            <mdc-list-item>
-              <mdc-icon mdcListItemGraphic>drafts</mdc-icon>Drafts
-            </mdc-list-item>
-            <mdc-list-divider></mdc-list-divider>
-            <mdc-list-item>
-              <mdc-icon mdcListItemGraphic>email</mdc-icon>All Mail
-            </mdc-list-item>
-            <mdc-list-item>
-              <mdc-icon mdcListItemGraphic>delete</mdc-icon>Trash
-            </mdc-list-item>
-            <mdc-list-item>
-              <mdc-icon mdcListItemGraphic>report</mdc-icon>Spam
+          </mdc-list>
+          <mdc-list *ngFor="let match of searchMatchList; let i = index">
+            <mdc-list-item (click)=" this.showVersions(i, versionDrawer)">
+              <mdc-checkbox #checkbox1 mdcListItemGraphic></mdc-checkbox>{{match.title}}
+              <mdc-icon mdcListItemMeta>keyboard_arrow_right</mdc-icon>
             </mdc-list-item>
           </mdc-list>
         </mdc-list-group>
+      </mdc-drawer>
+      <mdc-drawer #versionDrawer drawer='persistent'>
+        <mdc-drawer-spacer>
+          Versions
+        </mdc-drawer-spacer>
+        <mdc-list *ngFor="let version of versionsMatchList; let i = index">
+          <mdc-list-item (click)="checkbox1.toggle()">
+              {{version.title}}<mdc-checkbox #checkbox1 mdcListItemMeta></mdc-checkbox>
+          </mdc-list-item>
+        </mdc-list>
       </mdc-drawer>
       <div>
         <mdc-toolbar>
