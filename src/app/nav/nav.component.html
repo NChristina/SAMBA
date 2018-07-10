@@ -1,0 +1,47 @@
+    <div class="demo-content__drawer demo-content__drawer--persistent">
+      <mdc-drawer #persistent drawer='persistent'>
+        <mdc-drawer-spacer></mdc-drawer-spacer>
+        <mdc-list-group>
+          <mdc-list>
+            <mdc-list-item>
+              <mdc-icon mdcListItemGraphic>home</mdc-icon>Home
+            </mdc-list-item>
+            <mdc-list-item>
+              <mdc-icon mdcListItemGraphic>star</mdc-icon>Star
+            </mdc-list-item>
+            <mdc-list-item>
+              <mdc-icon mdcListItemGraphic>send</mdc-icon>Sent Mail
+            </mdc-list-item>
+            <mdc-list-item>
+              <mdc-icon mdcListItemGraphic>drafts</mdc-icon>Drafts
+            </mdc-list-item>
+            <mdc-list-divider></mdc-list-divider>
+            <mdc-list-item>
+              <mdc-icon mdcListItemGraphic>email</mdc-icon>All Mail
+            </mdc-list-item>
+            <mdc-list-item>
+              <mdc-icon mdcListItemGraphic>delete</mdc-icon>Trash
+            </mdc-list-item>
+            <mdc-list-item>
+              <mdc-icon mdcListItemGraphic>report</mdc-icon>Spam
+            </mdc-list-item>
+          </mdc-list>
+        </mdc-list-group>
+      </mdc-drawer>
+      <div>
+        <mdc-toolbar>
+          <mdc-toolbar-row>
+            <mdc-toolbar-section [alignStart]="true">
+              <mdc-icon mdc-toolbar-menu-icon (click)="persistent.open()">menu</mdc-icon>
+              <mdc-toolbar-title>Please select a song</mdc-toolbar-title>
+            </mdc-toolbar-section>
+            <mdc-toolbar-section [alignEnd]="true" [shrinkToFit]="true">
+              <a>here you can place icons or links</a>
+            </mdc-toolbar-section>
+          </mdc-toolbar-row>
+        </mdc-toolbar>
+        <div class="contentmargin">
+          <app-dashboard></app-dashboard>
+        </div>
+      </div>
+    </div>

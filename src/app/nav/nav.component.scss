@@ -1,0 +1,29 @@
+.contentmargin {
+  width: 100vw;
+  height: 100vh;
+}
+
+.demo-content__drawer {
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  overflow-x: auto;
+
+  &--row {
+    display: flex;
+    flex-direction: row;
+  }
+
+  &--column {
+    display: flex;
+    flex-direction: column;
+  }
+
+
+  &--persistent {
+    display: flex;
+
+    .mdc-drawer--persistent:not(.mdc-drawer--open) {
+      display: none;
+    }
+  }
+}
+
