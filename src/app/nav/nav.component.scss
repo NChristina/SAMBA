@@ -27,3 +27,19 @@
   }
 }
 
+.search_icon {
+  position: relative;
+  top: 0.01mm;
+  right: 20px;
+}
+
+.mdc-drawer {
+  width: 400px;
+}
+.mdc-drawer__drawer {
+  width: 400px !important;
+}
+
+.song_list_item {
+  height: fit-content;
+}

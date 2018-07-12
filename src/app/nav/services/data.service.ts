@@ -13,4 +13,7 @@ export class DataService {
   getData(): Observable<any[]> {
     return this.httpClient.get('/assets/example-data.json') as any;
   }
+
+  getDataFromDb() {
+  }
 }

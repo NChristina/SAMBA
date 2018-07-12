@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import * as mdc from '@angular-mdc/web';
 import { SearchService } from './services/search.service';
+import { MdcCheckbox } from '@angular-mdc/web';
 
 @Component({
   selector: 'app-nav',
@@ -11,8 +11,7 @@ export class NavComponent implements OnInit {
   showFiller = false;
   private input: string;
   searchMatchList = [];
-  proposalList = [];
-  versionsMatchList = [];
+  selectedList = [];
 
   constructor(private searcher: SearchService) { }
 
@@ -20,43 +19,39 @@ export class NavComponent implements OnInit {
 
   }
 
-  onSearching(event) {
-    this.searcher.search(event.target.value).subscribe((results) => {
-      this.proposalList = results;
+  submitSearch(value: string) {
+    this.searchMatchList = [];
+    this.searcher.search(value).subscribe((results) => {
+      this.searchMatchList = results;
     });
   }
 
-  submitSearch(value: string) {
-    this.searchMatchList = [];
-    // let filter;
-    // const input = value;
-    // if (input === '') {
-    //   return;
-    // }
-    // filter = input.toUpperCase();
-    // for (let i = 0; i < this.songData.length; i++) {
-    //   const title = this.songData[i].title;
-    //   if (title.toUpperCase().indexOf(filter) > -1) {
-    //     this.searchMatchList.push(this.songData[i]);
-    //   }
-    // }
-  }
-
-  /**
-   *  - handles the click on the song and shows the versions of the song
-   *  - handles the opening of the version-side-bar
-   */
-  showVersions(index, drawer) {
-    this.versionsMatchList = [];
-    console.log(index);
-    if (this.searchMatchList[index].versions !== undefined) {
-      this.searchMatchList[index].versions.forEach((v) => {
-        this.versionsMatchList.push(v);
-      });
-      drawer.open();
+  selectSong(index: number, checkbox: MdcCheckbox) {
+    if (checkbox.isChecked()) {
+      this.selectedList.push(this.searchMatchList[index].data);
     } else {
-      drawer.close();
+      this.selectedList.forEach((song, i) => {
+        if (song.song._id === this.searchMatchList[index].data.song._id) {
+          this.selectedList.splice(i, 1);
+        }
+      });
     }
   }
 
+  removeSelectedSong(index) {
+    const song = this.selectedList[index];
+    this.searchMatchList.forEach((songData, i) => {
+      if (songData.data === song) {
+        this.searchMatchList.splice(i, 1);
+        this.searchMatchList.push({displayName: song.song.artist + ' - ' + song.song.title, data: song});
+      }
+    });
+    this.searchMatchList.sort((a, b) => {
+      if (a.data.data[0].statistics === b.data.data[0].statistics) {
+        return 0;
+      }
+      return a.data.data[0].statistics.viewCount > b.data.data[0].statistics.viewCount ? -1 : 1;
+    });
+    this.selectedList.splice(index, 1);
+  }
 }

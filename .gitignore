@@ -37,3 +37,7 @@ testem.log
 # System Files
 .DS_Store
 Thumbs.db
+
+# Test Data
+./src/assets/data.json
+./src/assets/example-data.json

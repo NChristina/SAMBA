@@ -1,33 +1,17 @@
     <div class="demo-content__drawer demo-content__drawer--persistent">
       <mdc-drawer #persistent drawer='persistent'>
         <mdc-drawer-spacer>
-          <mdc-text-field #searchText [box]="false" formControlName="searchTitle" label="Title" maxlength="30" (change)="submitSearch(searchText.value)" (keyup)="onSearching($event)">
-            <mdc-icon trailing #searchicon type="submit" [clickable]="true">search</mdc-icon>
+          <mdc-text-field #searchText [box]="false" formControlName="searchTitle" label="Title" maxlength="30" (change)="submitSearch(searchText.value)">
+            <mdc-icon class="search_icon" trailing #searchicon type="submit" [clickable]="true">search</mdc-icon>
           </mdc-text-field>
         </mdc-drawer-spacer>
         <mdc-list-group>
-          <mdc-list #proposals *ngFor="let proposal of proposalList; let i = index">
-            <mdc-list-item (click)="submitSearch(i)">
-              {{proposal.title}}<mdc-icon mdcListItemGraphic>lens</mdc-icon>
-            </mdc-list-item>
-          </mdc-list>
           <mdc-list *ngFor="let match of searchMatchList; let i = index">
-            <mdc-list-item (click)=" this.showVersions(i, versionDrawer)">
-              <mdc-checkbox #checkbox1 mdcListItemGraphic></mdc-checkbox>{{match.title}}
-              <mdc-icon mdcListItemMeta>keyboard_arrow_right</mdc-icon>
+            <mdc-list-item class="song_list_item" (click)="checkbox1.toggle(); selectSong(i, checkbox1);">
+              <mdc-checkbox #checkbox1 mdcListItemGraphic (change)="selectSong(i, checkbox1)"></mdc-checkbox>{{match.displayName}}
             </mdc-list-item>
           </mdc-list>
         </mdc-list-group>
-      </mdc-drawer>
-      <mdc-drawer #versionDrawer drawer='persistent'>
-        <mdc-drawer-spacer>
-          Versions
-        </mdc-drawer-spacer>
-        <mdc-list *ngFor="let version of versionsMatchList; let i = index">
-          <mdc-list-item (click)="checkbox1.toggle()">
-              {{version.title}}<mdc-checkbox #checkbox1 mdcListItemMeta></mdc-checkbox>
-          </mdc-list-item>
-        </mdc-list>
       </mdc-drawer>
       <div>
         <mdc-toolbar>
@@ -41,6 +25,12 @@
             </mdc-toolbar-section>
           </mdc-toolbar-row>
         </mdc-toolbar>
+        <mdc-chip-set #inputchipset [input]="true">
+          <mdc-chip *ngFor="let element of selectedList; let i = index" label="{{element.song.title}}" (trailingIconInteraction)="removeSelectedSong(i)">
+            <mdc-chip-icon leading>music_note</mdc-chip-icon>
+            <mdc-chip-icon trailing>cancel</mdc-chip-icon>
+          </mdc-chip>
+        </mdc-chip-set>
         <div class="contentmargin">
           <app-dashboard></app-dashboard>
         </div>

@@ -21,7 +21,8 @@ import { MdcDrawerModule,
     MdcTextFieldModule,
     MdcFormFieldModule,
     MdcCheckboxModule,
-    MdcButtonModule } from '@angular-mdc/web';
+    MdcButtonModule,
+    MdcChipsModule } from '@angular-mdc/web';
 import { DashboardComponent } from './nav/dashboard/dashboard.component';
 import { HardfactsComponent } from './nav/dashboard/hardfacts/hardfacts.component';
 import { LanguageComponent } from './nav/dashboard/language/language.component';
@@ -65,6 +66,7 @@ import { SentimentComponent } from './nav/dashboard/sentiment/sentiment.componen
     MdcFormFieldModule,
     MdcCheckboxModule,
     MdcButtonModule,
+    MdcChipsModule,
     HttpClientModule
   ],
   providers: [SearchService, DataService],
