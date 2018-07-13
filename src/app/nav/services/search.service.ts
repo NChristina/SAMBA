@@ -45,7 +45,6 @@ export class SearchService {
       if (a.value > b.value) {
         return -1;
       } else if (a.value === b.value) {
-        console.log(a.data.data[0].statistics);
         return a.data.data[0].statistics.viewCount > b.data.data[0].statistics.viewCount ? -1 : 1;
       } else {
         return a.value < b.value ? 1 : 0;

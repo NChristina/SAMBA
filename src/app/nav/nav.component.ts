@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { SearchService } from './services/search.service';
 import { MdcCheckbox } from '@angular-mdc/web';
+import { ChartService } from './dashboard/services/chart.service';
 
 @Component({
   selector: 'app-nav',
@@ -13,7 +14,7 @@ export class NavComponent implements OnInit {
   searchMatchList = [];
   selectedList = [];
 
-  constructor(private searcher: SearchService) { }
+  constructor(private searcher: SearchService, private chartService: ChartService) { }
 
   ngOnInit() {
 
@@ -36,6 +37,7 @@ export class NavComponent implements OnInit {
         }
       });
     }
+    this.chartService.SetData(this.selectedList);
   }
 
   removeSelectedSong(index) {
@@ -53,5 +55,6 @@ export class NavComponent implements OnInit {
       return a.data.data[0].statistics.viewCount > b.data.data[0].statistics.viewCount ? -1 : 1;
     });
     this.selectedList.splice(index, 1);
+    this.chartService.SetData(this.selectedList);
   }
 }

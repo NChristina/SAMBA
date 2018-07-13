@@ -1,6 +1,7 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 
+import { ChartService } from './nav/dashboard/services/chart.service';
 import { SearchService } from './nav/services/search.service';
 import { DataService } from './nav/services/data.service';
 import { HttpClientModule } from '@angular/common/http';
@@ -22,14 +23,15 @@ import { MdcDrawerModule,
     MdcFormFieldModule,
     MdcCheckboxModule,
     MdcButtonModule,
-    MdcChipsModule } from '@angular-mdc/web';
+    MdcChipsModule,
+    MdcFabModule,
+    MdcElevationModule} from '@angular-mdc/web';
 import { DashboardComponent } from './nav/dashboard/dashboard.component';
 import { HardfactsComponent } from './nav/dashboard/hardfacts/hardfacts.component';
 import { LanguageComponent } from './nav/dashboard/language/language.component';
 import { CommentComponent } from './nav/dashboard/comment/comment.component';
 import { MainvisComponent } from './nav/dashboard/mainvis/mainvis.component';
 import { SentimentComponent } from './nav/dashboard/sentiment/sentiment.component';
-
 
 
 @NgModule({
@@ -67,9 +69,11 @@ import { SentimentComponent } from './nav/dashboard/sentiment/sentiment.componen
     MdcCheckboxModule,
     MdcButtonModule,
     MdcChipsModule,
+    MdcFabModule,
+    MdcElevationModule,
     HttpClientModule
   ],
-  providers: [SearchService, DataService],
+  providers: [SearchService, DataService, ChartService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

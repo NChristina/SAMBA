@@ -1,0 +1,28 @@
+@import "~@angular-mdc/theme/material";
+.fab_button {
+  float: left !important;
+  height: 35px !important;
+  margin-right: 2px;
+  margin-top: 8px;
+  margin-left: 2px;
+}
+
+.fab_button:first-child {
+  margin-left: 10px;
+}
+
+.fab_button:last-child {
+  margin-right: 10px;
+}
+
+.fab_button {
+  @include mdc-fab-accessible(#1565C0);
+}
+.selection_bar {
+  height: 4em;
+  margin: -20px;
+  width: fit-content;
+}
+#compositeChart {
+  margin-top: 40px;
+}
