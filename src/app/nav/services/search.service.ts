@@ -1,10 +1,12 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { DataService } from './data.service';
 
 @Injectable()
 export class SearchService {
   private data: any[];
+  private searchResultSource = new BehaviorSubject([]);
+  private currentSearchResult = this.searchResultSource.asObservable();
 
   constructor(private dataService: DataService) {
     dataService.getData().subscribe((data) => {
@@ -13,10 +15,8 @@ export class SearchService {
   }
 
   search(value: string): Observable<any[]> {
-    return new Observable((observer) => {
-      observer.next(this.searchSplitter(value));
-      observer.complete();
-    });
+    this.searchResultSource.next(this.searchSplitter(value));
+    return this.currentSearchResult;
   }
 
   searchSplitter(value: string): any[] {
