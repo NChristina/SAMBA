@@ -20,9 +20,6 @@ export class ChartService {
   SetData(value: any[]) {
     const newData = this.dataStructure(value);
     this.chartDataSource.next(newData);
-    //console.log('Data changed');
-    //console.log(newData);
-    console.log('New Data Structur: ', newData);
     this.changeCrossfilter(crossfilter(newData));
   }
   GetData(): Observable<any[]> {
@@ -31,35 +28,10 @@ export class ChartService {
 
   changeCrossfilter(filter: CrossFilter.CrossFilter<{}>) {
     this.cfilterSource.next(filter);
-    //console.log('Crossfilter changed');
   }
 
   getCrossfilter(): Observable<CrossFilter.CrossFilter<{}>> {
     return this.currentCfilter;
-  }
-
-  private nest(data) {
-    console.log(d3.nest()
-      .key(function (d: any) {
-        return d.song.title;
-      })
-      .rollup((v: any) => {
-        return {
-          all: v[0],
-          artist: v[0].artist[0].name,
-          comments: v[0].comment,
-          data: {
-            channel: v[0].data[0].channelTitle,
-            publishedAt: v[0].data[0].publishedAt,
-            // commentCount: v[0].data.statistics.commentCount,
-            // dislikeCount: v[0].data.statistics.dislikeCount,
-            // likeCount: v[0].data.statistics.likeCount,
-            // viewCount: v[0].data.statistics.viewCount
-          }
-        } as any;
-      })
-      .entries(data)
-  );
   }
 
   private dataStructure(data): any[] {
@@ -73,19 +45,15 @@ export class ChartService {
           publishedAt: comment.snippet.topLevelComment.snippet.publishedAt,
           text: comment.snippet.topLevelComment.snippet.textOriginal,
           song: song.song.title,
+          song_key: song.song._key,
+          song_id: song.song._id,
           artist: song.artist[0].name,
           analysis: comment.analysis
         });
       });
     });
-    // const nest = d3.nest()
-    //   .key(function (d: any) {
-    //     return d.song;
-    //   })
-    //   .entries(comments);
-    // return nest;
     comments.sort((a, b) => {
-      return new Date(a.publishedAt) > new Date(b.publishedAt) ? -1: 1;
+      return new Date(a.publishedAt) > new Date(b.publishedAt) ? -1 : 1;
     });
     return comments;
   }

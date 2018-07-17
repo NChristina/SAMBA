@@ -12,7 +12,7 @@ import { AppRoutingModule } from './/app-routing.module';
 import { NavComponent } from './nav/nav.component';
 import { MatGridListModule, MatCardModule, MatMenuModule,
   MatIconModule, MatButtonModule, MatToolbarModule, MatSidenavModule,
-  MatListModule, MatCheckboxModule } from '@angular/material';
+  MatListModule, MatCheckboxModule, MatProgressSpinnerModule } from '@angular/material';
 import { LayoutModule } from '@angular/cdk/layout';
 import { MdcDrawerModule,
     MdcListModule,
@@ -25,14 +25,15 @@ import { MdcDrawerModule,
     MdcButtonModule,
     MdcChipsModule,
     MdcFabModule,
-    MdcElevationModule} from '@angular-mdc/web';
+    MdcElevationModule,
+    MdcSnackbarModule} from '@angular-mdc/web';
 import { DashboardComponent } from './nav/dashboard/dashboard.component';
 import { HardfactsComponent } from './nav/dashboard/hardfacts/hardfacts.component';
 import { LanguageComponent } from './nav/dashboard/language/language.component';
 import { CommentComponent } from './nav/dashboard/comment/comment.component';
 import { MainvisComponent } from './nav/dashboard/mainvis/mainvis.component';
 import { SentimentComponent } from './nav/dashboard/sentiment/sentiment.component';
-
+import { Ng5SliderModule } from 'ng5-slider';
 
 @NgModule({
   declarations: [
@@ -59,6 +60,7 @@ import { SentimentComponent } from './nav/dashboard/sentiment/sentiment.componen
     MatSidenavModule,
     MatListModule,
     MatCheckboxModule,
+    MatProgressSpinnerModule,
     MdcDrawerModule,
     MdcListModule,
     MdcToolbarModule,
@@ -71,6 +73,8 @@ import { SentimentComponent } from './nav/dashboard/sentiment/sentiment.componen
     MdcChipsModule,
     MdcFabModule,
     MdcElevationModule,
+    MdcSnackbarModule,
+    Ng5SliderModule,
     HttpClientModule
   ],
   providers: [SearchService, DataService, ChartService],

@@ -6,6 +6,10 @@ $mdc-theme-primary: #1565c0;
 $mdc-theme-secondary: #388e3c;
 $mdc-theme-background: #fff;
 
+/* if you change the color list you have to
+    change it in mainvis.component.scss as well */
+$color-change-list: #a6cee3 #1f78b4 #b2df8a #33a02c #fb9a99 #e31a1c #ff0084 #ff7f00 #cab2d6;
+
 body {
   font-family: Roboto, Arial, sans-serif;
   margin: 0;
@@ -40,6 +44,32 @@ body {
   fill: none;
 }
 
-.stack0 {
-  stroke: 'red';
+@mixin coloring {
+  @each $color in $color-change-list {
+    $i: index($color-change-list, $color);
+    &:nth-child(#{$i}) .chart-body .stack-list .stack .line {
+      stroke: $color;
+    }
+  }
+}
+
+/* if you change the color list you have to
+    change it in mainvis.component.scss as well */
+.sub {
+  @include coloring();
+}
+
+/* Slider - Design */
+.ng5-slider .ng5-slider-pointer {
+  background-color: #1976D2 !important;
+  width: 10px !important;
+  height: 30px !important;
+}
+
+.ng5-slider .ng5-slider-selection {
+  background-color: #1976D2 !important;
+}
+
+.ng5-slider .ng5-slider-pointer:after {
+  content: none !important;
 }

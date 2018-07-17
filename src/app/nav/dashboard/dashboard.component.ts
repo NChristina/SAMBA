@@ -8,15 +8,6 @@ import { ChartService } from './services/chart.service';
 })
 export class DashboardComponent implements OnInit {
 
-  data;
-  @Input()
-  set chartData(value) {
-    this.data = value;
-  }
-  get chartData() {
-    return this.data;
-  }
-
   constructor(private chartService: ChartService) {
   }
 

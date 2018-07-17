@@ -6,10 +6,13 @@
           </mdc-text-field>
         </mdc-drawer-spacer>
         <mdc-list-group>
+          <mat-progress-spinner mode="indeterminate" *ngIf="this.isSearching"></mat-progress-spinner>
           <mdc-list *ngFor="let match of searchMatchList; let i = index">
             <mdc-list-item class="song_list_item" (click)="checkbox1.toggle(); selectSong(i, checkbox1);">
               <mdc-checkbox #checkbox1 mdcListItemGraphic (change)="selectSong(i, checkbox1)"></mdc-checkbox>{{match.displayName}}
-              <a class="song_link" href="https://www.youtube.com/watch?v={{match.data.data[0].id}}" target="_blank" mdcListItemMeta><mdc-icon mdcListItemMeta>link</mdc-icon></a>
+              <a class="song_link" href="https://www.youtube.com/watch?v={{match.data.data[0].id}}" target="_blank" mdcListItemMeta>
+                <mdc-icon mdcListItemMeta>link</mdc-icon>
+              </a>
             </mdc-list-item>
           </mdc-list>
         </mdc-list-group>
@@ -33,7 +36,7 @@
           </mdc-chip>
         </mdc-chip-set>
         <div class="contentmargin">
-          <app-dashboard [chartData]="this.selectedList"></app-dashboard>
+          <app-dashboard></app-dashboard>
         </div>
       </div>
     </div>
