@@ -44,6 +44,7 @@ body {
   fill: none;
 }
 
+//colors the legend of the line chart
 @mixin coloring {
   @each $color in $color-change-list {
     $i: index($color-change-list, $color);
@@ -72,4 +73,78 @@ body {
 
 .ng5-slider .ng5-slider-pointer:after {
   content: none !important;
+}
+
+/* Data Grid - Comment - Design*/
+.dc-grid-label {
+  display: none;
+}
+
+/* Comment Design */
+.comment-wrap {
+  display: table;
+  width: 100%;
+  height: fit-content;
+  margin-bottom: 10px;
+}
+
+.comment-block {
+  background-color: #fff;
+  display: table-cell;
+  vertical-align: top;
+  border-radius: rem(3);
+  box-shadow: 0 1px 3px 0 rgba(0,0,0,0.08);
+}
+
+.comment-text {
+  margin-right: 20px;
+  margin-left: 20px;
+  text-align: left;
+}
+
+.bottom-comment {
+  color: #acb4c2;
+}
+
+.comment-date {
+  float: left;
+  margin: 14px;
+}
+
+.comment-actions {
+  float: right;
+  width: 25%;
+  margin: 14px;
+  li {
+    display: inline;
+		margin: -2px;
+		cursor: pointer;
+
+    &.complain {
+      text-align: right;
+    }
+  }
+}
+
+.comment-song {
+  float: left;
+  width: 100%;
+  text-align: left;
+  margin: 14px;
+  margin-bottom: 0;
+  font-weight: bold;
+}
+
+.comment-author {
+  float: left;
+  width: 100%;
+  text-align: left;
+  margin: 14px;
+  color: #acb4c2;
+}
+
+.comment-thumb {
+  font-size: 10pt;
+  position: relative;
+  top: 2px;
 }

@@ -59,6 +59,8 @@ export class MainvisComponent implements OnInit {
     });
   }
 
+  // nests the data by song and returns an array of line charts
+  // each line chart belongs to one song
   getLineCharts(): dc.LineChart[] {
     const charts: dc.LineChart[] = [];
     const nestedData = d3.nest()
@@ -96,6 +98,7 @@ export class MainvisComponent implements OnInit {
       this.compositeChart.render();
   }
 
+  // sets the display mode of the line chart (daily, monthly, yearly)
   setShowOption(index: number) {
     this.chartShowOption = index;
     if (this.lineCharts !== undefined) {
@@ -108,7 +111,7 @@ export class MainvisComponent implements OnInit {
   }
 
   // slider methods
-
+  // sets the additional values for the slider
   setSliderValues() {
     if (this.data.length < 1) {
       return;
@@ -156,6 +159,7 @@ export class MainvisComponent implements OnInit {
     };
   }
 
+  // sets the first displayed date of the x-axis
   setMinRangeValue(value) {
     const date = new Date(value);
     this.chartRange1 = date;
@@ -163,7 +167,7 @@ export class MainvisComponent implements OnInit {
       .x(d3.scaleTime().domain([this.chartRange1, this.chartRange2]));
     this.compositeChart.redraw();
   }
-
+  // sets the last displayed date of the x-axis
   setMaxRangeValue(value) {
     const date = new Date(value);
     this.chartRange2 = date;
@@ -172,6 +176,7 @@ export class MainvisComponent implements OnInit {
     this.compositeChart.redraw();
   }
 
+  // converts the date for each mode (yearly, monthly, daily)
   getDateStringByShowOption(date: string): string {
     switch (this.chartShowOption) {
       default:

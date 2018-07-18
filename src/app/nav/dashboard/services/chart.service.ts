@@ -3,6 +3,7 @@ import * as d3 from 'd3';
 import * as crossfilter from 'crossfilter';
 import { Observable, BehaviorSubject } from '../../../../../node_modules/rxjs';
 
+// The Chart Service allows to use one data for all the charts
 @Injectable()
 export class ChartService {
   private chartDataSource = new BehaviorSubject([]);
@@ -17,6 +18,7 @@ export class ChartService {
     });
   }
 
+  // get and set of the data, the observable broadcasts the changed data to all its subscribers
   SetData(value: any[]) {
     const newData = this.dataStructure(value);
     this.chartDataSource.next(newData);
@@ -34,6 +36,7 @@ export class ChartService {
     return this.currentCfilter;
   }
 
+  // the comments are bundled for the charts
   private dataStructure(data): any[] {
     const comments = [];
     data.forEach(song => {
@@ -42,6 +45,7 @@ export class ChartService {
           _key: comment._key,
           authorDisplayName: comment.snippet.topLevelComment.snippet.authorDisplayName,
           likeCount: comment.snippet.topLevelComment.snippet.likeCount,
+          replyCount: comment.snippet.totalReplyCount,
           publishedAt: comment.snippet.topLevelComment.snippet.publishedAt,
           text: comment.snippet.topLevelComment.snippet.textOriginal,
           song: song.song.title,
