@@ -38,7 +38,10 @@ body {
     margin-bottom: .8em;
   }
 }
-
+/* Drawer */
+.mdc-drawer__drawer {
+  width: 400px !important;
+}
 /* Chart - Design */
 .line {
   fill: none;

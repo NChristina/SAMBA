@@ -36,7 +36,8 @@
 .mdc-drawer {
   width: 400px;
 }
-.mdc-drawer__drawer {
+
+.mdc-drawer--persistent .mdc-drawer__drawer {
   width: 400px !important;
 }
 
@@ -46,4 +47,9 @@
 
 .song_link {
   cursor: pointer;
+}
+
+.search-list {
+  height: 95vh;
+  overflow-y: scroll;
 }

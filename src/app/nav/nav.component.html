@@ -7,9 +7,11 @@
         </mdc-drawer-spacer>
         <mdc-list-group>
           <mat-progress-spinner mode="indeterminate" *ngIf="this.isSearching"></mat-progress-spinner>
-          <mdc-list *ngFor="let match of searchMatchList; let i = index">
-            <mdc-list-item class="song_list_item" (click)="checkbox1.toggle(); selectSong(i, checkbox1);">
-              <mdc-checkbox #checkbox1 mdcListItemGraphic (change)="selectSong(i, checkbox1)"></mdc-checkbox>{{match.displayName}}
+          <mdc-list class="search-list" >
+            <mdc-list-item class="song_list_item" *ngFor="let match of searchMatchList; let i = index" (click)="checkbox1.toggle(); selectSong(i, checkbox1);">
+              <mdc-checkbox #checkbox1 mdcListItemGraphic (change)="selectSong(i, checkbox1)"></mdc-checkbox>
+              <mdc-list-item-text>{{match.displayName}}
+              <mdc-list-item-secondary>{{ match.data.comment.length }} Comments</mdc-list-item-secondary></mdc-list-item-text>
               <a class="song_link" href="https://www.youtube.com/watch?v={{match.data.data[0].id}}" target="_blank" mdcListItemMeta>
                 <mdc-icon mdcListItemMeta>link</mdc-icon>
               </a>
