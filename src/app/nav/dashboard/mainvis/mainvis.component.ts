@@ -95,7 +95,11 @@ export class MainvisComponent implements OnInit {
       .compose(
         this.lineCharts
       );
-      this.compositeChart.render();
+    // sends data to the language chart component on brush-filtering
+    this.compositeChart.on('filtered', (chart, filter) => {
+      this.chartService.setChartRange({range: filter, chart: chart});
+    });
+    this.compositeChart.render();
   }
 
   // sets the display mode of the line chart (daily, monthly, yearly)

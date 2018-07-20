@@ -12,6 +12,9 @@ export class ChartService {
   private currentCfilter = this.cfilterSource.asObservable();
   private cfilter: CrossFilter.CrossFilter<{}>;
 
+  private chartRangeSource = new BehaviorSubject([]);
+  private currentChartRange = this.chartRangeSource.asObservable();
+
   constructor() {
     this.GetData().subscribe((data) => {
       this.changeCrossfilter(crossfilter(data));
@@ -60,5 +63,13 @@ export class ChartService {
       return new Date(a.publishedAt) > new Date(b.publishedAt) ? -1 : 1;
     });
     return comments;
+  }
+
+  getChartRange(): Observable<any> {
+    return this.currentChartRange;
+  }
+
+  setChartRange(range) {
+    this.chartRangeSource.next(range);
   }
 }
