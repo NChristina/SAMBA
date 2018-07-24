@@ -1,3 +1,26 @@
-<p>
-  hardfacts works!
-</p>
+<div id="likeChart">
+
+</div>
+ <div class="wrapper">
+  <div mdcOverline (mouseover)="setTooltip($event, tooltip);"
+    class="fab_button">
+    Total Views: {{ this.getTotalViews() }}
+    <span #tooltip class="tooltip_text">
+      <table>
+        <tr class="view_tr" *ngFor="let song of this.getSongsAndViews();">
+          <td>
+            {{ song.name }}
+          </td>
+          <td>
+            {{ song.views }}
+          </td>
+          <td>
+            <mdc-icon class="thumb_icon">
+              visibility
+            </mdc-icon>
+          </td>
+        </tr>
+      </table>
+    </span>
+  </div>
+</div>

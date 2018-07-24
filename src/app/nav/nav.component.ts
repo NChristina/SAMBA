@@ -40,7 +40,7 @@ export class NavComponent implements OnInit {
       this.selectedList.push(this.searchMatchList[index].data);
     } else {
       this.selectedList.forEach((song, i) => {
-        if (song.song._id === this.searchMatchList[index].data.song._id) {
+        if (song.data[0]._id === this.searchMatchList[index].data.data[0]._id) {
           this.selectedList.splice(i, 1);
         }
       });
@@ -51,7 +51,7 @@ export class NavComponent implements OnInit {
   removeSelectedSong(index) {
     const song = this.selectedList[index];
     this.searchMatchList.forEach((songData, i) => {
-      if (songData.data.song._id === song.song._id) {
+      if (songData.data.data[0]._id === song.data[0]._id) {
         this.searchMatchList.splice(i, 1);
         this.searchMatchList.push({displayName: song.song.artist + ' - ' + song.song.title, data: song});
       }

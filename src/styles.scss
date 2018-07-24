@@ -151,3 +151,16 @@ body {
   position: relative;
   top: 2px;
 }
+
+
+#likeChart svg g .axis .tick text {
+  visibility: hidden;
+}
+
+#likeChart svg g .axis .tick {
+  visibility: hidden;
+}
+
+#likeChart svg g .axis {
+  visibility: hidden;
+}

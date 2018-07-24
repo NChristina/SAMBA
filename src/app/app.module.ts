@@ -26,7 +26,7 @@ import { MdcDrawerModule,
     MdcChipsModule,
     MdcFabModule,
     MdcElevationModule,
-    MdcSnackbarModule} from '@angular-mdc/web';
+    MdcSnackbarModule, MdcTypographyModule} from '@angular-mdc/web';
 import { DashboardComponent } from './nav/dashboard/dashboard.component';
 import { HardfactsComponent } from './nav/dashboard/hardfacts/hardfacts.component';
 import { LanguageComponent } from './nav/dashboard/language/language.component';
@@ -74,6 +74,7 @@ import { Ng5SliderModule } from 'ng5-slider';
     MdcFabModule,
     MdcElevationModule,
     MdcSnackbarModule,
+    MdcTypographyModule,
     Ng5SliderModule,
     HttpClientModule
   ],

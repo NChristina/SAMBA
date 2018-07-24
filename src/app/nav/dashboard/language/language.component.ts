@@ -17,7 +17,6 @@ export class LanguageComponent implements OnInit {
   languageChart: dc.LineChart;
 
   groups: CrossFilter.Group<{}, Date, any>[];
-  private drawn = false;
   private maxGroupValue;
 
   constructor(private chartService: ChartService) { }
@@ -28,17 +27,15 @@ export class LanguageComponent implements OnInit {
       this.cfilter = filter;
       this.setDimension();
       if (this.data !== undefined && this.data.length > 0) {
-        this.drawn = true;
-        // chart 2
         this.renderChart();
       }
     });
     this.chartService.GetData().subscribe((data) => {
       this.data = data;
     });
+    // gets the range through the chart service from the mainVis Component
     this.chartService.getChartRange().subscribe((range) => {
-      if (this.data !== undefined && this.drawn && range.range !== null) {
-        console.log(range);
+      if (this.data !== undefined && range.range !== null && range.range !== undefined) {
         this.languageChart
         .x(d3.scaleTime().domain([range.range[0], range.range[1]]))
         .y(d3.scaleLinear().domain([0, this.getMaxGroupValue()]))
@@ -48,13 +45,14 @@ export class LanguageComponent implements OnInit {
         if (!dc.chartRegistry.list().some((c) => c.hasFilter())) {
           this.languageChart
             .x(d3.scaleTime().domain([d3.min(this.data, (d: any) => new Date(d.publishedAt)),
-              d3.max(this.data, (d: any) => new Date(d. publishedAt))]))
+              d3.max(this.data, (d: any) => new Date(d.publishedAt))]))
             .y(d3.scaleLinear().domain([0, this.maxGroupValue]));
         }
       }
     });
   }
 
+  // sets the crossfilter dimension
   setDimension() {
     this.dimension = this.cfilter.dimension((d: any) => {
       const splitted = d.publishedAt.split('-');
@@ -77,7 +75,6 @@ export class LanguageComponent implements OnInit {
         return d.analysis.mainLanguage === language.key;
       });
       groups.push({group: g, lang: language.key });
-      console.log(language.key, g.all());
     });
     // sort by language groups which have the most data in it
     groups.sort((a, b) => {
@@ -113,7 +110,6 @@ export class LanguageComponent implements OnInit {
   renderChart () {
     const groups: { group: CrossFilter.Group<{}, Date, any>, lang: string}[] = this.getLanguageGroups();
     this.maxGroupValue = this.getMaxGroupValue();
-    console.log(groups);
     const group1 = groups[0];
     this.languageChart
         .renderArea(true)

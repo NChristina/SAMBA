@@ -32,7 +32,7 @@
           </mdc-toolbar-row>
         </mdc-toolbar>
         <mdc-chip-set #inputchipset [input]="true">
-          <mdc-chip *ngFor="let element of selectedList; let i = index" label="{{element.song.title}}" (trailingIconInteraction)="removeSelectedSong(i)">
+          <mdc-chip *ngFor="let element of selectedList; let i = index" label="{{element.data[0].snippet.title}}" (trailingIconInteraction)="removeSelectedSong(i)">
             <mdc-chip-icon leading>music_note</mdc-chip-icon>
             <mdc-chip-icon trailing>cancel</mdc-chip-icon>
           </mdc-chip>

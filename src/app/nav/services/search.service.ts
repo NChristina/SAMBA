@@ -27,7 +27,7 @@ export class SearchService {
     const splitted = value.toUpperCase().split(' ');
     this.data.forEach((element) => {
       let count = 0;
-      const splittedElement = (element.song.artist + ' - ' + element.song.title).toUpperCase().split(' ');
+      const splittedElement = (element.song.artist + ' - ' + element.data[0].snippet.title).toUpperCase().split(' ');
       splitted.forEach((searchword) => {
         splittedElement.forEach((titleWord) => {
           if (titleWord.indexOf(searchword) > -1) {
@@ -37,7 +37,7 @@ export class SearchService {
         });
       });
       if (count > 0 && element.comment.length > 1) {
-        matches.push({ displayName: element.song.artist + ' - ' +  element.song.title , value: count, data: element});
+        matches.push({ displayName: element.data[0].snippet.title , value: count, data: element});
       }
     });
     // if they got the same count, they should be compared by views

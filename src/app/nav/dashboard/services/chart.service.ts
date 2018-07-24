@@ -55,7 +55,10 @@ export class ChartService {
           song_key: song.song._key,
           song_id: song.song._id,
           artist: song.artist[0].name,
-          analysis: comment.analysis
+          analysis: comment.analysis,
+          videoLikes: song.data[0].statistics.likeCount,
+          videoDislikes: song.data[0].statistics.dislikeCount,
+          videoViews: song.data[0].statistics.viewCount
         });
       });
     });
