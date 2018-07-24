@@ -98,7 +98,7 @@ export class HardfactsComponent implements OnInit {
       }), 'Dislikes');
     this.likeChart.margins().right = 80;
     this.likeChart.margins().left = 50;
-    this.likeChart.margins().bottom = 50;
+    this.likeChart.margins().bottom = 30;
     this.likeChart.legend(dc.legend().gap(5).x(220).y(10));
     this.likeChart.render();
   }
@@ -109,10 +109,21 @@ export class HardfactsComponent implements OnInit {
       .entries(this.data);
     const returner = [];
     nest.forEach((d) => {
-      let sum = parseInt(d.values[0].videoDislikes, 10) + parseInt(d.values[0].videoLikes, 10);
-      let value = (parseInt(d.values[0].videoLikes, 10) / sum) * 100;
       returner.push(
-        { name: d.key, views: d.values[0].videoViews, likes: d.values[0].videoLikes, dislikes: d.values[0].videoDislikes, value: value }
+        { name: d.key, views: d.values[0].videoViews}
+      );
+    });
+    return returner;
+  }
+
+  getSongsAndComments(): any[] {
+    const nest = d3.nest()
+      .key((d: any) => d.song)
+      .entries(this.data);
+    const returner = [];
+    nest.forEach((d) => {
+      returner.push(
+        { name: d.key, comments: d.values.length}
       );
     });
     return returner;
