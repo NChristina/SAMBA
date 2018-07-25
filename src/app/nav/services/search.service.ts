@@ -4,13 +4,19 @@ import { DataService } from './data.service';
 
 @Injectable()
 export class SearchService {
-  private data: any[];
+  private data: any[] = [];
   private searchResultSource = new BehaviorSubject([]);
   private currentSearchResult = this.searchResultSource.asObservable();
 
   constructor(private dataService: DataService) {
-    dataService.getData().subscribe((data) => {
-      this.data = data;
+    dataService.getData().then((data) => {
+      while (data.hasNext()) {
+        data.next().then( (record) => {
+          console.log(record);
+          this.data.push(record);
+          }
+        );
+      }
     });
   }
 
