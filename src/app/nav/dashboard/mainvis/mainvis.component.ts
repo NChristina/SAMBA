@@ -30,6 +30,9 @@ export class MainvisComponent implements OnInit {
   private chartRange1;
   private chartRange2;
 
+  // total comments
+  protected showTotalComments = false;
+
   constructor(private chartService: ChartService) {
   }
 
@@ -50,6 +53,11 @@ export class MainvisComponent implements OnInit {
         .key((d: any) => d.song_key)
         .key((d: any) => d.song)
         .entries(this.data);
+      console.log(this.songs);
+      if (this.showTotalComments) {
+        this.songs.push({ key: '-------', values: [{ key: 'Total Comments', values: this.data }]});
+      }
+      console.log(this.songs);
     });
   }
 
@@ -67,6 +75,10 @@ export class MainvisComponent implements OnInit {
       .key((comment: any) => comment.song)
       .entries(this.data);
     nestedData.forEach((song) => {
+      // comulative show option
+      if (this.chartShowOption === 3) {
+
+      }
       const lineChart = dc.lineChart(this.compositeChart);
       const group = this.dimension.group().reduceSum((d: any) => {
         return d.song === song.key;
@@ -75,6 +87,9 @@ export class MainvisComponent implements OnInit {
         .renderDataPoints(true);
       charts.push(lineChart);
     });
+    if (this.showTotalComments) {
+      charts.push(dc.lineChart(this.compositeChart).group(this.dimension.group()).renderDataPoints(true));
+    }
     return charts;
   }
 
@@ -185,13 +200,13 @@ export class MainvisComponent implements OnInit {
     switch (this.chartShowOption) {
       default:
       case 0:
-        return (date.split('T')[0]);
+        return (date.split('T')[0]); // daily
       case 1:
         const splitted = date.split('-');
-        return (splitted[0] + '-' + splitted[1]);
+        return (splitted[0] + '-' + splitted[1]); // monthly
       case 2:
-        return (date.split('-')[0]);
-      case 3:
+        return (date.split('-')[0]); // yearly
+      case 4:
         return (date);
     }
   }

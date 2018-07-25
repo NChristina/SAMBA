@@ -3,7 +3,12 @@
   </button>
   <button #fab2 mdc-fab class="fab_button" (click)="setShowOption(1)" [ngStyle]="{'background-color': this.chartShowOption === 1 ? '#009688' : '#1976D2'}" [extended]="true" label="monthly"></button>
   <button #fab3 mdc-fab class="fab_button" (click)="setShowOption(0)" [ngStyle]="{'background-color': this.chartShowOption === 0 ? '#009688' : '#1976D2'}" [extended]="true" label="daily"></button>
+  <!--<button #fab4 mdc-fab class="fab_button" (click)="setShowOption(3)" [ngStyle]="{'background-color': this.chartShowOption === 3 ? '#009688' : '#1976D2'}" [extended]="true" label="comulative"></button>
+  -->
 </div>
+<!--<mdc-form-field class="selection_bar" [mdcElevation]="2">
+  <mdc-checkbox #total (change)="this.showTotalComments = !this.showTotalComments"></mdc-checkbox><label>Show Total Comments</label>
+</mdc-form-field>-->
 <div class="legend" [mdcElevation]="2" *ngIf="this.songs.length > 0">
   <div class="legendElement" *ngFor="let song of this.songs; let i = index">
     <div class="colorRect" ></div>
