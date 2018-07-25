@@ -75,11 +75,23 @@ export class MainvisComponent implements OnInit {
       .key((comment: any) => comment.song)
       .entries(this.data);
     nestedData.forEach((song) => {
+      const lineChart = dc.lineChart(this.compositeChart);
       // comulative show option
       if (this.chartShowOption === 3) {
-
+        let dataLength = this.data.length;
+        const dates = d3.nest().key((d: any) => this.getDateStringByShowOption(d.publishedAt)).entries(song.values);
+        for (let i = 0; i < dates.length; i++) {
+          if ((i + 1) === dates.length) {
+            break;
+          }
+          const date = new Date(this.getDateStringByShowOption(dates[i].key));
+          const date2 = new Date(this.getDateStringByShowOption(dates[i + 1].key));
+          const daysBetween = Math.floor( (date.getTime() - date2.getTime()) / 86400000); // 86400000 = one day
+          this.addDaysToData(daysBetween, dates[i].values.length, date, song.key);
+        }
+        console.log(dataLength, this.data.length);
+        lineChart.interpolate('monotone');
       }
-      const lineChart = dc.lineChart(this.compositeChart);
       const group = this.dimension.group().reduceSum((d: any) => {
         return d.song === song.key;
       });
@@ -91,6 +103,32 @@ export class MainvisComponent implements OnInit {
       charts.push(dc.lineChart(this.compositeChart).group(this.dimension.group()).renderDataPoints(true));
     }
     return charts;
+  }
+
+  addDaysToData (days: number, amount: number, from: Date, song: string = '') {
+    if (days === 0) {
+      return;
+    }
+    for (let j = 1; j <= days; j++) {
+      for (let i = 0; i < amount; i++) {
+        this.data.push({
+          _key: '----------comulative---------',
+          authorDisplayName: '',
+          likeCount: 0,
+          replyCount: 0,
+          publishedAt: new Date(from.getTime() + (86400000 * j)).toISOString(),
+          text: '',
+          song: song,
+          song_key: '',
+          song_id: '',
+          artist: '',
+          analysis: {},
+          videoLikes: 0,
+          videoDislikes: 0,
+          videoViews: 0
+        });
+      }
+    }
   }
 
   renderChart() {
@@ -200,6 +238,7 @@ export class MainvisComponent implements OnInit {
     switch (this.chartShowOption) {
       default:
       case 0:
+      case 3:
         return (date.split('T')[0]); // daily
       case 1:
         const splitted = date.split('-');
