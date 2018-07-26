@@ -9,6 +9,7 @@ export class SearchService {
   private currentSearchResult = this.searchResultSource.asObservable();
 
   constructor(private dataService: DataService) {
+    // subscribes to the data from the data service
     dataService.getData().subscribe((data) => {
       this.data = data;
     });
@@ -19,17 +20,24 @@ export class SearchService {
     return this.currentSearchResult;
   }
 
+  // splits the value and the song title by words and look for each word if it
+  // matches any word. Results will be pushed to a list, after that the list will
+  // be sorted by match count, comments and views
   searchSplitter(value: string): any[] {
     if (value.length === 0) {
       return;
     }
+    // list
     const matches = [];
+    // value splitted into words
     const splitted = value.toUpperCase().split(' ');
+    // loop for each song
     this.data.forEach((element) => {
       let count = 0;
       const splittedElement = (element.song.artist + ' - ' + element.data[0].snippet.title).toUpperCase().split(' ');
       splitted.forEach((searchword) => {
         splittedElement.forEach((titleWord) => {
+          // test for match
           if (titleWord.indexOf(searchword) > -1) {
             count++;
             return;

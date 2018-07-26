@@ -20,6 +20,7 @@ export class CommentComponent implements OnInit {
   ngOnInit() {
     this.commentTable = dc.dataGrid('#commentSection');
     // subscribing to the crossfilter in the chart service
+    // crossfilter is needed to view the comments which are selected in any chart
     this.chartService.getCrossfilter().subscribe((filter) => {
       this.cfilter = filter;
       this.setDimension();
@@ -31,12 +32,14 @@ export class CommentComponent implements OnInit {
     });
   }
 
+  // sets the dimension
   setDimension() {
     this.dimension = this.cfilter.dimension((d: any) => {
       return new Date(d.publishedAt.split('T')[0]);
     });
   }
 
+  // renders the comment table and sets the design and look
   renderCommentTable() {
     const dateGroup = this.dimension.group();
     this.commentTable
@@ -57,12 +60,10 @@ export class CommentComponent implements OnInit {
         html += 'thumb_up</mdc-icon> | ' + d.replyCount + ' ';
         html += '<mdc-icon _ngcontent-c1="" mdclistitemmeta="" aria-hidden="true" class="material-icons ng-mdc-icon comment-thumb">';
         html += 'reply</mdc-icon></div>';
-        // html +=	'<ul class="comment-actions">';
-        // html +=	'<li class="complain">' + d.authorDisplayName + ' </li></ul>';
         html += '';
         html +=	'</div></div></div>';
         return html;
-      })
+      }) // orders the comments by likes
       .order((a, b) => {
         return a.likeCount > b.likeCount ? -1 : 1;
       })
@@ -71,7 +72,7 @@ export class CommentComponent implements OnInit {
     this.commentTable.render();
   }
 
-  // converts the published date into a viewable format
+  // converts the published date into a viewable format (looks better :))
   private dateTimeParser (publishedDate: string) {
     const date = publishedDate.split('T')[0];
     const time = publishedDate.split('T')[1].split('.')[0];

@@ -6,8 +6,8 @@
           </mdc-text-field>
         </mdc-drawer-spacer>
         <mdc-list-group>
-          <mat-progress-spinner mode="indeterminate" *ngIf="this.isSearching"></mat-progress-spinner>
           <mdc-list class="search-list" >
+            <!--List of search results-->
             <mdc-list-item class="song_list_item" *ngFor="let match of searchMatchList; let i = index" (click)="checkbox1.toggle(); selectSong(i, checkbox1);">
               <mdc-checkbox #checkbox1 mdcListItemGraphic (change)="selectSong(i, checkbox1)"></mdc-checkbox>
               <mdc-list-item-text>{{match.displayName}}

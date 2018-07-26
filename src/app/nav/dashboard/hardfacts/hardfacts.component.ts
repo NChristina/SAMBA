@@ -18,6 +18,7 @@ export class HardfactsComponent implements OnInit {
   constructor(private chartService: ChartService, private _element: ElementRef) { }
 
   ngOnInit() {
+    // initialization of the chart
     this.likeChart = dc.barChart('#likeChart');
     this.chartService.GetData().subscribe((data) => {
       this.data = data;
@@ -31,11 +32,13 @@ export class HardfactsComponent implements OnInit {
     });
   }
 
+  // sets the dimension based on the songs
   setDimension() {
     this.dimension = this.cfilter.dimension(function (d: any) {
       return d.song;
     });
   }
+  // used to set the domain
   getMaxLikesAndDislikes () {
     let m = 0;
     this.data.forEach((d) => {
@@ -47,7 +50,7 @@ export class HardfactsComponent implements OnInit {
     return m;
   }
 
-  // set the numbers for the chart
+  // renders the chart
   renderChart() {
     const checklist = [];
     const group = this.dimension.group().reduceSum((d: any) => {
@@ -64,10 +67,6 @@ export class HardfactsComponent implements OnInit {
       checklist.push({ song: d.song, value: value });
       return value;
     });
-    this.likeChart.renderlet(function(chart) {
-      chart.selectAll('g.x text')
-        .attr('transform', 'rotate(-50)');
-    });
     this.likeChart
       .width(300)
       .height(200)
@@ -81,6 +80,7 @@ export class HardfactsComponent implements OnInit {
       .barPadding(0.1)
       .outerPadding(0.05)
       .group(group, 'Likes');
+      // stacks the dislikes
       this.likeChart
       .stack(this.dimension.group().reduceSum((d: any) => {
         let returning = false;
@@ -103,6 +103,7 @@ export class HardfactsComponent implements OnInit {
     this.likeChart.render();
   }
 
+  // returns the views and song name for each song (tooltip)
   getSongsAndViews(): any[] {
     const nest = d3.nest()
       .key((d: any) => d.song)
@@ -116,6 +117,7 @@ export class HardfactsComponent implements OnInit {
     return returner;
   }
 
+  // returns the amount of comments and the song for the tooltip
   getSongsAndComments(): any[] {
     const nest = d3.nest()
       .key((d: any) => d.song)
@@ -128,7 +130,7 @@ export class HardfactsComponent implements OnInit {
     });
     return returner;
   }
-
+  // returns the total views
   getTotalViews () {
     let views = 0;
     const nest = d3.nest()
@@ -139,7 +141,7 @@ export class HardfactsComponent implements OnInit {
     });
     return views;
   }
-
+  // sets the tooltip on mouseover
   setTooltip(event: MouseEvent, tooltip: HTMLSpanElement) {
     tooltip.style.position = 'fixed';
     tooltip.style.top = (event.clientY - tooltip.offsetHeight - 20) + 'px';

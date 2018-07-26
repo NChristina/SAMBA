@@ -23,7 +23,6 @@ export class MainvisComponent implements OnInit {
   protected songs = [];
 
   // slider values
-  private dateRange: Date[];
   protected value: number;
   protected value2: number;
   protected options: Options;
@@ -34,7 +33,9 @@ export class MainvisComponent implements OnInit {
   }
 
   ngOnInit() {
+    // initialization of the chart by id = compositeChart
     this.compositeChart = dc.compositeChart('#compositeChart');
+    // subscribing to crossfilter
     this.chartService.getCrossfilter().subscribe((filter) => {
       this.cfilter = filter;
       this.setDimension();
@@ -53,6 +54,8 @@ export class MainvisComponent implements OnInit {
     });
   }
 
+  // sets the dimension by date
+  // the dimension is required for the dc and crossfilter library
   setDimension() {
     this.dimension = this.cfilter.dimension((d: any) => {
       return new Date(this.getDateStringByShowOption(d.publishedAt));
@@ -78,6 +81,7 @@ export class MainvisComponent implements OnInit {
     return charts;
   }
 
+  // renders the chart
   renderChart() {
     const dateGroup = this.dimension.group();
     this.chartRange1 = d3.min(this.data, (d: any) => new Date(d.publishedAt));
@@ -132,6 +136,7 @@ export class MainvisComponent implements OnInit {
       return;
     }
     this.value2 = new Date(dates[dates.length - 1].key).getTime();
+    // scales the slider to the last week or the last 2 datapoints on daily-view
     if (this.chartShowOption === 0) {
       let weeks = 604800000; // one week
       const diff = this.value2 - new Date(dates[dates.length - 2].key).getTime();
@@ -181,6 +186,7 @@ export class MainvisComponent implements OnInit {
   }
 
   // converts the date for each mode (yearly, monthly, daily)
+  // this is importent to stack the comments
   getDateStringByShowOption(date: string): string {
     switch (this.chartShowOption) {
       default:

@@ -10,6 +10,7 @@ export class DataService {
   constructor(private httpClient: HttpClient) {
   }
 
+  // gets the data locally from the assets folder
   getData(): Observable<any[]> {
     return this.httpClient.get('/assets/data.json') as any;
   }

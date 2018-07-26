@@ -6,11 +6,12 @@ import { Observable, BehaviorSubject } from '../../../../../node_modules/rxjs';
 // The Chart Service allows to use one data for all the charts
 @Injectable()
 export class ChartService {
+  // The BehavioSubject allows us to inform all the subscribers, when data changed
+  // we need two of them, one for crossfilter and one for the data
   private chartDataSource = new BehaviorSubject([]);
   private currentChartData = this.chartDataSource.asObservable();
   private cfilterSource = new BehaviorSubject(crossfilter([]));
   private currentCfilter = this.cfilterSource.asObservable();
-  private cfilter: CrossFilter.CrossFilter<{}>;
 
   private chartRangeSource = new BehaviorSubject([]);
   private currentChartRange = this.chartRangeSource.asObservable();
@@ -22,6 +23,7 @@ export class ChartService {
   }
 
   // get and set of the data, the observable broadcasts the changed data to all its subscribers
+  // the function sets also the crossfilter
   SetData(value: any[]) {
     const newData = this.dataStructure(value);
     this.chartDataSource.next(newData);
@@ -31,15 +33,20 @@ export class ChartService {
     return this.currentChartData;
   }
 
+  // informs all crossfilter subscribers that the crossfilter variable has changed
   changeCrossfilter(filter: CrossFilter.CrossFilter<{}>) {
     this.cfilterSource.next(filter);
   }
 
+  // function, which is used to subscribe to the crossfilter
   getCrossfilter(): Observable<CrossFilter.CrossFilter<{}>> {
     return this.currentCfilter;
   }
 
   // the comments are bundled for the charts
+  // the function returns a new data structure, so its easier to
+  // work with crossfilter and display it as visualization
+  // if something is missing just add it
   private dataStructure(data): any[] {
     const comments = [];
     data.forEach(song => {
@@ -62,12 +69,14 @@ export class ChartService {
         });
       });
     });
+    // the comments have to be sorted for the charts
     comments.sort((a, b) => {
       return new Date(a.publishedAt) > new Date(b.publishedAt) ? -1 : 1;
     });
     return comments;
   }
 
+  // is used to tell an subscriber if the size of view has changed
   getChartRange(): Observable<any> {
     return this.currentChartRange;
   }

@@ -22,6 +22,7 @@ export class LanguageComponent implements OnInit {
   constructor(private chartService: ChartService) { }
 
   ngOnInit() {
+    // initialization of the chart
     this.languageChart = dc.lineChart('#languageGraph');
     this.chartService.getCrossfilter().subscribe((filter) => {
       this.cfilter = filter;
@@ -97,6 +98,7 @@ export class LanguageComponent implements OnInit {
     return groups;
   }
 
+  // returns the max value for the domain of the chart
   getMaxGroupValue(): number {
     let m = 0;
     this.dimension.group().all().forEach((date: any) => {
@@ -107,6 +109,7 @@ export class LanguageComponent implements OnInit {
     return m;
   }
 
+  // renders the chart
   renderChart () {
     const groups: { group: CrossFilter.Group<{}, Date, any>, lang: string}[] = this.getLanguageGroups();
     this.maxGroupValue = this.getMaxGroupValue();
@@ -135,6 +138,7 @@ export class LanguageComponent implements OnInit {
         if (group.group === group1.group || maxLang === 2) {
           return;
         }
+        // stacks the groups
         this.languageChart
           .stack(group.group, group.lang, function (d) {
           return d.value;
