@@ -9,20 +9,27 @@ export class SearchService {
   private currentSearchResult = this.searchResultSource.asObservable();
 
   constructor(private dataService: DataService) {
-    dataService.getData().then((data) => {
-      while (data.hasNext()) {
-        data.next().then( (record) => {
-          console.log(record);
-          this.data.push(record);
-          }
-        );
-      }
-    });
+    // dataService.getData().then((data) => {
+    //   while (data.hasNext()) {
+    //     data.next().then( (record) => {
+    //       console.log(record);
+    //       this.data.push(record);
+    //       }
+    //     );
+    //   }
+    // });
   }
-
-  search(value: string): Observable<any[]> {
+  // file search
+  searchFromFile(value: string, dataSelection: number): Observable<any[]> {
     this.searchResultSource.next(this.searchSplitter(value));
     return this.currentSearchResult;
+  }
+
+  searchFromDb(value: string): Promise<any> {
+    if (value.length < 1) {
+      return;
+    }
+    return this.dataService.search(value);
   }
 
   searchSplitter(value: string): any[] {

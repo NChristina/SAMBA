@@ -24,8 +24,13 @@ export class NavComponent implements OnInit {
   submitSearch(value: string) {
     this.searchMatchList = [];
     this.isSearching = true;
-    this.searcher.search(value).subscribe((results) => {
-      this.searchMatchList = results;
+    this.searcher.searchFromDb(value).then((results) => {
+      console.log(results.body);
+      const list = [];
+      results.body.forEach(record => {
+        list.push({ displayName: record.data[0].snippet.title, data: record });
+      });
+      this.searchMatchList = list;
       this.isSearching = false;
     });
   }
