@@ -2,8 +2,8 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { catchError } from 'rxjs/operators';
 import { Observable, from } from 'rxjs';
-import { Database, aql } from 'arangojs/lib/web.js';
-// import { Database, aql } from 'arangojs';
+ import { Database, aql } from 'arangojs/lib/web.js';
+//import { Database, aql } from 'arangojs';
 import { ArrayCursor } from '../../../../node_modules/arangojs/lib/cjs/cursor';
 
 
@@ -14,14 +14,19 @@ export class DataService {
 
   constructor(private httpClient: HttpClient) {
     this.db = new Database({
-      url: 'http://10.0.1.26:8530'
+      url: 'http://127.0.0.1:8529'
     });
     this.db.useDatabase('ForTunesV0_1');
-    this.db.useBasicAuth('reader', 'hackathon');
-
-      // .then((result) => {
-      //   console.log(result);
-      // }).catch((err) => console.log(err));
+    //this.db.useBasicAuth('reader', 'hackathon');
+    this.db.useBasicAuth('root', '');
+    //this.db.getService('search').then((ser) => console.log(ser));
+    //httpClient.get('http://localhost:8529/_db/ForTunesV0_1/search/search/fil').subscribe((res) => console.log(res));
+    const service = this.db.route('search', {  });
+    // service.post('search', {
+    //   username: 'admin',
+    //   password: 'hunter2'
+    // })
+    service.get('search/fil').then((res) => console.log(res));
   }
 
   getData(): Promise<ArrayCursor> {
