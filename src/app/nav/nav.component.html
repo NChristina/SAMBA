@@ -1,7 +1,7 @@
     <div class="demo-content__drawer demo-content__drawer--persistent">
       <mdc-drawer #persistent drawer='persistent'>
         <mdc-drawer-spacer>
-          <mdc-text-field #searchText [box]="false" formControlName="searchTitle" label="Title" maxlength="30" (change)="submitSearch(searchText.value)">
+          <mdc-text-field #searchText [box]="false" formControlName="searchTitle" label="search for songs" maxlength="30" (change)="submitSearch(searchText.value)">
             <mdc-icon class="search_icon" trailing #searchicon type="submit" [clickable]="true">search</mdc-icon>
           </mdc-text-field>
         </mdc-drawer-spacer>
@@ -13,7 +13,11 @@
               <mdc-list-item-text>{{match.displayName}}
               <mdc-list-item-secondary>{{ match.data.comment.length }} Comments</mdc-list-item-secondary></mdc-list-item-text>
               <a class="song_link" href="https://www.youtube.com/watch?v={{match.data.data[0].id}}" target="_blank" mdcListItemMeta>
-                <mdc-icon mdcListItemMeta>link</mdc-icon>
+
+                <div class="tooltip">
+                    <mdc-icon mdcListItemMeta>link</mdc-icon>
+                  <span class="tooltiptext">link to video</span>
+                </div>
               </a>
             </mdc-list-item>
           </mdc-list>
@@ -27,7 +31,7 @@
               <mdc-toolbar-title>Please select a song</mdc-toolbar-title>
             </mdc-toolbar-section>
             <mdc-toolbar-section [alignEnd]="true" [shrinkToFit]="true">
-              <a>here you can place icons or links</a>
+              <img src="../../assets/Samba_Logo_rgb_transparent_cut.png" alt="samba logo" style="width:200px; margin-right: 15px;">
             </mdc-toolbar-section>
           </mdc-toolbar-row>
         </mdc-toolbar>

@@ -11,7 +11,7 @@
     <br>
   </div>
 </div>
-<div id="compositeChart">
+<div id="compositeChart" class="maxSize">
 
 </div>
 <ng5-slider #slider *ngIf="this.data.length > 0" [options]="this.options" [(value)]="this.value" [(highValue)]="this.value2" (valueChange)="setMinRangeValue($event)" (highValueChange)="setMaxRangeValue($event)"></ng5-slider>

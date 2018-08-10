@@ -70,6 +70,7 @@ export class HardfactsComponent implements OnInit {
     this.likeChart
       .width(300)
       .height(200)
+      .useViewBoxResizing(true)
       .dimension(this.dimension)
       .yAxisLabel('Likes / Dislikes')
       .x(d3.scaleBand())

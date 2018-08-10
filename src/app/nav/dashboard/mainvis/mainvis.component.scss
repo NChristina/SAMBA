@@ -2,7 +2,10 @@
 
 //$color-change-list: #ff0084 #ffa200 #3d94ff #01ffc8;
 $color-change-list: /*#a6cee3*/ #1f78b4 #b2df8a #33a02c #fb9a99 #e31a1c #ff0084 #ff7f00 #cab2d6;
-
+.maxSize {
+  max-width: 1250px;
+  max-height: 550px;
+}
 .fab_button {
   float: left !important;
   height: 35px !important;
@@ -62,3 +65,5 @@ $color-change-list: /*#a6cee3*/ #1f78b4 #b2df8a #33a02c #fb9a99 #e31a1c #ff0084 
   float: left;
   margin: 0;
 }
+
+
