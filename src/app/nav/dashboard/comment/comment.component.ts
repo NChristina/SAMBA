@@ -3,6 +3,7 @@ import * as d3 from 'd3';
 import * as crossfilter from 'crossfilter';
 import * as dc from 'dc';
 import { ChartService } from '../services/chart.service';
+import { FormControl } from '@angular/forms';
 
 @Component({
   selector: 'app-comment',
@@ -10,6 +11,16 @@ import { ChartService } from '../services/chart.service';
   styleUrls: ['./comment.component.scss']
 })
 export class CommentComponent implements OnInit {
+  foodControl = new FormControl();
+
+  filter = [
+    { value: 'likes asc'},
+    { value: 'likes desc'},
+    { value: 'comments'},
+    { value: 'date asc'},
+    { value: 'date desc'}
+  ];
+
 
   commentTable: dc.DataGridWidget;
   cfilter: CrossFilter.CrossFilter<{}>;
@@ -30,6 +41,32 @@ export class CommentComponent implements OnInit {
     this.chartService.GetData().subscribe((data) => {
       this.data = data;
     });
+  }
+
+  onFilterChange() {
+    console.log('test');
+    // switch (currentValue) {
+    //   case 'likes asc':
+    //   console.log('valueChanged: ', currentValue);
+    //   break;
+
+    //   case 'likes desc':
+    //   console.log('valueChanged: ', currentValue);
+    //   break;
+
+    //   case 'comments':
+    //   console.log('valueChanged: ', currentValue);
+    //   break;
+
+    //   case 'date asc':
+    //   console.log('valueChanged: ', currentValue);
+    //   break;
+
+    //   case 'date desc':
+    //   console.log('valueChanged: ', currentValue);
+    //   break;
+
+    // }
   }
 
   // sets the dimension
