@@ -12,17 +12,11 @@ import { FormControl } from '@angular/forms';
 })
 export class CommentComponent implements OnInit {
   foodControl = new FormControl();
-
-  // filter = [
-  //   { value: 'likes asc'},
-  //   { value: 'likes desc'},
-  //   { value: 'comments'},
-  //   { value: 'date asc'},
-  //   { value: 'date desc'}
-  // ];
+  whatOrder = 0;
 
   filter = [
-    { value: 'comments', description: 'comments'},
+    { value: 'comments asc', description: 'comments asc'},
+    { value: 'comments desc', description: 'comments desc'},
     { value: 'likes asc', description: 'likes asc'},
     { value: 'likes desc', description: 'likes desc'},
     { value: 'date asc', description: 'date asc'},
@@ -88,6 +82,27 @@ export class CommentComponent implements OnInit {
         return html;
       }) // orders the comments by likes
       .order(d3.ascending)
+      .order((a, b) => {
+        // to decide after what critera the comments should be ordered
+        console.log('I am rendering.');
+        if (this.whatOrder === 0) {
+          return a.replyCount > b.replyCount ? -1 : 1;
+        } else if (this.whatOrder === 1) {
+          return a.replyCount < b.replyCount ? -1 : 1;
+        } else if (this.whatOrder === 2) {
+          return a.likeCount > b.likeCount ? -1 : 1;
+        } else if (this.whatOrder === 3) {
+          return a.likeCount < b.likeCount ? -1 : 1;
+        } else if (this.whatOrder === 4) {
+          return a.publishedAt > b.publishedAt ? -1 : 1;
+        } else if (this.whatOrder === 5) {
+          return a.publishedAt < b.publishedAt ? -1 : 1;
+        }
+
+        // console.log('a datapoint: ', a, '; b datapoint: ', b);
+      return a.replyCount > b.replyCount ? -1 : 1;
+      })
+
       .renderLabel(false)
       .renderTitle(false);
     this.commentTable.render();
@@ -99,24 +114,40 @@ export class CommentComponent implements OnInit {
     // console.log(`onSelectionChange: ${event.value}`);
 
     switch (event.value) {
+      case 'comments asc':
+      // console.log('valueChanged: ', event.value);
+      this.whatOrder = 0;
+      this.renderCommentTable();
+      break;
+
+      case 'comments desc':
+      // console.log('valueChanged: ', event.value);
+      this.whatOrder = 1;
+      this.renderCommentTable();
+      break;
+
       case 'likes asc':
-      console.log('valueChanged: ', event.value);
+      // console.log('valueChanged: ', event.value);
+      this.whatOrder = 2;
+      this.renderCommentTable();
       break;
 
       case 'likes desc':
-      console.log('valueChanged: ', event.value);
-      break;
-
-      case 'comments':
-      console.log('valueChanged: ', event.value);
+      // console.log('valueChanged: ', event.value);
+      this.whatOrder = 3;
+      this.renderCommentTable();
       break;
 
       case 'date asc':
-      console.log('valueChanged: ', event.value);
+      // console.log('valueChanged: ', event.value);
+      this.whatOrder = 4;
+      this.renderCommentTable();
       break;
 
       case 'date desc':
-      console.log('valueChanged: ', event.value);
+      // console.log('valueChanged: ', event.value);
+      this.whatOrder = 5;
+      this.renderCommentTable();
       break;
 
     }
