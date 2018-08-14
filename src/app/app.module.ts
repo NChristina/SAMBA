@@ -1,5 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { ChartService } from './nav/dashboard/services/chart.service';
 import { SearchService } from './nav/services/search.service';
@@ -52,6 +53,8 @@ import { Ng5SliderModule } from 'ng5-slider';
     BrowserModule,
     BrowserAnimationsModule,
     AppRoutingModule,
+    FormsModule,
+    ReactiveFormsModule,
     MatGridListModule,
     MatCardModule,
     MatMenuModule,

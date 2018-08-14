@@ -13,12 +13,20 @@ import { FormControl } from '@angular/forms';
 export class CommentComponent implements OnInit {
   foodControl = new FormControl();
 
+  // filter = [
+  //   { value: 'likes asc'},
+  //   { value: 'likes desc'},
+  //   { value: 'comments'},
+  //   { value: 'date asc'},
+  //   { value: 'date desc'}
+  // ];
+
   filter = [
-    { value: 'likes asc'},
-    { value: 'likes desc'},
-    { value: 'comments'},
-    { value: 'date asc'},
-    { value: 'date desc'}
+    { value: 'comments', description: 'comments'},
+    { value: 'likes asc', description: 'likes asc'},
+    { value: 'likes desc', description: 'likes desc'},
+    { value: 'date asc', description: 'date asc'},
+    { value: 'date desc', description: 'date desc' },
   ];
 
 
@@ -43,30 +51,8 @@ export class CommentComponent implements OnInit {
     });
   }
 
-  onFilterChange() {
-    console.log('test');
-    // switch (currentValue) {
-    //   case 'likes asc':
-    //   console.log('valueChanged: ', currentValue);
-    //   break;
+  onFilterChange(currentValue) {
 
-    //   case 'likes desc':
-    //   console.log('valueChanged: ', currentValue);
-    //   break;
-
-    //   case 'comments':
-    //   console.log('valueChanged: ', currentValue);
-    //   break;
-
-    //   case 'date asc':
-    //   console.log('valueChanged: ', currentValue);
-    //   break;
-
-    //   case 'date desc':
-    //   console.log('valueChanged: ', currentValue);
-    //   break;
-
-    // }
   }
 
   // sets the dimension
@@ -101,14 +87,41 @@ export class CommentComponent implements OnInit {
         html +=	'</div></div></div>';
         return html;
       }) // orders the comments by likes
-      .order((a, b) => {
-        return a.likeCount > b.likeCount ? -1 : 1;
-      })
+      .order(d3.ascending)
       .renderLabel(false)
       .renderTitle(false);
     this.commentTable.render();
   }
 
+
+
+  onSelectionChange(event: { index: any, value: any }) {
+    // console.log(`onSelectionChange: ${event.value}`);
+
+    switch (event.value) {
+      case 'likes asc':
+      console.log('valueChanged: ', event.value);
+      break;
+
+      case 'likes desc':
+      console.log('valueChanged: ', event.value);
+      break;
+
+      case 'comments':
+      console.log('valueChanged: ', event.value);
+      break;
+
+      case 'date asc':
+      console.log('valueChanged: ', event.value);
+      break;
+
+      case 'date desc':
+      console.log('valueChanged: ', event.value);
+      break;
+
+    }
+
+  }
   // converts the published date into a viewable format (looks better :))
   private dateTimeParser (publishedDate: string) {
     const date = publishedDate.split('T')[0];
