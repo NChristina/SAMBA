@@ -3,6 +3,8 @@
   </button>
   <button #fab2 mdc-fab class="fab_button" (click)="setShowOption(1)" [ngStyle]="{'background-color': this.chartShowOption === 1 ? '#009688' : '#1976D2'}" [extended]="true" label="monthly"></button>
   <button #fab3 mdc-fab class="fab_button" (click)="setShowOption(0)" [ngStyle]="{'background-color': this.chartShowOption === 0 ? '#009688' : '#1976D2'}" [extended]="true" label="daily"></button>
+  <button #fab4 mdc-fab class="fab_button" (click)="setShowOption(3)" [ngStyle]="{'background-color': this.chartShowOption === 3 ? '#009688' : '#1976D2'}" [extended]="true" label="comulative"></button>
+
 </div>
 <div class="legend" [mdcElevation]="2" *ngIf="this.songs.length > 0">
   <div class="legendElement" *ngFor="let song of this.songs; let i = index">
@@ -12,6 +14,5 @@
   </div>
 </div>
 <div id="compositeChart" class="maxSize">
-
 </div>
 <ng5-slider #slider *ngIf="this.data.length > 0" [options]="this.options" [(value)]="this.value" [(highValue)]="this.value2" (valueChange)="setMinRangeValue($event)" (highValueChange)="setMaxRangeValue($event)"></ng5-slider>
