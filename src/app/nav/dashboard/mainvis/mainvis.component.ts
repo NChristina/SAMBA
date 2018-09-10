@@ -213,7 +213,7 @@ export class MainvisComponent implements OnInit {
     this.value2 = new Date(dates[dates.length - 1].key).getTime();
     // scales the slider to the last week or the last 2 datapoints on daily-view
     if (this.chartShowOption === 0) {
-      let weeks = 604800000; // one week
+      let weeks = 604800000 * 4; // one week
       const diff =
         this.value2 - new Date(dates[dates.length - 2].key).getTime();
       while (weeks <= diff) {
