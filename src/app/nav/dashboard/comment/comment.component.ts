@@ -14,6 +14,9 @@ export class CommentComponent implements OnInit {
   foodControl = new FormControl();
   whatOrder = 0;
 
+
+
+
   filter = [
     { value: 'comments asc', description: 'comments asc'},
     { value: 'comments desc', description: 'comments desc'},
@@ -31,6 +34,27 @@ export class CommentComponent implements OnInit {
   constructor(private chartService: ChartService) { }
 
   ngOnInit() {
+     // for the accordion
+    let acc = document.getElementsByClassName('accordion');
+    // for the accordion
+
+
+    // for the accordion
+    for (let i = 0; i < acc.length; i ++) {
+      acc[i].addEventListener('click', function() {
+        this.classList.toggle('active');
+        /* Toggle between hiding and showing the active panel */
+
+        const panel = this.nextElementSibling;
+        if (panel.style.display === 'block') {
+            panel.style.display = 'none';
+        } else {
+            panel.style.display = 'block';
+        }
+      });
+    }
+    // for the accordion
+
     this.commentTable = dc.dataGrid('#commentSection');
     // subscribing to the crossfilter in the chart service
     // crossfilter is needed to view the comments which are selected in any chart
@@ -64,6 +88,7 @@ export class CommentComponent implements OnInit {
       .group(function (d) {
         return d.value;
       })
+
       .html((d) => {
         let html = '';
         html += '<div class="comment-wrap"><div class="comment-block"><div class="comment-song">' + d.artist + ' - ' + d.song + '</div>';
