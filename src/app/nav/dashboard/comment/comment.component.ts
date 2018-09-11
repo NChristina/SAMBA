@@ -34,26 +34,8 @@ export class CommentComponent implements OnInit {
   constructor(private chartService: ChartService) { }
 
   ngOnInit() {
-     // for the accordion
-    let acc = document.getElementsByClassName('accordion');
-    // for the accordion
 
 
-    // for the accordion
-    for (let i = 0; i < acc.length; i ++) {
-      acc[i].addEventListener('click', function() {
-        this.classList.toggle('active');
-        /* Toggle between hiding and showing the active panel */
-
-        const panel = this.nextElementSibling;
-        if (panel.style.display === 'block') {
-            panel.style.display = 'none';
-        } else {
-            panel.style.display = 'block';
-        }
-      });
-    }
-    // for the accordion
 
     this.commentTable = dc.dataGrid('#commentSection');
     // subscribing to the crossfilter in the chart service
@@ -66,6 +48,7 @@ export class CommentComponent implements OnInit {
     // subscribing to the data in the chart service
     this.chartService.GetData().subscribe((data) => {
       this.data = data;
+      console.log('SO SCHAUT DIE DATA AUUUUUS: ', data);
     });
   }
 
@@ -98,13 +81,34 @@ export class CommentComponent implements OnInit {
         html +=	'<p class="comment-text">' + d.text + '</p>';
         html += '<div class="bottom-comment">';
         html += '<div class="comment-date">' + d.likeCount;
-        html += ' <mdc-icon _ngcontent-c1="" mdclistitemmeta="" aria-hidden="true" class="material-icons ng-mdc-icon comment-thumb">';
-        html += 'thumb_up</mdc-icon> | ' + d.replyCount + ' ';
         html += '<mdc-icon _ngcontent-c1="" mdclistitemmeta="" aria-hidden="true" class="material-icons ng-mdc-icon comment-thumb">';
-        html += 'reply</mdc-icon></div>';
-        html += '';
-        html +=	'</div></div></div>';
+        html += 'thumb_up</mdc-icon> | <a style="text-decoration: none" href="#" class="accordion">' + d.replyCount + ' ';
+        html += '<mdc-icon _ngcontent-c1="" mdclistitemmeta="" aria-hidden="true" class="material-icons ng-mdc-icon comment-thumb">';
+        html += 'reply</mdc-icon> </a> <div class="panel" style="display: none;"><p>Lorem Ipsum...</p></div>';
+        html += ' ';
+        html +=	'</div></div>';
         return html;
+
+        /**
+         *
+         *
+<button class="accordion">Section 1</button>
+<div class="panel">
+  <p>Lorem ipsum...</p>
+</div>
+
+<button class="accordion">Section 2</button>
+<div class="panel">
+  <p>Lorem ipsum...</p>
+</div>
+
+<button class="accordion">Section 3</button>
+<div class="panel">
+  <p>Lorem ipsum...</p>
+</div>
+         *
+         *
+         */
       }) // orders the comments by likes
       .order(d3.ascending)
       .order((a, b) => {
@@ -131,6 +135,9 @@ export class CommentComponent implements OnInit {
       .renderLabel(false)
       .renderTitle(false);
     this.commentTable.render();
+    this.buildReplyAccordion();
+
+
   }
 
 
@@ -183,5 +190,24 @@ export class CommentComponent implements OnInit {
     const date = publishedDate.split('T')[0];
     const time = publishedDate.split('T')[1].split('.')[0];
     return date + ' ' + time;
+  }
+
+  buildReplyAccordion() {
+      // for the accordion ---> BEGINNING
+      let acc = document.getElementsByClassName('accordion');
+
+      for (let i = 0; i < acc.length; i ++) {
+        acc[i].addEventListener('click', function() {
+          this.classList.toggle('active');
+          /* Toggle between hiding and showing the active panel */
+
+          const panel = this.nextElementSibling;
+          if (panel.style.display === 'block') {
+              panel.style.display = 'none';
+          } else {
+              panel.style.display = 'block';
+          }
+        });
+      }
   }
 }
