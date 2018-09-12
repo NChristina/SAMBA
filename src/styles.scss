@@ -10,6 +10,9 @@ $mdc-theme-background: #fff;
     change it in mainvis.component.scss as well */
 $color-change-list: #a6cee3 #1f78b4 #b2df8a #33a02c #fb9a99 #e31a1c #ff0084 #ff7f00 #cab2d6;
 
+html {
+  overflow-y: hidden
+}
 body {
   font-family: Roboto, Arial, sans-serif;
   margin: 0;

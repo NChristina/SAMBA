@@ -1,15 +1,15 @@
 <div class="grid-container">
-  <mat-grid-list cols="3" rowHeight="300px">
+  <mat-grid-list cols="3" rowHeight="200px">
     <mat-grid-tile [colspan]="1" [rowspan]="2">
       <mat-card class="dashboard-card">
         <mat-card-content class="dashboard-card-content">
           <div>
-            <app-sentiment></app-sentiment>
-          </div>
+              <app-language></app-language>
+            </div>
         </mat-card-content>
       </mat-card>
     </mat-grid-tile>
-    <mat-grid-tile [colspan]="2" [rowspan]="2">
+    <mat-grid-tile [colspan]="2" [rowspan]="3">
       <mat-card class="dashboard-card comment-section">
         <mat-card-content class="dashboard-card-content">
           <div>
@@ -27,8 +27,8 @@
         </mat-card-content>
       </mat-card>
     </mat-grid-tile>
-    <mat-grid-tile [colspan]="2" [rowspan]="3">
-      <mat-card class="dashboard-card">
+    <mat-grid-tile [colspan]="2" [rowspan]="4">
+      <mat-card class="dashboard-card" style="overflow-y: scroll;">
         <mat-card-content class="dashboard-card-content">
           <div>
             <app-comment></app-comment>
@@ -36,11 +36,11 @@
         </mat-card-content>
       </mat-card>
     </mat-grid-tile>
-    <mat-grid-tile [colspan]="1" [rowspan]="2">
+    <mat-grid-tile [colspan]="1" [rowspan]="1">
       <mat-card class="dashboard-card">
         <mat-card-content class="dashboard-card-content">
           <div>
-            <app-language></app-language>
+              <app-sentiment></app-sentiment>
           </div>
         </mat-card-content>
       </mat-card>

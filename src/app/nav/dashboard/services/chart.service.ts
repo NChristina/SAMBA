@@ -38,6 +38,14 @@ export class ChartService {
     this.cfilterSource.next(filter);
   }
 
+  resetCrossfilter() {
+    // this.cfilterSource.next(null);
+    // Need to apply filter to all first
+    //  dc.filterAll();
+    //  // Then call remove
+    //  crossFilter.remove();
+  }
+
   // function, which is used to subscribe to the crossfilter
   getCrossfilter(): Observable<CrossFilter.CrossFilter<{}>> {
     return this.currentCfilter;

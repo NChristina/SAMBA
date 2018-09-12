@@ -32,6 +32,8 @@ export class MainvisComponent implements OnInit {
   private chartRange1;
   private chartRange2;
 
+  private initialValues;
+
   constructor(private chartService: ChartService) {}
 
   ngOnInit() {
@@ -45,7 +47,7 @@ export class MainvisComponent implements OnInit {
     // initialization of the chart by id = compositeChart
     this.compositeChart = dc.compositeChart('#compositeChart');
     // subscribing to crossfilter
-    this.chartService.getCrossfilter().subscribe(filter => {
+    this.initialValues = this.chartService.getCrossfilter().subscribe(filter => {
       this.cfilter = filter;
       this.setDimension();
       if (this.data !== undefined) {
@@ -145,7 +147,7 @@ export class MainvisComponent implements OnInit {
     //         .on('mouseout', rowtip.hide);
     // });
 
-    // sends data to the language chart component on brush-filtering
+    // sends data to the language chart component on brush-filtering //   VL HIER????
     this.compositeChart.on('filtered', (chart, filter) => {
       this.chartService.setChartRange({range: filter, chart: chart});
     });
@@ -264,7 +266,7 @@ export class MainvisComponent implements OnInit {
   }
 
   // converts the date for each mode (yearly, monthly, daily)
-  // this is importent to stack the comments
+  // this is important to stack the comments
   getDateStringByShowOption(date: string): string {
     switch (this.chartShowOption) {
       default:

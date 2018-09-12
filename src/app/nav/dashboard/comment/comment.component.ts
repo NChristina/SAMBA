@@ -71,7 +71,6 @@ export class CommentComponent implements OnInit {
       .group(function (d) {
         return d.value;
       })
-
       .html((d) => {
         let html = '';
         html += '<div class="comment-wrap"><div class="comment-block"><div class="comment-song">' + d.artist + ' - ' + d.song + '</div>';
@@ -82,7 +81,7 @@ export class CommentComponent implements OnInit {
         html += '<div class="bottom-comment">';
         html += '<div class="comment-date">' + d.likeCount;
         html += '<mdc-icon _ngcontent-c1="" mdclistitemmeta="" aria-hidden="true" class="material-icons ng-mdc-icon comment-thumb">';
-        html += 'thumb_up</mdc-icon> | <a style="text-decoration: none" href="#" class="accordion">' + d.replyCount + ' ';
+        html += 'thumb_up</mdc-icon> | <a style="text-decoration: none; cursor: pointer;" class="accordion">' + d.replyCount + ' ';
         html += '<mdc-icon _ngcontent-c1="" mdclistitemmeta="" aria-hidden="true" class="material-icons ng-mdc-icon comment-thumb">';
         html += 'reply</mdc-icon> </a> <div class="panel" style="display: none;"><p>Lorem Ipsum...</p></div>';
         html += ' ';
@@ -127,20 +126,14 @@ export class CommentComponent implements OnInit {
         } else if (this.whatOrder === 5) {
           return a.publishedAt < b.publishedAt ? -1 : 1;
         }
-
         // console.log('a datapoint: ', a, '; b datapoint: ', b);
       return a.replyCount > b.replyCount ? -1 : 1;
       })
-
       .renderLabel(false)
       .renderTitle(false);
     this.commentTable.render();
     this.buildReplyAccordion();
-
-
   }
-
-
 
   onSelectionChange(event: { index: any, value: any }) {
     // console.log(`onSelectionChange: ${event.value}`);
