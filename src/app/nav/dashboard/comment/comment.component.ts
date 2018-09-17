@@ -18,12 +18,12 @@ export class CommentComponent implements OnInit {
 
 
   filter = [
-    { value: 'comments asc', description: 'comments asc'},
-    { value: 'comments desc', description: 'comments desc'},
-    { value: 'likes asc', description: 'likes asc'},
-    { value: 'likes desc', description: 'likes desc'},
-    { value: 'date asc', description: 'date asc'},
-    { value: 'date desc', description: 'date desc' },
+    { value: 'comments asc', description: 'replies desc'},
+    { value: 'comments desc', description: 'replies asc'},
+    { value: 'likes asc', description: 'likes desc'},
+    { value: 'likes desc', description: 'likes asc'},
+    { value: 'date asc', description: 'date desc'},
+    { value: 'date desc', description: 'date asc' },
   ];
 
 
