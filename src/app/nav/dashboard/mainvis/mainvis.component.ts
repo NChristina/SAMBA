@@ -32,7 +32,10 @@ export class MainvisComponent implements OnInit {
   private chartRange1;
   private chartRange2;
 
+
   private initialValues;
+  // total comments
+  protected showTotalComments = false;
 
   constructor(private chartService: ChartService) {}
 
@@ -63,6 +66,11 @@ export class MainvisComponent implements OnInit {
         .key((d: any) => d.song_key)
         .key((d: any) => d.song)
         .entries(this.data);
+      console.log(this.songs);
+      if (this.showTotalComments) {
+        this.songs.push({ key: '-------', values: [{ key: 'Total Comments', values: this.data }]});
+      }
+      console.log(this.songs);
     });
   }
 
@@ -107,6 +115,9 @@ export class MainvisComponent implements OnInit {
       lineChart.group(group).renderDataPoints(true);
       charts.push(lineChart);
     });
+    if (this.showTotalComments) {
+      charts.push(dc.lineChart(this.compositeChart).group(this.dimension.group()).renderDataPoints(true));
+    }
     return charts;
   }
 
@@ -281,7 +292,6 @@ export class MainvisComponent implements OnInit {
         // return date;
         case 3:
         return (date.split('T')[0]); // daily
-
     }
   }
 }
