@@ -2,26 +2,34 @@
       <mdc-drawer #persistent drawer='persistent'>
         <mdc-drawer-spacer>
           <mdc-text-field #searchText [box]="false" formControlName="searchTitle" label="search for songs" maxlength="30" (change)="submitSearch(searchText.value)">
-            <mdc-icon class="search_icon" trailing #searchicon type="submit" [clickable]="true">search</mdc-icon>
+            <mdc-icon class="search_icon" trailing #searchicon  [clickable]="true">search</mdc-icon>
           </mdc-text-field>
         </mdc-drawer-spacer>
-        <mdc-list-group>
-          <mdc-list class="search-list" >
-            <!--List of search results-->
-            <mdc-list-item class="song_list_item" *ngFor="let match of searchMatchList; let i = index" (click)="checkbox1.toggle(); selectSong(i, checkbox1);">
-              <mdc-checkbox #checkbox1 mdcListItemGraphic (change)="selectSong(i, checkbox1)"></mdc-checkbox>
-              <mdc-list-item-text>{{match.displayName}}
-              <mdc-list-item-secondary>{{ match.data.comment.length }} Comments</mdc-list-item-secondary></mdc-list-item-text>
-              <a class="song_link" href="https://www.youtube.com/watch?v={{match.data.data[0].id}}" target="_blank" mdcListItemMeta>
 
-                <div class="tooltip">
-                    <mdc-icon mdcListItemMeta>link</mdc-icon>
-                  <span class="tooltiptext">link to video</span>
+          <div class="search-list list-group" >
+            <!--List of search results-->
+            <div class="song_list_item list-group-item list-group-item-action flex-column align-items-start" *ngFor="let match of searchMatchList; let i = index" > <!--(click)="checkbox1.toggle(); selectSong(i, checkbox1);"-->
+                  <div class="d-flex w-100 justify-content-between">
+                      <!-- <mdc-checkbox #checkbox1 mdcListItemGraphic (change)="selectSong(i, checkbox1)"></mdc-checkbox> -->
+                      <b class="mb-1">{{match.displayName}}</b>
+                      <div class="checkbox" #checkbox1 (change)="selectSong(i, checkbox1.value)">
+                          <label><input type="checkbox" value=""></label>
+                      </div>
+                  </div>
+                  <div class="d-flex w-100 justify-content-between">
+                      <small>{{ match.data.comment.length }} Comments</small>
+                      <a class="song_link" href="https://www.youtube.com/watch?v={{match.data.data[0].id}}" target="_blank">
+                        <mdc-icon mdcListItemMeta>link</mdc-icon>
+                        <div class="tooltip">
+                          <span class="tooltiptext">link to video</span>
+                        </div>
+                      </a>
+                  </div>
+
+
+
                 </div>
-              </a>
-            </mdc-list-item>
-          </mdc-list>
-        </mdc-list-group>
+          </div>
       </mdc-drawer>
       <div>
         <mdc-toolbar>

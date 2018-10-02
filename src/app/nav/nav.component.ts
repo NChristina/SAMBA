@@ -40,11 +40,11 @@ export class NavComponent implements OnInit {
   // is called when the user selects a song
   // it checks if the user has already selected the song
   // it also updates the data for all charts via the chartService
-  selectSong(index: number, checkbox: MdcCheckbox) {
-    if (checkbox.isChecked()) {
+  selectSong(index: number, checkbox: boolean) {
+    if (checkbox) {
       if (this.selectedList.length === 8) {
         const snackBar = this.snackbar.show('You can only pick 8 songs', 'OK', {});
-        checkbox.toggle();
+        // checkbox.toggle();
         return;
       }
       this.selectedList.push(this.searchMatchList[index].data);
