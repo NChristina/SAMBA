@@ -12,6 +12,8 @@ export class NavComponent implements OnInit {
   searchMatchList = [];
   // list with all selected 'songs'
   selectedList = [];
+  isSearching = false;
+
 
   constructor(private searcher: SearchService, private chartService: ChartService, private snackbar: MdcSnackbar) { }
 
@@ -20,11 +22,19 @@ export class NavComponent implements OnInit {
   }
   // is called when the user hits enter (searchBar)
   submitSearch(value: string) {
+    console.log('entered submitSearch in nav comp');
     this.searchMatchList = [];
-    // search service
-    this.searcher.search(value).subscribe((results) => {
-      this.searchMatchList = results;
+    this.isSearching = true;
+    this.searcher.searchFromDb(value).then((results) => {
+      console.log(results.body);
+      const list = [];
+      results.body.forEach(record => {
+        list.push({ displayName: record.data[0].snippet.title, data: record });
+      });
+      this.searchMatchList = list;
+      this.isSearching = false;
     });
+    console.log('this is the end of submitSearch');
   }
 
   // is called when the user selects a song
