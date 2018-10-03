@@ -43,7 +43,7 @@ router.get('/search/:value', function (req, res) {
     for version in VideoMetadata
     ` + filter + `
     sort to_number(version.statistics.commentCount) desc, to_number(version.statistics.viewCount) desc
-    let song = first(flatten(for r in 1 outbound version matched
+    let song = first(flatten(for r in Request filter r._id == version.request_id
         return (for s in 1 outbound r requestedAbout
             return s)
             ))
