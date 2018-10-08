@@ -16,10 +16,10 @@ export class SearchService {
   }
 
   // file search
-  searchFromFile(value: string, dataSelection: number): Observable<any[]> {
-    this.searchResultSource.next(this.searchSplitter(value));
-    return this.currentSearchResult;
-  }
+  // searchFromFile(value: string, dataSelection: number): Observable<any[]> {
+  //   this.searchResultSource.next(this.searchSplitter(value));
+  //   return this.currentSearchResult;
+  // }
 
   searchFromDb(value: string): Promise<any> {
     console.log('entered searchFromDb() in search.service.ts');
