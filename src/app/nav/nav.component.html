@@ -12,7 +12,7 @@
                   <div class="d-flex w-100 justify-content-between">
                       <!-- <mdc-checkbox #checkbox1 mdcListItemGraphic (change)="selectSong(i, checkbox1)"></mdc-checkbox> -->
                       <b class="mb-1">{{match.displayName}}</b>
-                      <div class="checkbox" #checkbox1 (change)="selectSong(i, checkbox1.value)">
+                      <div class="checkbox" #checkbox1 (change)="selectSong(i, $event)">
                           <label><input type="checkbox" value=""></label>
                       </div>
                   </div>
