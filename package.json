@@ -27,6 +27,7 @@
     "@material/floating-label": "^0.38.0",
     "@material/list": "^0.37.0",
     "@material/select": "^0.38.0",
+    "@ng-bootstrap/ng-bootstrap": "^3.3.1",
     "@types/crossfilter": "0.0.31",
     "@types/d3": "^5.0.0",
     "@types/dc": "0.0.28",

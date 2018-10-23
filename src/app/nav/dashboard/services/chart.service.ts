@@ -19,7 +19,7 @@ export class ChartService {
   constructor() {
     this.GetData().subscribe((data) => {
       this.changeCrossfilter(crossfilter(data));
-      console.log('this is the actual data from crossfilter: ', data);
+      // console.log('this is the actual data from crossfilter: ', data);
     });
   }
 
@@ -39,13 +39,7 @@ export class ChartService {
     this.cfilterSource.next(filter);
   }
 
-  resetCrossfilter() {
-    // this.cfilterSource.next(null);
-    // Need to apply filter to all first
-    //  dc.filterAll();
-    //  // Then call remove
-    //  crossFilter.remove();
-  }
+
 
   // function, which is used to subscribe to the crossfilter
   getCrossfilter(): Observable<CrossFilter.CrossFilter<{}>> {

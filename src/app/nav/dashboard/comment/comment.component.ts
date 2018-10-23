@@ -4,7 +4,7 @@ import * as crossfilter from 'crossfilter';
 import * as dc from 'dc';
 import { ChartService } from '../services/chart.service';
 import { FormControl } from '@angular/forms';
-import { ViewEncapsulation } from '@angular/core';
+// import { ViewEncapsulation } from '@angular/core';
 
 @Component({
   selector: 'app-comment',
@@ -40,22 +40,23 @@ export class CommentComponent implements OnInit {
 
 
     this.commentTable = dc.dataGrid('#commentSection');
+
     // subscribing to the crossfilter in the chart service
     // crossfilter is needed to view the comments which are selected in any chart
     this.chartService.getCrossfilter().subscribe((filter) => {
       this.cfilter = filter;
+      console.log('cfilter:', this.cfilter);
       this.setDimension();
       this.renderCommentTable();
     });
     // subscribing to the data in the chart service
-    this.chartService.GetData().subscribe((data) => {
-      this.data = data;
-      console.log('SO SCHAUT DIE DATA AUUUUUS: ', data);
-    });
-  }
-
-  onFilterChange(currentValue) {
-
+    // this.chartService.GetData().subscribe((data) => { SOLLTEN WIR ABER VERWENDEN FÜR DAS AUTOMATISCHE UPDATE
+    //   // this.data = data;
+    //   for (let i = 0; i < 10; i ++) {
+    //     this.data.push(data[i]);
+    //   }
+    //   console.log('SO SCHAUT DIE DATA AUUUUUS: ', data);
+    // });
   }
 
   // sets the dimension
@@ -68,6 +69,7 @@ export class CommentComponent implements OnInit {
   // renders the comment table and sets the design and look
   renderCommentTable() {
     const dateGroup = this.dimension.group();
+    console.log('dimension: ', this.dimension);
     this.commentTable
       .dimension(this.dimension)
       .group(function (d) {
@@ -91,25 +93,8 @@ export class CommentComponent implements OnInit {
         html +=	'</div></div></div></div></div>';
         return html;
 
-
-
-        // <div class="container">
-        // <div class="row">
-        //   <div class="col-sm-12">
-        //     <div class="panel panel-white post panel-shadow">
-        //       <div class="post-heading">
-        //         comment content
-        //         <div class="row">
-        //             <img src="../../../../assets/001-reply.svg" style ="height: 20px">
-        //             <img src="../../../../assets/002-like.svg" style ="height: 20px">
-        //         </div>
-
-
-        //       </div>
-        //     </div>
-        //   </div>
-        // </div>
       }) // orders the comments by likes
+      // .size(120)
       .order(d3.ascending)
       .order((a, b) => {
         // to decide after what critera the comments should be ordered
@@ -188,7 +173,7 @@ export class CommentComponent implements OnInit {
 
   buildReplyAccordion() {
       // for the accordion ---> BEGINNING
-      let acc = document.getElementsByClassName('accordion');
+      const acc = document.getElementsByClassName('accordion');
 
       for (let i = 0; i < acc.length; i ++) {
         acc[i].addEventListener('click', function() {
