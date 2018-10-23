@@ -4,11 +4,13 @@ import * as crossfilter from 'crossfilter';
 import * as dc from 'dc';
 import { ChartService } from '../services/chart.service';
 import { FormControl } from '@angular/forms';
+import { ViewEncapsulation } from '@angular/core';
 
 @Component({
   selector: 'app-comment',
   templateUrl: './comment.component.html',
-  styleUrls: ['./comment.component.scss']
+  styleUrls: ['./comment.component.scss'],
+  // encapsulation: ViewEncapsulation.None
 })
 export class CommentComponent implements OnInit {
   foodControl = new FormControl();
@@ -73,41 +75,40 @@ export class CommentComponent implements OnInit {
       })
       .html((d) => {
         let html = '';
-        html += '<div class="comment-wrap"><div class="comment-block"><div class="comment-song">' + d.artist + ' - ' + d.song + '</div>';
+        html += '<div class="container" style="box-shadow: rgba(0, 0, 0, 0.3) 7px 7px 7px; padding: 20px 20px 30px 20px;">';
+        html += '<div class="row"> <div class="col-sm-8"><div><div class="post-heading">';
         html += '<div class="comment-author">';
-        html += '<mdc-icon _ngcontent-c1="" mdclistitemmeta="" aria-hidden="true" class="material-icons ng-mdc-icon comment-thumb">';
-        html += 'account_circle</mdc-icon> ' + d.authorDisplayName + ' | ' + this.dateTimeParser(d.publishedAt) + '</div>';
-        html +=	'<p class="comment-text">' + d.text + '</p>';
-        html += '<div class="bottom-comment">';
-        html += '<div class="comment-date">' + d.likeCount;
-        html += '<mdc-icon _ngcontent-c1="" mdclistitemmeta="" aria-hidden="true" class="material-icons ng-mdc-icon comment-thumb">';
-        html += 'thumb_up</mdc-icon> | <a style="text-decoration: none; cursor: pointer;" class="accordion">' + d.replyCount + ' ';
-        html += '<mdc-icon _ngcontent-c1="" mdclistitemmeta="" aria-hidden="true" class="material-icons ng-mdc-icon comment-thumb">';
-        html += 'reply</mdc-icon> </a> <div class="panel" style="display: none;"><p>Lorem Ipsum...</p></div>';
+        html += '<img src="../../../../assets/user.svg" style ="height: 20px; margin: 0px 5px -5px 0px">';
+        html += d.authorDisplayName + ' | ' + this.dateTimeParser(d.publishedAt) + '<b style="float: right; margin-right: 30px;">';
+        html +=	d.artist + ' - ' + d.song + '</b></div><p class="comment-text">' + d.text + '</p></div></div>';
+        html += '<div class="bottom-comment" style="float: left; margin-left: 15px">';
+        html += d.likeCount;
+        html += '<img src="../../../../assets/002-like.svg" height="15px" "class="iconStyle" style="margin: 0px 5px 0px 5px">';
+        html += '| <a style="text-decoration: none; cursor: pointer;" class="accordion">' + d.replyCount + ' ';
+        html += '<img src="../../../../assets/001-reply.svg" height="15px" class="iconStyle" style="margin: 0px 5px 0px 5px">';
+        html += '</a> <div class="panelAc" style="display: none;"><p>Lorem Ipsum...</p></div>';
         html += ' ';
-        html +=	'</div></div>';
+        html +=	'</div></div></div></div></div>';
         return html;
 
-        /**
-         *
-         *
-<button class="accordion">Section 1</button>
-<div class="panel">
-  <p>Lorem ipsum...</p>
-</div>
 
-<button class="accordion">Section 2</button>
-<div class="panel">
-  <p>Lorem ipsum...</p>
-</div>
 
-<button class="accordion">Section 3</button>
-<div class="panel">
-  <p>Lorem ipsum...</p>
-</div>
-         *
-         *
-         */
+        // <div class="container">
+        // <div class="row">
+        //   <div class="col-sm-12">
+        //     <div class="panel panel-white post panel-shadow">
+        //       <div class="post-heading">
+        //         comment content
+        //         <div class="row">
+        //             <img src="../../../../assets/001-reply.svg" style ="height: 20px">
+        //             <img src="../../../../assets/002-like.svg" style ="height: 20px">
+        //         </div>
+
+
+        //       </div>
+        //     </div>
+        //   </div>
+        // </div>
       }) // orders the comments by likes
       .order(d3.ascending)
       .order((a, b) => {

@@ -19,6 +19,7 @@ export class ChartService {
   constructor() {
     this.GetData().subscribe((data) => {
       this.changeCrossfilter(crossfilter(data));
+      console.log('this is the actual data from crossfilter: ', data);
     });
   }
 
@@ -73,7 +74,7 @@ export class ChartService {
           analysis: comment.analysis,
           videoLikes: song.data[0].statistics.likeCount,
           videoDislikes: song.data[0].statistics.dislikeCount,
-          videoViews: song.data[0].statistics.viewCount
+          videoViews: song.data[0].statistics.viewCount,
         });
       });
     });
