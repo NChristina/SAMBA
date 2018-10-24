@@ -50,13 +50,13 @@ export class CommentComponent implements OnInit {
       this.renderCommentTable();
     });
     // subscribing to the data in the chart service
-    this.chartService.GetData().subscribe((data) => {
-      this.data = data;
-      //console.log('SO SCHAUT DIE DATA AUUUUUS: ', data);
-    });
-  }
-
-  onFilterChange(currentValue) {
+    // this.chartService.GetData().subscribe((data) => { SOLLTEN WIR ABER VERWENDEN FÜR DAS AUTOMATISCHE UPDATE
+    //   // this.data = data;
+    //   for (let i = 0; i < 10; i ++) {
+    //     this.data.push(data[i]);
+    //   }
+    //   console.log('SO SCHAUT DIE DATA AUUUUUS: ', data);
+    // });
   }
 
   // sets the dimension
