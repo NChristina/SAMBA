@@ -4,11 +4,13 @@ import * as crossfilter from 'crossfilter';
 import * as dc from 'dc';
 import { ChartService } from '../services/chart.service';
 import { FormControl } from '@angular/forms';
+// import { ViewEncapsulation } from '@angular/core';
 
 @Component({
   selector: 'app-comment',
   templateUrl: './comment.component.html',
-  styleUrls: ['./comment.component.scss']
+  styleUrls: ['./comment.component.scss'],
+  // encapsulation: ViewEncapsulation.None
 })
 export class CommentComponent implements OnInit {
   foodControl = new FormControl();
@@ -38,22 +40,23 @@ export class CommentComponent implements OnInit {
 
 
     this.commentTable = dc.dataGrid('#commentSection');
+
     // subscribing to the crossfilter in the chart service
     // crossfilter is needed to view the comments which are selected in any chart
     this.chartService.getCrossfilter().subscribe((filter) => {
       this.cfilter = filter;
+      console.log('cfilter:', this.cfilter);
       this.setDimension();
       this.renderCommentTable();
     });
     // subscribing to the data in the chart service
     this.chartService.GetData().subscribe((data) => {
       this.data = data;
-      console.log('SO SCHAUT DIE DATA AUUUUUS: ', data);
+      //console.log('SO SCHAUT DIE DATA AUUUUUS: ', data);
     });
   }
 
   onFilterChange(currentValue) {
-
   }
 
   // sets the dimension
@@ -66,6 +69,7 @@ export class CommentComponent implements OnInit {
   // renders the comment table and sets the design and look
   renderCommentTable() {
     const dateGroup = this.dimension.group();
+    console.log('dimension: ', this.dimension);
     this.commentTable
       .dimension(this.dimension)
       .group(function (d) {
@@ -73,22 +77,22 @@ export class CommentComponent implements OnInit {
       })
       .html((d) => {
         let html = '';
-        html += '<div class="comment-wrap"><div class="comment-block"><div class="comment-song">' + d.artist + ' - ' + d.song + '</div>';
+        html += '<div class="container" style="box-shadow: rgba(0, 0, 0, 0.3) 7px 7px 7px; padding: 20px 20px 30px 20px;">';
+        html += '<div class="row"> <div class="col-sm-8"><div><div class="post-heading">';
         html += '<div class="comment-author">';
-        html += '<mdc-icon _ngcontent-c1="" mdclistitemmeta="" aria-hidden="true" class="material-icons ng-mdc-icon comment-thumb">';
-        html += 'account_circle</mdc-icon> ' + d.authorDisplayName + ' | ' + this.dateTimeParser(d.publishedAt) + '</div>';
-        html +=	'<p class="comment-text">' + d.text + '</p>';
-        html += '<div class="bottom-comment">';
-        html += '<div class="comment-date">' + d.likeCount;
-        html += '<mdc-icon _ngcontent-c1="" mdclistitemmeta="" aria-hidden="true" class="material-icons ng-mdc-icon comment-thumb">';
-        html += 'thumb_up</mdc-icon> | <a style="text-decoration: none; cursor: pointer;" class="accordion">' + d.replyCount + ' ';
-        html += '<mdc-icon _ngcontent-c1="" mdclistitemmeta="" aria-hidden="true" class="material-icons ng-mdc-icon comment-thumb">';
-        html += 'reply</mdc-icon> </a> <div class="panel" style="display: none;"><p>Lorem Ipsum...</p></div>';
+        html += '<img src="../../../../assets/user.svg" style ="height: 20px; margin: 0px 5px -5px 0px">';
+        html += d.authorDisplayName + ' | ' + this.dateTimeParser(d.publishedAt) + '<b style="float: right; margin-right: 30px;">';
+        html +=	d.artist + ' - ' + d.song + '</b></div><p class="comment-text">' + d.text + '</p></div></div>';
+        html += '<div class="bottom-comment" style="float: left; margin-left: 15px">';
+        html += d.likeCount;
+        html += '<img src="../../../../assets/002-like.svg" height="15px" "class="iconStyle" style="margin: 0px 5px 0px 5px">';
+        html += '| <a style="text-decoration: none; cursor: pointer;" class="accordion">' + d.replyCount + ' ';
+        html += '<img src="../../../../assets/001-reply.svg" height="15px" class="iconStyle" style="margin: 0px 5px 0px 5px">';
+        html += '</a> | '+ this.getSentiment(d.analysis.sentiment)+'  <div class="panelAc" style="display: none;"><p>Lorem Ipsum...</p></div>';
         html += ' ';
-        html +=	'</div></div>';
+        html +=	'</div></div></div></div></div>';
         return html;
-
-        /**
+        /** 
          *
          *
 <button class="accordion">Section 1</button>
@@ -109,10 +113,11 @@ export class CommentComponent implements OnInit {
          *
          */
       }) // orders the comments by likes
+      // .size(120)
       .order(d3.ascending)
       .order((a, b) => {
         // to decide after what critera the comments should be ordered
-        console.log('I am rendering.');
+        //console.log('I am rendering.');
         if (this.whatOrder === 0) {
           return a.replyCount > b.replyCount ? -1 : 1;
         } else if (this.whatOrder === 1) {
@@ -178,6 +183,20 @@ export class CommentComponent implements OnInit {
     }
 
   }
+
+  // get sentiment
+  private getSentiment (sentiment: any) {
+    if(sentiment){
+      if(sentiment.mainSentiment >= 0.6) return 'Very Positive <mdc-icon _ngcontent-c1="" mdclistitemmeta="" aria-hidden="true" class="material-icons ng-mdc-icon comment-thumb">sentiment_satisfied_alt</mdc-icon>'
+      else if(sentiment.mainSentiment < 0.6 && sentiment.mainSentiment >= 0.2) return 'Positive <mdc-icon _ngcontent-c1="" mdclistitemmeta="" aria-hidden="true" class="material-icons ng-mdc-icon comment-thumb">sentiment_satisfied_alt</mdc-icon>'
+      else if(sentiment.mainSentiment < 0.2 && sentiment.mainSentiment > -0.2) return 'Neutral <mdc-icon _ngcontent-c1="" mdclistitemmeta="" aria-hidden="true" class="material-icons ng-mdc-icon comment-thumb">sentiment_satisfied</mdc-icon>'
+      else if(sentiment.mainSentiment <= -0.2 && sentiment.mainSentiment > -0.6) return 'Negative <mdc-icon _ngcontent-c1="" mdclistitemmeta="" aria-hidden="true" class="material-icons ng-mdc-icon comment-thumb">sentiment_very_dissatisfied</mdc-icon>'
+      else if(sentiment.mainSentiment <= -0.6) return 'Very Negative <mdc-icon _ngcontent-c1="" mdclistitemmeta="" aria-hidden="true" class="material-icons ng-mdc-icon comment-thumb">sentiment_very_dissatisfied</mdc-icon>'
+      else return "wat " + sentiment.mainSentiment;
+    } 
+    else return 'No Sentiment <mdc-icon _ngcontent-c1="" mdclistitemmeta="" aria-hidden="true" class="material-icons ng-mdc-icon comment-thumb">not_interested</mdc-icon>';
+  }
+
   // converts the published date into a viewable format (looks better :))
   private dateTimeParser (publishedDate: string) {
     const date = publishedDate.split('T')[0];
@@ -187,7 +206,7 @@ export class CommentComponent implements OnInit {
 
   buildReplyAccordion() {
       // for the accordion ---> BEGINNING
-      let acc = document.getElementsByClassName('accordion');
+      const acc = document.getElementsByClassName('accordion');
 
       for (let i = 0; i < acc.length; i ++) {
         acc[i].addEventListener('click', function() {

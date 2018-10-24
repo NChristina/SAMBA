@@ -19,6 +19,7 @@ export class ChartService {
   constructor() {
     this.GetData().subscribe((data) => {
       this.changeCrossfilter(crossfilter(data));
+      // console.log('this is the actual data from crossfilter: ', data);
     });
   }
 
@@ -38,13 +39,7 @@ export class ChartService {
     this.cfilterSource.next(filter);
   }
 
-  resetCrossfilter() {
-    // this.cfilterSource.next(null);
-    // Need to apply filter to all first
-    //  dc.filterAll();
-    //  // Then call remove
-    //  crossFilter.remove();
-  }
+
 
   // function, which is used to subscribe to the crossfilter
   getCrossfilter(): Observable<CrossFilter.CrossFilter<{}>> {
@@ -57,6 +52,7 @@ export class ChartService {
   // if something is missing just add it
   private dataStructure(data): any[] {
     const comments = [];
+
     data.forEach(song => {
       song.comment.forEach(comment => {
         comments.push({
@@ -73,7 +69,7 @@ export class ChartService {
           analysis: comment.analysis,
           videoLikes: song.data[0].statistics.likeCount,
           videoDislikes: song.data[0].statistics.dislikeCount,
-          videoViews: song.data[0].statistics.viewCount
+          videoViews: song.data[0].statistics.viewCount,
         });
       });
     });
