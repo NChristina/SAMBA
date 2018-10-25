@@ -45,7 +45,7 @@ export class CommentComponent implements OnInit {
     // crossfilter is needed to view the comments which are selected in any chart
     this.chartService.getCrossfilter().subscribe((filter) => {
       this.cfilter = filter;
-      console.log('cfilter:', this.cfilter);
+      //console.log('cfilter:', this.cfilter);
       this.setDimension();
       this.renderCommentTable();
     });
@@ -69,7 +69,7 @@ export class CommentComponent implements OnInit {
   // renders the comment table and sets the design and look
   renderCommentTable() {
     const dateGroup = this.dimension.group();
-    console.log('dimension: ', this.dimension);
+    //console.log('dimension: ', this.dimension);
     this.commentTable
       .dimension(this.dimension)
       .group(function (d) {
@@ -88,7 +88,7 @@ export class CommentComponent implements OnInit {
         html += ' <img src="../../../../assets/002-like.svg" height="13px" "class="iconStyle" style="margin: 0px 5px -1px 5px">';
         html += '| <a style="text-decoration: none; cursor: pointer;" class="accordion" id="replyCount_'+ d._key +'">' + d.replyCount + ' ';
         html += '<img src="../../../../assets/001-reply.svg" height="13px" class="iconStyle" style="margin: 0px 5px -1px 5px">';
-        html += '</a> | '+ this.getSentiment(d.analysis.sentiment)+'  <div class="panelAc" id="replyPanel_'+ d._key +'" style="display: none;"><p>Lorem Ipsum...</p></div>';
+        html += '</a> | '+ this.getSentiment(d.analysis.sentiment,"mean")+' | NLTK: '+ this.getSentiment(d.analysis.sentiment,"nltk")+' | TEXTBLOB: '+ this.getSentiment(d.analysis.sentiment,"blob")+' | AFINN: '+ this.getSentiment(d.analysis.sentiment,"afinn")+'  <div class="panelAc" id="replyPanel_'+ d._key +'" style="display: none;"><p>Lorem Ipsum...</p></div>';
         html += ' ';
         html +=	'</div></div></div></div>';
         return html;
@@ -185,17 +185,34 @@ export class CommentComponent implements OnInit {
   }
 
   // get sentiment
-  private getSentiment (sentiment: any) {
+  private getSentiment (sentiment: any, mode: string) {
     if(sentiment){
-      if(sentiment.mainSentiment >= 0.6) return 'Very Positive <img src="../../../../assets/007-verypos.svg" height="13px" "class="iconStyle" style="margin: 0px 5px -2px 5px">'
-      else if(sentiment.mainSentiment < 0.6 && sentiment.mainSentiment >= 0.2) return 'Positive <img src="../../../../assets/006-pos.svg" height="13px" "class="iconStyle" style="margin: 0px 5px -2px 5px">'
-      else if(sentiment.mainSentiment < 0.2 && sentiment.mainSentiment > -0.2) return 'Neutral <img src="../../../../assets/005-neu.svg" height="13px" "class="iconStyle" style="margin: 0px 5px -2px 5px">'
-      else if(sentiment.mainSentiment <= -0.2 && sentiment.mainSentiment > -0.6) return 'Negative <img src="../../../../assets/004-neg.svg" height="13px" "class="iconStyle" style="margin: 0px 5px -2px 5px">'
-      else if(sentiment.mainSentiment <= -0.6) return 'Very Negative <img src="../../../../assets/003-veryneg.svg" height="13px" "class="iconStyle" style="margin: 0px 5px -2px 5px">'
-      else return "wat " + sentiment.mainSentiment;
+      // checar inconsistencia: contar qts negativos e qts positivos. se os dois contadores forem maior que zero tem inconsistencia das brabas. imprimir inconsistencia ao inves da media.
+      if(mode == "main") return this.printSentiment(sentiment.mainSentiment, true);
+      else if(mode == "nltk") return this.printSentiment(sentiment.nltk.compound, false);
+      else if(mode == "afinn") return this.printSentiment(sentiment.afinn.normalized, false);
+      else if(mode == "blob") return this.printSentiment(sentiment.textBlob.polarity, false);
+      else if(mode == "mean") return this.printSentiment(((sentiment.nltk.compound + sentiment.afinn.normalized + sentiment.textBlob.polarity) / 3), true);
     } 
     else return 'No Sentiment <img src="../../../../assets/008-NA.svg" height="13px" "class="iconStyle" style="margin: 0px 5px -2px 5px">';
   }
+
+  // get sentiment
+  private printSentiment (sentValue: any, icon: boolean) {
+    let scoreValue = "";
+    let iconValue = "";
+
+    if(sentValue >= 0.5) { scoreValue = "Very Positive"; iconValue = "007-verypos.svg"; } 
+    else if(sentValue < 0.5 && sentValue > 0) { scoreValue = "Positive"; iconValue = "006-pos.svg"; }
+    else if(sentValue == 0) { scoreValue = "Neutral"; iconValue = "005-neu.svg"; } 
+    else if(sentValue < 0 && sentValue > -0.5) { scoreValue = "Negative"; iconValue = "004-neg.svg"; } 
+    else if(sentValue <= -0.5) { scoreValue = "Very Negative"; iconValue = "003-veryneg.svg"; } 
+    else return "wat " + sentValue;
+
+    if(icon) return scoreValue + '<img src="../../../../assets/'+ iconValue +'" height="13px" "class="iconStyle" style="margin: 0px 5px -2px 5px">';
+    else return scoreValue;
+  }
+
 
   // converts the published date into a viewable format (looks better :))
   private dateTimeParser (publishedDate: string) {

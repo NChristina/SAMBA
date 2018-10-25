@@ -52,7 +52,7 @@ export class ChartService {
   // if something is missing just add it
   private dataStructure(data): any[] {
     const comments = [];
-
+    
     data.forEach(song => {
       song.comment.forEach(comment => {
         comments.push({
@@ -73,6 +73,8 @@ export class ChartService {
         });
       });
     });
+
+    //console.log(data);
     // the comments have to be sorted for the charts
     comments.sort((a, b) => {
       return new Date(a.publishedAt) > new Date(b.publishedAt) ? -1 : 1;
