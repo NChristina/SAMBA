@@ -85,12 +85,12 @@ export class CommentComponent implements OnInit {
         html +=	d.artist + ' - ' + d.song + '</b></div><p class="comment-text">' + d.text + '</p></div></div>';
         html += '<div class="bottom-comment" style="float: left; margin-left: 15px">';
         html += d.likeCount;
-        html += '<img src="../../../../assets/002-like.svg" height="15px" "class="iconStyle" style="margin: 0px 5px 0px 5px">';
-        html += '| <a style="text-decoration: none; cursor: pointer;" class="accordion">' + d.replyCount + ' ';
-        html += '<img src="../../../../assets/001-reply.svg" height="15px" class="iconStyle" style="margin: 0px 5px 0px 5px">';
-        html += '</a> | '+ this.getSentiment(d.analysis.sentiment)+'  <div class="panelAc" style="display: none;"><p>Lorem Ipsum...</p></div>';
+        html += ' <img src="../../../../assets/002-like.svg" height="13px" "class="iconStyle" style="margin: 0px 5px -1px 5px">';
+        html += '| <a style="text-decoration: none; cursor: pointer;" class="accordion" id="replyCount_'+ d._key +'">' + d.replyCount + ' ';
+        html += '<img src="../../../../assets/001-reply.svg" height="13px" class="iconStyle" style="margin: 0px 5px -1px 5px">';
+        html += '</a> | '+ this.getSentiment(d.analysis.sentiment)+'  <div class="panelAc" id="replyPanel_'+ d._key +'" style="display: none;"><p>Lorem Ipsum...</p></div>';
         html += ' ';
-        html +=	'</div></div></div></div></div>';
+        html +=	'</div></div></div></div>';
         return html;
         /** 
          *
@@ -187,14 +187,14 @@ export class CommentComponent implements OnInit {
   // get sentiment
   private getSentiment (sentiment: any) {
     if(sentiment){
-      if(sentiment.mainSentiment >= 0.6) return 'Very Positive <mdc-icon _ngcontent-c1="" mdclistitemmeta="" aria-hidden="true" class="material-icons ng-mdc-icon comment-thumb">sentiment_satisfied_alt</mdc-icon>'
-      else if(sentiment.mainSentiment < 0.6 && sentiment.mainSentiment >= 0.2) return 'Positive <mdc-icon _ngcontent-c1="" mdclistitemmeta="" aria-hidden="true" class="material-icons ng-mdc-icon comment-thumb">sentiment_satisfied_alt</mdc-icon>'
-      else if(sentiment.mainSentiment < 0.2 && sentiment.mainSentiment > -0.2) return 'Neutral <mdc-icon _ngcontent-c1="" mdclistitemmeta="" aria-hidden="true" class="material-icons ng-mdc-icon comment-thumb">sentiment_satisfied</mdc-icon>'
-      else if(sentiment.mainSentiment <= -0.2 && sentiment.mainSentiment > -0.6) return 'Negative <mdc-icon _ngcontent-c1="" mdclistitemmeta="" aria-hidden="true" class="material-icons ng-mdc-icon comment-thumb">sentiment_very_dissatisfied</mdc-icon>'
-      else if(sentiment.mainSentiment <= -0.6) return 'Very Negative <mdc-icon _ngcontent-c1="" mdclistitemmeta="" aria-hidden="true" class="material-icons ng-mdc-icon comment-thumb">sentiment_very_dissatisfied</mdc-icon>'
+      if(sentiment.mainSentiment >= 0.6) return 'Very Positive <img src="../../../../assets/007-verypos.svg" height="13px" "class="iconStyle" style="margin: 0px 5px -2px 5px">'
+      else if(sentiment.mainSentiment < 0.6 && sentiment.mainSentiment >= 0.2) return 'Positive <img src="../../../../assets/006-pos.svg" height="13px" "class="iconStyle" style="margin: 0px 5px -2px 5px">'
+      else if(sentiment.mainSentiment < 0.2 && sentiment.mainSentiment > -0.2) return 'Neutral <img src="../../../../assets/005-neu.svg" height="13px" "class="iconStyle" style="margin: 0px 5px -2px 5px">'
+      else if(sentiment.mainSentiment <= -0.2 && sentiment.mainSentiment > -0.6) return 'Negative <img src="../../../../assets/004-neg.svg" height="13px" "class="iconStyle" style="margin: 0px 5px -2px 5px">'
+      else if(sentiment.mainSentiment <= -0.6) return 'Very Negative <img src="../../../../assets/003-veryneg.svg" height="13px" "class="iconStyle" style="margin: 0px 5px -2px 5px">'
       else return "wat " + sentiment.mainSentiment;
     } 
-    else return 'No Sentiment <mdc-icon _ngcontent-c1="" mdclistitemmeta="" aria-hidden="true" class="material-icons ng-mdc-icon comment-thumb">not_interested</mdc-icon>';
+    else return 'No Sentiment <img src="../../../../assets/008-NA.svg" height="13px" "class="iconStyle" style="margin: 0px 5px -2px 5px">';
   }
 
   // converts the published date into a viewable format (looks better :))
@@ -213,7 +213,8 @@ export class CommentComponent implements OnInit {
           this.classList.toggle('active');
           /* Toggle between hiding and showing the active panel */
 
-          const panel = this.nextElementSibling;
+          //const panel = this.nextElementSibling;
+          const panel = document.getElementById('replyPanel_' + (this.id.split('_')[1]));
           if (panel.style.display === 'block') {
               panel.style.display = 'none';
           } else {
