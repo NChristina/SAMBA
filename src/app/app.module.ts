@@ -37,6 +37,7 @@ import { CommentComponent } from './nav/dashboard/comment/comment.component';
 import { MainvisComponent } from './nav/dashboard/mainvis/mainvis.component';
 import { SentimentComponent } from './nav/dashboard/sentiment/sentiment.component';
 import { Ng5SliderModule } from 'ng5-slider';
+import { TopicComponent } from './nav/dashboard/topic/topic.component';
 
 @NgModule({
   declarations: [
@@ -48,6 +49,7 @@ import { Ng5SliderModule } from 'ng5-slider';
     CommentComponent,
     MainvisComponent,
     SentimentComponent,
+    TopicComponent,
   ],
   imports: [
     BrowserModule,

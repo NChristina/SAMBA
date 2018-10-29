@@ -197,7 +197,10 @@ export class CommentComponent implements OnInit {
         else return this.printSentiment(((sentiment.nltk.compound + sentiment.afinn.normalized + sentiment.textBlob.polarity) / 3), true);
       } 
     } 
-    else return 'No Sentiment <img src="../../../../assets/008-NA.svg" height="13px" "class="iconStyle" style="margin: 0px 5px -2px 5px">';
+    else{
+      if (mode == "main" || mode == "mean") return 'No Sentiment <img src="../../../../assets/008-NA.svg" height="13px" "class="iconStyle" style="margin: 0px 5px -2px 5px">';
+      else return 'No Sentiment ';
+    } 
   }
 
   // get sentiment
