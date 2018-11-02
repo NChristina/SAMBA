@@ -193,12 +193,12 @@ export class CommentComponent implements OnInit {
       else if(mode == "afinn") return this.printSentiment(sentiment.afinn.normalized, false);
       else if(mode == "blob") return this.printSentiment(sentiment.textBlob.polarity, false);
       else if(mode == "mean"){
-        if(this.isIconsistent([sentiment.nltk.compound,sentiment.textBlob.polarity,sentiment.afinn.normalized])) return 'Inconsistent Sentiment <img src="../../../../assets/009-warning.svg" height="13px" "class="iconStyle" style="margin: 0px 5px -2px 5px">';
+        if(this.isIconsistent([sentiment.nltk.compound,sentiment.textBlob.polarity,sentiment.afinn.normalized])) return 'Mixed<img src="../../../../assets/009-warning.svg" height="13px" "class="iconStyle" style="margin: 0px 5px -2px 5px">';
         else return this.printSentiment(((sentiment.nltk.compound + sentiment.afinn.normalized + sentiment.textBlob.polarity) / 3), true);
       } 
     } 
     else{
-      if (mode == "main" || mode == "mean") return 'No Sentiment <img src="../../../../assets/008-NA.svg" height="13px" "class="iconStyle" style="margin: 0px 5px -2px 5px">';
+      if (mode == "main" || mode == "mean") return 'No Sentiment<img src="../../../../assets/008-NA.svg" height="13px" "class="iconStyle" style="margin: 0px 5px -2px 5px">';
       else return 'No Sentiment ';
     } 
   }

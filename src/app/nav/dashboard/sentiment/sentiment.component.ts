@@ -54,27 +54,43 @@ export class SentimentComponent implements OnInit {
           }
         });
 
-        if(inList){
-          if(d.analysis.sentiment.mainSentiment > 0) sentSummAux[countedSongidx].countPositive++;
-          else if(d.analysis.sentiment.mainSentiment == 0) sentSummAux[countedSongidx].countNeutral++;
-          else if(d.analysis.sentiment.mainSentiment < 0) sentSummAux[countedSongidx].countNegative++;
-        }else{
-          if(d.analysis.sentiment.mainSentiment > 0) sentSummAux.push({ song: d.song, countPositive: 1, countNeutral: 0, countNegative: 0 });
-          else if(d.analysis.sentiment.mainSentiment == 0) sentSummAux.push({ song: d.song, countPositive: 0, countNeutral: 1, countNegative: 0 });
-          else if(d.analysis.sentiment.mainSentiment < 0) sentSummAux.push({ song: d.song, countPositive: 0, countNeutral: 0, countNegative: 1 });
-        } 
+        
+        if(this.isIconsistent([d.analysis.sentiment.nltk.compound,d.analysis.sentiment.textBlob.polarity,d.analysis.sentiment.afinn.normalized])){
+          if(inList) sentSummAux[countedSongidx].countMixed++;
+          else sentSummAux.push({ song: d.song, countPositive: 0, countNeutral: 0, countNegative: 0, countMixed: 1 });
+        }
+        else{
+          let sentPolarity = ((d.analysis.sentiment.nltk.compound + d.analysis.sentiment.afinn.normalized + d.analysis.sentiment.textBlob.polarity) / 3);
 
+          if(inList){
+            if(sentPolarity > 0) sentSummAux[countedSongidx].countPositive++;
+            else if(sentPolarity == 0) sentSummAux[countedSongidx].countNeutral++;
+            else if(sentPolarity < 0) sentSummAux[countedSongidx].countNegative++;
+          }else{
+            if(sentPolarity > 0) sentSummAux.push({ song: d.song, countPositive: 1, countNeutral: 0, countNegative: 0, countMixed: 0 });
+            else if(sentPolarity == 0) sentSummAux.push({ song: d.song, countPositive: 0, countNeutral: 1, countNegative: 0, countMixed: 0 });
+            else if(sentPolarity < 0) sentSummAux.push({ song: d.song, countPositive: 0, countNeutral: 0, countNegative: 1, countMixed: 0 });
+          } 
+        }
       }else{
         //console.log("No sentiment");
       } 
     });
 
     this.sentSumm = sentSummAux;
-  
-    /*sentSummAux.forEach((sent) => { 
-      sumsum = sent.countPositive + sent.countNeutral + sent.countNegative;
-      console.log(sent.song + " - Pos: " + sent.countPositive + " - Neu: " + sent.countNeutral + " - Neg: " + sent.countNegative + " - SUM: " + sumsum ); 
-    });*/
+  }
+
+  private isIconsistent (sentValues: any) {
+    let countPos = 0;
+    let countNeg = 0;
+
+    sentValues.forEach((value) => { 
+      if(value > 0) countPos++;
+      else if(value < 0) countNeg++;
+    });
+
+    if (countPos > 0 && countNeg > 0) return true;
+    else return false;
   }
 
   // sets the dimension based on the songs
@@ -98,11 +114,12 @@ export class SentimentComponent implements OnInit {
     });
 
     if(inList){
-      sumAll = this.sentSumm[countedSongidx].countPositive + this.sentSumm[countedSongidx].countNeutral + this.sentSumm[countedSongidx].countNegative;
+      sumAll = this.sentSumm[countedSongidx].countPositive + this.sentSumm[countedSongidx].countNeutral + this.sentSumm[countedSongidx].countNegative + this.sentSumm[countedSongidx].countMixed;
 
       if(sentiment == "Positive") groupedValue = (this.sentSumm[countedSongidx].countPositive * 100) / sumAll;
       else if(sentiment == "Neutral") groupedValue = (this.sentSumm[countedSongidx].countNeutral * 100) / sumAll;
       else if(sentiment == "Negative") groupedValue = (this.sentSumm[countedSongidx].countNegative * 100) / sumAll;
+      else if(sentiment == "Mixed") groupedValue = (this.sentSumm[countedSongidx].countMixed * 100) / sumAll;
       else console.log("Which sentiment??");
 
     } else {
@@ -129,7 +146,7 @@ export class SentimentComponent implements OnInit {
     this.sentimentChart
       .width(300)
       .height(200)
-      .ordinalColors(['#4daf4a','#cccccc','#ff7f00'])
+      .ordinalColors(['#4daf4a','#cccccc','#ff7f00','#984ea3'])
       .useViewBoxResizing(true)
       .dimension(this.dimension)
       .yAxisLabel('Sentiment (%)')
@@ -165,6 +182,18 @@ export class SentimentComponent implements OnInit {
       checklist.push({ song: d.song, value: value });
       return value;
     }), 'Negative');
+
+     // stacks the mixed sentiment
+     this.sentimentChart
+     .stack(this.dimension.group().reduceSum((d: any) => {
+       let returning = false;
+       const value = this.getGroupedSentiment(d.song,"Mixed");
+       
+       checklist.forEach((e) => { if (e.song === d.song && e.value === value) { returning = true; } });
+       if (returning) { return 0; }
+       checklist.push({ song: d.song, value: value });
+       return value;
+     }), 'Mixed');
       
     this.sentimentChart.margins().right = 80;
     this.sentimentChart.margins().left = 50;
