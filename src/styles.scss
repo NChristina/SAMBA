@@ -157,14 +157,17 @@ body {
 }
 
 
+#sentimentChart svg g .axis .tick text,
 #likeChart svg g .axis .tick text {
   visibility: hidden;
 }
 
+#sentimentChart svg g .axis .tick,
 #likeChart svg g .axis .tick {
   visibility: hidden;
 }
 
+#sentimentChart svg g .axis,
 #likeChart svg g .axis {
   visibility: hidden;
 }

@@ -19,27 +19,24 @@
                   <div class="d-flex w-100 justify-content-between">
                       <small>{{ match.data.comment.length }} Comments</small>
                       <a class="song_link" href="https://www.youtube.com/watch?v={{match.data.data[0].id}}" target="_blank">
-                        <span>link</span>
+                        <img height="18px" src="../../assets/002-unlink.svg">
                         <div class="tooltip">
-                          <span class="tooltiptext">link to video</span>
+                          <span class="tooltiptext">link to video test</span>
                         </div>
                       </a>
                   </div>
-
-
-
                 </div>
           </div>
       </mdc-drawer>
       <div>
         <mdc-toolbar>
           <mdc-toolbar-row>
-            <mdc-toolbar-section [alignStart]="true">
+            <mdc-toolbar-section [alignStart]="true" >
               <mdc-icon mdc-toolbar-menu-icon (click)="persistent.open()">menu</mdc-icon>
               <mdc-toolbar-title>Please select a song</mdc-toolbar-title>
             </mdc-toolbar-section>
             <mdc-toolbar-section [alignEnd]="true" [shrinkToFit]="true">
-              <img src="../../assets/Samba_Logo_rgb_transparent_cut.png" alt="samba logo" style="width:200px; margin-right: 15px;">
+              <img src="../../assets/Samba_Logo_rgb_transparent_cut.png" alt="samba logo" style="width:150px; margin-right: 15px;">
             </mdc-toolbar-section>
           </mdc-toolbar-row>
         </mdc-toolbar>
