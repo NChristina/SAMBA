@@ -54,7 +54,7 @@ export class CommentComponent implements OnInit {
   // sets the dimension
   setDimension() {
     this.dimension = this.cfilter.dimension((d: any) => {
-      console.log('was ist da drinnen:', d);
+      // console.log('was ist da drinnen:', d);
       return new Date(d.publishedAt.split('T')[0]);
     });
   }
@@ -62,7 +62,6 @@ export class CommentComponent implements OnInit {
   // renders the comment table and sets the design and look
   renderCommentTable() {
     const dateGroup = this.dimension.group();
-    //console.log('dimension: ', this.dimension);
     this.commentTable
       .dimension(this.dimension)
       .group(function (d) {
@@ -79,14 +78,23 @@ export class CommentComponent implements OnInit {
             </div>
           </div>
           <p class="comment-text">` + d.text + ` </p>
-          <div class="bottom-comment"  margin-left: 15px"> ` +
+          <div class="bottom-comment" style="float: left; margin-left: 15px"> ` +
             d.likeCount + `
             <img src="../../../../assets/002-like.svg" height="15px" "class="iconStyle" style="margin: 0px 5px 0px 5px"> |
-            <a style="text-decoration: none; cursor: pointer;" class="accordion"> ` +
+            <a style="text-decoration: none; cursor: pointer;" class="accordion" id="replyCount_` + d._key + `"> ` +
               d.replyCount + `
               <img src="../../../../assets/001-reply.svg" height="15px" class="iconStyle" style="margin: 0px 5px 0px 5px">
+            </a> |
+            <a style="text-decoration: none; cursor: pointer;" class="sentBttn" id="sentBttn_` + d._key + `">
+              ` + this.getSentiment(d.analysis.sentiment, 'mean') + `
             </a>
-          <div class="panelAc" style="display: none;">
+            <div class="pSt" id="pSt_` + d._key + `" style="display:none; background:#aaa; color:#fff; font-size:0.8em; padding:1px 5px;">
+              NLTK: ` + this.getSentiment(d.analysis.sentiment, 'nltk') +
+              ` | TextBlob: ` + this.getSentiment(d.analysis.sentiment, 'blob') +
+              ` | AFINN: ` + this.getSentiment(d.analysis.sentiment, 'afinn') + `
+            </div>
+          </div>
+          <div class="panelAc" id="replyPanel_` + d._key + `" style="display: none; margin-top: 40px;">
         `;
         d.replies.forEach( reply => {
           html += `
@@ -108,36 +116,16 @@ export class CommentComponent implements OnInit {
         html += `
             </div>
             </div>
-            </div>
 
           `;
         return html;
-        /**
-         *
-         *
-<button class="accordion">Section 1</button>
-<div class="panel">
-  <p>Lorem ipsum...</p>
-</div>
 
-<button class="accordion">Section 2</button>
-<div class="panel">
-  <p>Lorem ipsum...</p>
-</div>
-
-<button class="accordion">Section 3</button>
-<div class="panel">
-  <p>Lorem ipsum...</p>
-</div>
-         *
-         *
-         */
       }) // orders the comments by likes
       .size(500)
       .order(d3.ascending)
       .order((a, b) => {
         // to decide after what critera the comments should be ordered
-        //console.log('I am rendering.');
+        // console.log('I am rendering.');
         if (this.whatOrder === 0) {
           return a.replyCount > b.replyCount ? -1 : 1;
         } else if (this.whatOrder === 1) {
@@ -207,36 +195,59 @@ export class CommentComponent implements OnInit {
 
   // get sentiment
   private getSentiment (sentiment: any, mode: string) {
-    if(sentiment){
-      if(mode == "main") return this.printSentiment(sentiment.mainSentiment, true);
-      else if(mode == "nltk") return this.printSentiment(sentiment.nltk.compound, false);
-      else if(mode == "afinn") return this.printSentiment(sentiment.afinn.normalized, false);
-      else if(mode == "blob") return this.printSentiment(sentiment.textBlob.polarity, false);
-      else if(mode == "mean"){
-        if(this.isIconsistent([sentiment.nltk.compound,sentiment.textBlob.polarity,sentiment.afinn.normalized])) return 'Mixed<img src="../../../../assets/009-warning.svg" height="13px" "class="iconStyle" style="margin: 0px 5px -2px 5px">';
-        else return this.printSentiment(((sentiment.nltk.compound + sentiment.afinn.normalized + sentiment.textBlob.polarity) / 3), true);
+    if (sentiment) {
+      if (mode === 'main') {
+        return this.printSentiment(sentiment.mainSentiment, true);
+      } else if (mode === 'nltk') {
+        return this.printSentiment(sentiment.nltk.compound, false);
+      } else if (mode === 'afinn') {
+        return this.printSentiment(sentiment.afinn.normalized, false);
+      } else if (mode === 'blob') {
+        return this.printSentiment(sentiment.textBlob.polarity, false);
+      } else if (mode === 'mean') {
+        if (this.isIconsistent([sentiment.nltk.compound, sentiment.textBlob.polarity, sentiment.afinn.normalized])) {
+          const sValue = '<spam style="color:#984ea3">Mixed</spam>';
+          const iValue = '<img src="../../../../assets/009-warning.svg" height="13px" "class="iconStyle" style="margin: 0px 5px -2px 5px">';
+          return sValue + iValue;
+        } else {
+          return this.printSentiment(((sentiment.nltk.compound + sentiment.afinn.normalized + sentiment.textBlob.polarity) / 3), true);
+        }
       }
-    }
-    else{
-      if (mode == "main" || mode == "mean") return 'No Sentiment<img src="../../../../assets/008-NA.svg" height="13px" "class="iconStyle" style="margin: 0px 5px -2px 5px">';
-      else return 'No Sentiment ';
+    } else {
+      if (mode === 'main' || mode === 'mean') {
+        return 'No Sentiment<img src="../../../../assets/008-NA.svg" height="13px" "class="iconStyle" style="margin: 0px 5px -2px 5px">';
+      } else {
+        return 'No Sentiment ';
+      }
     }
   }
 
   // get sentiment
   private printSentiment (sentValue: any, icon: boolean) {
-    let scoreValue = "";
-    let iconValue = "";
+    let scoreValue = '';
+    let iconValue = '';
+    let iconColor = '#a9a9a9';
 
-    if(sentValue >= 0.5) { scoreValue = "Very Positive"; iconValue = "007-verypos.svg"; }
-    else if(sentValue < 0.5 && sentValue > 0) { scoreValue = "Positive"; iconValue = "006-pos.svg"; }
-    else if(sentValue == 0) { scoreValue = "Neutral"; iconValue = "005-neu.svg"; }
-    else if(sentValue < 0 && sentValue > -0.5) { scoreValue = "Negative"; iconValue = "004-neg.svg"; }
-    else if(sentValue <= -0.5) { scoreValue = "Very Negative"; iconValue = "003-veryneg.svg"; }
-    else return "NaN (" + sentValue + ")";
+    if (sentValue >= 0.5) {
+      scoreValue = 'Very Positive'; iconValue = '007-verypos.svg'; iconColor = '#4daf4a';
+    } else if (sentValue < 0.5 && sentValue > 0) {
+      scoreValue = 'Positive'; iconValue = '006-pos.svg'; iconColor = '#4daf4a';
+    } else if (sentValue === 0) {
+      scoreValue = 'Neutral'; iconValue = '005-neu.svg'; iconColor = '#666666';
+    } else if (sentValue < 0 && sentValue > -0.5) {
+      scoreValue = 'Negative'; iconValue = '004-neg.svg'; iconColor = '#ff7f00';
+    } else if (sentValue <= -0.5) {
+      scoreValue = 'Very Negative'; iconValue = '003-veryneg.svg'; iconColor = '#ff7f00';
+    } else {
+      return 'NaN (' + sentValue + ')';
+    }
 
-    if(icon) return scoreValue + '<img src="../../../../assets/'+ iconValue +'" height="13px" "class="iconStyle" style="margin: 0px 5px -2px 5px">';
-    else return scoreValue;
+    if (icon) {
+      const iconhtml = '<img src="../../../../assets/' + iconValue + '" height="13px" "class="iconStyle" style="margin: 0px 5px -2px 5px">';
+      return '<spam style="color:' + iconColor + '">' + scoreValue + '</spam>' + iconhtml;
+    } else {
+      return scoreValue;
+    }
   }
 
   private isIconsistent (sentValues: any) {
@@ -244,12 +255,18 @@ export class CommentComponent implements OnInit {
     let countNeg = 0;
 
     sentValues.forEach((value) => {
-      if(value > 0) countPos++;
-      else if(value < 0) countNeg++;
+      if (value > 0) {
+        countPos++;
+      } else if (value < 0) {
+        countNeg++;
+      }
     });
 
-    if (countPos > 0 && countNeg > 0) return true;
-    else return false;
+    if (countPos > 0 && countNeg > 0) {
+      return true;
+    } else {
+      return false;
+    }
   }
 
   // converts the published date into a viewable format (looks better :))
@@ -263,7 +280,7 @@ export class CommentComponent implements OnInit {
     const sentBttn = document.getElementsByClassName('sentBttn');
     for (let i = 0; i < sentBttn.length; i++) {
       sentBttn[i].addEventListener('click', function() {
-        const box = document.getElementById('panelSent_' + (this.id.split('_')[1]));
+        const box = document.getElementById('pSt_' + (this.id.split('sentBttn_')[1]));
         if (box.style.display === 'inline') {
             box.style.display = 'none';
         } else {
@@ -282,8 +299,8 @@ export class CommentComponent implements OnInit {
           this.classList.toggle('active');
           /* Toggle between hiding and showing the active panel */
 
-          const panel = this.nextElementSibling;
-         //  const panel = document.getElementById('replyPanel_' + (this.id.split('_')[1]));
+          // const panel = this.nextElementSibling;
+          const panel = document.getElementById('replyPanel_' + (this.id.split('replyCount_')[1]));
           if (panel.style.display === 'block') {
               panel.style.display = 'none';
           } else {
