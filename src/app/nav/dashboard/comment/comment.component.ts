@@ -112,7 +112,7 @@ export class CommentComponent implements OnInit {
 
           `;
         return html;
-        /** 
+        /**
          *
          *
 <button class="accordion">Section 1</button>
@@ -208,19 +208,19 @@ export class CommentComponent implements OnInit {
   // get sentiment
   private getSentiment (sentiment: any, mode: string) {
     if(sentiment){
-      if(mode == "main") return this.printSentiment(sentiment.mainSentiment, true); 
+      if(mode == "main") return this.printSentiment(sentiment.mainSentiment, true);
       else if(mode == "nltk") return this.printSentiment(sentiment.nltk.compound, false);
       else if(mode == "afinn") return this.printSentiment(sentiment.afinn.normalized, false);
       else if(mode == "blob") return this.printSentiment(sentiment.textBlob.polarity, false);
       else if(mode == "mean"){
         if(this.isIconsistent([sentiment.nltk.compound,sentiment.textBlob.polarity,sentiment.afinn.normalized])) return 'Mixed<img src="../../../../assets/009-warning.svg" height="13px" "class="iconStyle" style="margin: 0px 5px -2px 5px">';
         else return this.printSentiment(((sentiment.nltk.compound + sentiment.afinn.normalized + sentiment.textBlob.polarity) / 3), true);
-      } 
-    } 
+      }
+    }
     else{
       if (mode == "main" || mode == "mean") return 'No Sentiment<img src="../../../../assets/008-NA.svg" height="13px" "class="iconStyle" style="margin: 0px 5px -2px 5px">';
       else return 'No Sentiment ';
-    } 
+    }
   }
 
   // get sentiment
@@ -228,11 +228,11 @@ export class CommentComponent implements OnInit {
     let scoreValue = "";
     let iconValue = "";
 
-    if(sentValue >= 0.5) { scoreValue = "Very Positive"; iconValue = "007-verypos.svg"; } 
+    if(sentValue >= 0.5) { scoreValue = "Very Positive"; iconValue = "007-verypos.svg"; }
     else if(sentValue < 0.5 && sentValue > 0) { scoreValue = "Positive"; iconValue = "006-pos.svg"; }
-    else if(sentValue == 0) { scoreValue = "Neutral"; iconValue = "005-neu.svg"; } 
-    else if(sentValue < 0 && sentValue > -0.5) { scoreValue = "Negative"; iconValue = "004-neg.svg"; } 
-    else if(sentValue <= -0.5) { scoreValue = "Very Negative"; iconValue = "003-veryneg.svg"; } 
+    else if(sentValue == 0) { scoreValue = "Neutral"; iconValue = "005-neu.svg"; }
+    else if(sentValue < 0 && sentValue > -0.5) { scoreValue = "Negative"; iconValue = "004-neg.svg"; }
+    else if(sentValue <= -0.5) { scoreValue = "Very Negative"; iconValue = "003-veryneg.svg"; }
     else return "NaN (" + sentValue + ")";
 
     if(icon) return scoreValue + '<img src="../../../../assets/'+ iconValue +'" height="13px" "class="iconStyle" style="margin: 0px 5px -2px 5px">';
@@ -243,7 +243,7 @@ export class CommentComponent implements OnInit {
     let countPos = 0;
     let countNeg = 0;
 
-    sentValues.forEach((value) => { 
+    sentValues.forEach((value) => {
       if(value > 0) countPos++;
       else if(value < 0) countNeg++;
     });
@@ -282,8 +282,8 @@ export class CommentComponent implements OnInit {
           this.classList.toggle('active');
           /* Toggle between hiding and showing the active panel */
 
-          //const panel = this.nextElementSibling;
-          const panel = document.getElementById('replyPanel_' + (this.id.split('_')[1]));
+          const panel = this.nextElementSibling;
+         //  const panel = document.getElementById('replyPanel_' + (this.id.split('_')[1]));
           if (panel.style.display === 'block') {
               panel.style.display = 'none';
           } else {
