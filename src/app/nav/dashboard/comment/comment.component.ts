@@ -82,8 +82,10 @@ export class CommentComponent implements OnInit {
             d.likeCount + `
             <img src="../../../../assets/002-like.svg" height="15px" "class="iconStyle" style="margin: 0px 5px 0px 5px"> |
             <a style="text-decoration: none; cursor: pointer;" class="accordion" id="replyCount_` + d._key + `"> ` +
-              d.replyCount + `
+              d.replies.length + `
               <img src="../../../../assets/001-reply.svg" height="15px" class="iconStyle" style="margin: 0px 5px 0px 5px">
+              <img src="../../../../assets/010-down.svg" height="15px" id="iDown_` + d._key + `" style="display:inline;margin: 0px 3px">
+              <img src="../../../../assets/010-up.svg" height="15px" id="iUp_` + d._key + `" style="display:none;margin: 0px 3px">
             </a> |
             <a style="text-decoration: none; cursor: pointer;" class="sentBttn" id="sentBttn_` + d._key + `">
               ` + this.getSentiment(d.analysis.sentiment, 'mean') + `
@@ -96,6 +98,7 @@ export class CommentComponent implements OnInit {
           </div>
           <div class="panelAc" id="replyPanel_` + d._key + `" style="display: none; margin-top: 40px;">
         `;
+
         d.replies.forEach( reply => {
           html += `
               <hr>
@@ -226,14 +229,14 @@ export class CommentComponent implements OnInit {
   private printSentiment (sentValue: any, icon: boolean) {
     let scoreValue = '';
     let iconValue = '';
-    let iconColor = '#a9a9a9';
+    let iconColor = '#888888';
 
     if (sentValue >= 0.5) {
       scoreValue = 'Very Positive'; iconValue = '007-verypos.svg'; iconColor = '#4daf4a';
     } else if (sentValue < 0.5 && sentValue > 0) {
       scoreValue = 'Positive'; iconValue = '006-pos.svg'; iconColor = '#4daf4a';
     } else if (sentValue === 0) {
-      scoreValue = 'Neutral'; iconValue = '005-neu.svg'; iconColor = '#666666';
+      scoreValue = 'Neutral'; iconValue = '005-neu.svg'; iconColor = '#CCCCCC';
     } else if (sentValue < 0 && sentValue > -0.5) {
       scoreValue = 'Negative'; iconValue = '004-neg.svg'; iconColor = '#ff7f00';
     } else if (sentValue <= -0.5) {
@@ -301,10 +304,16 @@ export class CommentComponent implements OnInit {
 
           // const panel = this.nextElementSibling;
           const panel = document.getElementById('replyPanel_' + (this.id.split('replyCount_')[1]));
+          const up = document.getElementById('iUp_' + (this.id.split('replyCount_')[1]));
+          const down = document.getElementById('iDown_' + (this.id.split('replyCount_')[1]));
           if (panel.style.display === 'block') {
               panel.style.display = 'none';
+              up.style.display = 'none';
+              down.style.display = 'inline';
           } else {
               panel.style.display = 'block';
+              up.style.display = 'inline';
+              down.style.display = 'none';
           }
         });
       }

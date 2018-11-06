@@ -94,3 +94,18 @@
 .tooltip:hover .tooltiptext {
   visibility: visible;
 }
+
+#searchFeedback{
+  margin: 0px auto;
+}
+
+#searchFeedback img{
+  display: none;
+  margin: 30px auto;
+}
+
+#searchFeedback p{
+  color: #666666;
+  display: none;
+  margin: 30px auto;
+}

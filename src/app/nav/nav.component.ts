@@ -22,11 +22,19 @@ export class NavComponent implements OnInit {
   }
   // is called when the user hits enter (searchBar)
   submitSearch(value: string) {
-    console.log('entered submitSearch in nav comp');
+    // Entered submitSearch in nav comp
+    document.getElementById('sFtext').style.display = 'none'; // Remove any alert
+    document.getElementById('sFimg').style.display = 'block'; // Spinner ON
+
     this.searchMatchList = [];
     this.isSearching = true;
-    this.searcher.searchFromDb(value).then((results) => {
-      console.log(results.body);
+    this.searcher.searchFromDb(value.trim()).then((results) => {
+      document.getElementById('sFimg').style.display = 'none'; // Spinner OFF
+      if (results.body.length === 0) {
+        document.getElementById('sFtext').style.display = 'block'; // Display alert
+      }
+
+      // console.log('result::' + results.body);
       const list = [];
       results.body.forEach(record => {
         list.push({ displayName: record.data[0].snippet.title, data: record });
