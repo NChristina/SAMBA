@@ -72,9 +72,14 @@ export class CommentComponent implements OnInit {
         <div style="box-shadow: rgba(0, 0, 0, 0.3) 7px 7px 7px; padding: 20px 5px 30px 5px">
           <div class="post-heading">
             <div class="comment-author">
-              <img src="../../../../assets/user.svg" style ="height: 20px; margin: 0px 5px -5px 0px"> `
-              + d.authorDisplayName + ` | ` + this.dateTimeParser(d.publishedAt) + `
-              <b style="float: right; margin-right: 30px;"> ` + d.artist + ` - ` + d.song + `</b>
+              <img src="../../../../assets/user.svg" style ="height: 20px; margin: 0px 5px -5px 0px"> ` + d.authorDisplayName +
+              ` | <a href="https://www.youtube.com/watch?v=` + d.video_key + `&lc=` + d._key +
+              `" style="text-decoration:none; color:#acb4c2" target="_blank">
+              ` + this.dateTimeParser(d.publishedAt) + `
+              <a href="https://www.youtube.com/watch?v=` + d.video_key +
+              `" style="float:right; margin-right:30px; font-weight:bold; text-decoration:none; color:#acb4c2" target="_blank">
+                ` + d.artist + ` - ` + d.song + `
+              </a>
             </div>
           </div>
           <p class="comment-text">` + d.text + ` </p>
@@ -229,14 +234,14 @@ export class CommentComponent implements OnInit {
   private printSentiment (sentValue: any, icon: boolean) {
     let scoreValue = '';
     let iconValue = '';
-    let iconColor = '#888888';
+    let iconColor = '#999999';
 
     if (sentValue >= 0.5) {
       scoreValue = 'Very Positive'; iconValue = '007-verypos.svg'; iconColor = '#4daf4a';
     } else if (sentValue < 0.5 && sentValue > 0) {
       scoreValue = 'Positive'; iconValue = '006-pos.svg'; iconColor = '#4daf4a';
     } else if (sentValue === 0) {
-      scoreValue = 'Neutral'; iconValue = '005-neu.svg'; iconColor = '#CCCCCC';
+      scoreValue = 'Neutral'; iconValue = '005-neu.svg'; iconColor = '#666666';
     } else if (sentValue < 0 && sentValue > -0.5) {
       scoreValue = 'Negative'; iconValue = '004-neg.svg'; iconColor = '#ff7f00';
     } else if (sentValue <= -0.5) {

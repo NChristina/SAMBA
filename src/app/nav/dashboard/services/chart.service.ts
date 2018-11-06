@@ -59,7 +59,6 @@ export class ChartService {
         repliesArray = [];
         song.reply.forEach(reply => {
           if (reply.snippet.parentId === comment._key) {
-
             repliesArray.push(reply);
           }
         });
@@ -75,6 +74,7 @@ export class ChartService {
           song_id: song.song._id,
           artist: song.artist[0].name,
           analysis: comment.analysis,
+          video_key: song.data[0]._key,
           videoLikes: song.data[0].statistics.likeCount,
           videoDislikes: song.data[0].statistics.dislikeCount,
           videoViews: song.data[0].statistics.viewCount,
