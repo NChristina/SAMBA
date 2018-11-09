@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { SearchService } from './services/search.service';
 import { MdcCheckbox, MdcSnackbar } from '@angular-mdc/web';
 import { ChartService } from './dashboard/services/chart.service';
+import { FormGroup, FormControl } from '@angular/forms';
 @Component({
   selector: 'app-nav',
   templateUrl: './nav.component.html',
@@ -12,13 +13,16 @@ export class NavComponent implements OnInit {
   searchMatchList = [];
   // list with all selected 'songs'
   selectedList = [];
+  searchFormGroup: FormGroup;
   isSearching = false;
 
 
   constructor(private searcher: SearchService, private chartService: ChartService, private snackbar: MdcSnackbar) { }
 
   ngOnInit() {
-
+    this.searchFormGroup = new FormGroup({
+      searchTitle: new FormControl()
+    });
   }
   // is called when the user hits enter (searchBar)
   submitSearch(value: string) {

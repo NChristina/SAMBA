@@ -1,7 +1,23 @@
 <div class="grid-container">
-  <mat-grid-list cols="1" rowHeight="40px">
+  <mat-grid-list cols="3" rowHeight="40px">
+    <mat-grid-tile>
+      <h2>Hardfacts</h2>
+    </mat-grid-tile>
+    <mat-grid-tile>
+      <div style="display: block;" *ngIf="renderedChart">
+        <div style="display: flex;">
+            <div class="legendBox"></div>
+            <span>Likes</span>
+        </div>
+        <div style="display: flex;" *ngIf="renderedChart">
+          <div class="legendBox2"></div>
+          <span>Dislikes</span>
+        </div>
+      </div>
+    </mat-grid-tile>
+    <mat-grid-tile>
       <img height="24px" title="Absolute number of likes, views, and comments per song selected." style="float:right" src="../../assets/000-info.svg">
-      <h2>Hardfacts</h2>        
+    </mat-grid-tile>
   </mat-grid-list>
 </div>
 <hr /><br />

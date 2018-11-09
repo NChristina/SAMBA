@@ -1,26 +1,25 @@
 .maxSize {
-  max-width: 350px;
-  max-height: 250px;
+    max-width: 350px;
+    max-height: 250px;
 }
 
-
 .fab_button {
-  overflow: visible;
-  height: 35px;
-  width: fit-content;
-  padding: 5px;
-  margin: auto;
-  margin-top: -30px;
+    overflow: visible;
+    height: 35px;
+    width: fit-content;
+    padding: 5px;
+    margin: auto;
+    margin-top: -30px;
 }
 
 .tooltip_text {
-  visibility: hidden;
-  opacity: 0.7;
-  width: 300px;
-  height: fit-content;
-  background-color: #234;
-  color: white;
-  border-radius: 6px;
+    visibility: hidden;
+    opacity: 0.7;
+    width: 300px;
+    height: fit-content;
+    background-color: #234;
+    color: white;
+    border-radius: 6px;
     padding: 5px 5px;
     position: absolute;
     z-index: 1;
@@ -33,66 +32,85 @@
 }
 
 .tooltip_text table {
-  width: 100%;
+    width: 100%;
 }
 
 .fab_button .tooltip_text::after {
-  content: "";
-  position: absolute;
-  top: 100%;
-  /*right: 100%;*/
-  margin-left: -5px;
-  border-width: 5px;
-  border-style: solid;
-  border-color: #555 transparent transparent transparent;
+    content: "";
+    position: absolute;
+    top: 100%;
+    /*right: 100%;*/
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: #555 transparent transparent transparent;
 }
 
 .fab_button:hover .tooltip_text {
-  visibility: visible;
-  opacity: 1;
+    visibility: visible;
+    opacity: 1;
 }
 
 .view_tr {
-  width: 100%;
-  border-width: 2px;
-  border-style: solid;
-  border-color: #fff;
+    width: 100%;
+    border-width: 2px;
+    border-style: solid;
+    border-color: #fff;
 }
 
 .view_tr td {
-  font-size: 8pt;
-  border-width: 1px;
-  border-style: solid;
-  border-color: transparent transparent white transparent;
+    font-size: 8pt;
+    border-width: 1px;
+    border-style: solid;
+    border-color: transparent transparent white transparent;
 }
 
 .song_line {
-  width: 100%;
-  height: 10px;
+    width: 100%;
+    height: 10px;
 }
 
 .song_head_line {
-  width: 100%;
-  font-size: 9pt;
-  color: #cecece;
+    width: 100%;
+    font-size: 9pt;
+    color: #cecece;
 }
 
 .thumb_icon {
-  font-size: 12pt;
-  margin-left: 2px;
-  color: #acb4c2;
+    font-size: 12pt;
+    margin-left: 2px;
+    color: #acb4c2;
 }
 
 .progress_bar {
-  width: 70px;
+    width: 70px;
 }
 
 .tile_header {
-  text-align: left;
-  font-size: 9pt;
-  color: #acb4c2;
+    text-align: left;
+    font-size: 9pt;
+    color: #acb4c2;
 }
 
-.wrapper{
-  text-align: center;
+.wrapper {
+    text-align: center;
+}
+
+.barLabel {
+    font-size: 0.7em;
+    cursor: default;
+}
+
+.legendBox {
+    height: 10px;
+    width: 10px;
+    background-color: red;
+    margin-right: 5px;
+}
+
+.legendBox2 {
+    height: 10px;
+    width: 10px;
+    background-color: blue;
+    margin-right: 5px;
 }

@@ -1,4 +1,4 @@
-import { Component, OnInit, ElementRef } from '@angular/core';
+import { Component, OnInit, ElementRef, ViewEncapsulation } from '@angular/core';
 import { ChartService } from '../services/chart.service';
 import * as d3 from 'd3';
 import * as crossfilter from 'crossfilter';
@@ -7,13 +7,15 @@ import * as dc from 'dc';
 @Component({
   selector: 'app-hardfacts',
   templateUrl: './hardfacts.component.html',
-  styleUrls: ['./hardfacts.component.scss']
+  styleUrls: ['./hardfacts.component.scss'],
+  encapsulation: ViewEncapsulation.None
 })
 export class HardfactsComponent implements OnInit {
   data: any[];
   likeChart: dc.BarChart;
   dimension: CrossFilter.Dimension<{}, number>;
   cfilter: CrossFilter.CrossFilter<{}>;
+  renderedChart: boolean;
 
   constructor(private chartService: ChartService, private _element: ElementRef) { }
 
@@ -30,6 +32,8 @@ export class HardfactsComponent implements OnInit {
         this.renderChart();
       }
     });
+
+    this.renderedChart = false;
   }
 
   // sets the dimension based on the songs
@@ -39,7 +43,7 @@ export class HardfactsComponent implements OnInit {
     });
   }
   // used to set the domain
-  getMaxLikesAndDislikes () {
+  getMaxLikesAndDislikes() {
     let m = 0;
     this.data.forEach((d) => {
       const n = parseInt(d.videoLikes, 10) + parseInt(d.videoDislikes, 10);
@@ -73,17 +77,18 @@ export class HardfactsComponent implements OnInit {
       .useViewBoxResizing(true)
       .dimension(this.dimension)
       .yAxisLabel('Likes / Dislikes')
-      .ordinalColors(['#377eb8','#e41a1c'])
+      .ordinalColors(['#377eb8', '#e41a1c'])
       .x(d3.scaleBand())
       .y(d3.scaleLog().clamp(true).domain([1, this.getMaxLikesAndDislikes()]))
       .xUnits(dc.units.ordinal)
-      .brushOn(false)
+      // .brushOn(false)
       .controlsUseVisibility(true)
       .barPadding(0.1)
-      .outerPadding(0.05)
+      .clipPadding(100)
+      // .outerPadding(0.05)
       .group(group, 'Likes');
-      // stacks the dislikes
-      this.likeChart
+    // stacks the dislikes
+    this.likeChart
       .stack(this.dimension.group().reduceSum((d: any) => {
         let returning = false;
         const value = (parseInt(d.videoDislikes, 10));
@@ -98,11 +103,20 @@ export class HardfactsComponent implements OnInit {
         checklist.push({ song: d.song, value: value });
         return value;
       }), 'Dislikes');
+
     this.likeChart.margins().right = 80;
     this.likeChart.margins().left = 50;
     this.likeChart.margins().bottom = 30;
-    this.likeChart.legend(dc.legend().gap(5).x(220).y(10));
+
+    this.likeChart.renderLabel(true)
+      .label(function(d) {
+        return d.data.key;
+      });
+
+    // this.likeChart.legend(dc.legend().gap(5).x(220).y(10));
+
     this.likeChart.render();
+    this.renderedChart = true;
   }
 
   // returns the views and song name for each song (tooltip)
@@ -113,7 +127,7 @@ export class HardfactsComponent implements OnInit {
     const returner = [];
     nest.forEach((d) => {
       returner.push(
-        { name: d.key, views: d.values[0].videoViews}
+        { name: d.key, views: d.values[0].videoViews }
       );
     });
     return returner;
@@ -127,13 +141,13 @@ export class HardfactsComponent implements OnInit {
     const returner = [];
     nest.forEach((d) => {
       returner.push(
-        { name: d.key, comments: d.values.length}
+        { name: d.key, comments: d.values.length }
       );
     });
     return returner;
   }
   // returns the total views
-  getTotalViews () {
+  getTotalViews() {
     let views = 0;
     const nest = d3.nest()
       .key((d: any) => d.song)
