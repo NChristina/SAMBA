@@ -6,11 +6,12 @@
 </div>
 <hr />
 
-<div>
+<div (window:resize)="reDraw()">
   <angular-tag-cloud
-    [data]="data"
+    [data]="dataCloud"
     [width]="options.width"
     [height]="options.height"
-    [overflow]="options.overflow">
+    [overflow]="options.overflow"
+    [strict]="true">
   </angular-tag-cloud>
 </div>

@@ -42,6 +42,7 @@
     "ng5-slider": "^1.0.0",
     "node-sass": "^4.9.2",
     "rxjs": "^6.0.0",
+    "stopword": "^0.1.13",
     "webpack": "^4.3.0",
     "zone.js": "^0.8.26"
   },
