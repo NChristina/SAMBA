@@ -31,7 +31,7 @@ export class HardfactsComponent implements OnInit {
       if (this.data.length > 0) {
         this.renderChart();
       }
-    });
+    }); 
 
     this.renderedChart = false;
   }
@@ -53,6 +53,7 @@ export class HardfactsComponent implements OnInit {
     });
     return m;
   }
+
 
   // renders the chart
   renderChart() {
@@ -87,6 +88,7 @@ export class HardfactsComponent implements OnInit {
       .clipPadding(100)
       // .outerPadding(0.05)
       .group(group, 'Likes');
+
     // stacks the dislikes
     this.likeChart
       .stack(this.dimension.group().reduceSum((d: any) => {
@@ -109,14 +111,16 @@ export class HardfactsComponent implements OnInit {
     this.likeChart.margins().bottom = 30;
 
     this.likeChart.renderLabel(true)
-      .label(function(d) {
+      .label(function (d) {
         return d.data.key;
       });
 
-    // this.likeChart.legend(dc.legend().gap(5).x(220).y(10));
-
+    this.getLikesandDislikes();
+    this.likeChart.legend(dc.legend().gap(5).x(220).y(10));
     this.likeChart.render();
     this.renderedChart = true;
+
+
   }
 
   // returns the views and song name for each song (tooltip)
@@ -133,6 +137,8 @@ export class HardfactsComponent implements OnInit {
     return returner;
   }
 
+  
+
   // returns the amount of comments and the song for the tooltip
   getSongsAndComments(): any[] {
     const nest = d3.nest()
@@ -146,6 +152,30 @@ export class HardfactsComponent implements OnInit {
     });
     return returner;
   }
+
+  getLikesandDislikes () {
+    let likes = 0;
+    let dislikes = 0;
+
+    const nest = d3.nest()
+      .key((d: any) => d.song)
+      .entries(this.data);
+
+      console.log('daten', this.data, 'nest', nest);
+      nest.forEach((d) => {
+      likes += parseInt(d.values[0].videoLikes, 10);
+    });
+
+    nest.forEach((d) => {
+      dislikes += parseInt(d.values[0].videoDislikes, 10);
+    });
+    console.log('likes', likes, 'dislikes', dislikes);
+    return {
+      likes: likes,
+      dislikes: dislikes
+     };  
+  }
+
   // returns the total views
   getTotalViews() {
     let views = 0;

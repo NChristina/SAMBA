@@ -1,30 +1,14 @@
 <div class="grid-container">
-  <mat-grid-list cols="3" rowHeight="40px">
-    <mat-grid-tile>
-      <h2>Hardfacts</h2>
-    </mat-grid-tile>
-    <mat-grid-tile>
-      <div style="display: block;" *ngIf="renderedChart">
-        <div style="display: flex;">
-            <div class="legendBox"></div>
-            <span>Likes</span>
-        </div>
-        <div style="display: flex;" *ngIf="renderedChart">
-          <div class="legendBox2"></div>
-          <span>Dislikes</span>
-        </div>
-      </div>
-    </mat-grid-tile>
-    <mat-grid-tile>
+  <mat-grid-list cols="1" rowHeight="40px">  
       <img height="24px" title="Absolute number of likes, views, and comments per song selected." style="float:right" src="../../assets/000-info.svg">
-    </mat-grid-tile>
-  </mat-grid-list>
+      <h2>Hardfacts</h2> 
+    </mat-grid-list>
 </div>
 <hr /><br />
-
 <div id="likeChart" class="maxSize">
-
 </div>
+
+
 
  <div class="wrapper">
     <div mdcOverline (mouseover)="setTooltip($event, tooltip1);"
@@ -48,9 +32,10 @@
       </table>
     </span>
   </div>
+  
   <div mdcOverline (mouseover)="setTooltip($event, tooltip2);"
     class="fab_button">
-    Total Views: {{ this.getTotalViews() }}
+    <p>Total Views: {{ this.getTotalViews() }} </p>
     <span #tooltip2 class="tooltip_text">
       <table>
         <tr class="view_tr" *ngFor="let song of this.getSongsAndViews();">
