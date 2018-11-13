@@ -6,6 +6,6 @@ import { Injectable } from '@angular/core';
 export class OrderingService {
 
   constructor() {
-    console.log('test');
+    console.log('test123');
    }
 }
