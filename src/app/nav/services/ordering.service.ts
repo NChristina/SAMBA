@@ -5,5 +5,7 @@ import { Injectable } from '@angular/core';
 })
 export class OrderingService {
 
-  constructor() { }
+  constructor() {
+    console.log('test');
+   }
 }
