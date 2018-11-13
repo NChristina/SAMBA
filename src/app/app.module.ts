@@ -30,6 +30,7 @@ import { MdcDrawerModule,
     MdcSnackbarModule,
     MdcTypographyModule,
     MdcSelectModule} from '@angular-mdc/web';
+import { TagCloudModule } from 'angular-tag-cloud-module';
 import { DashboardComponent } from './nav/dashboard/dashboard.component';
 import { HardfactsComponent } from './nav/dashboard/hardfacts/hardfacts.component';
 import { LanguageComponent } from './nav/dashboard/language/language.component';
@@ -37,6 +38,7 @@ import { CommentComponent } from './nav/dashboard/comment/comment.component';
 import { MainvisComponent } from './nav/dashboard/mainvis/mainvis.component';
 import { SentimentComponent } from './nav/dashboard/sentiment/sentiment.component';
 import { Ng5SliderModule } from 'ng5-slider';
+import { TopicComponent } from './nav/dashboard/topic/topic.component';
 
 @NgModule({
   declarations: [
@@ -48,6 +50,7 @@ import { Ng5SliderModule } from 'ng5-slider';
     CommentComponent,
     MainvisComponent,
     SentimentComponent,
+    TopicComponent,
   ],
   imports: [
     BrowserModule,
@@ -82,6 +85,7 @@ import { Ng5SliderModule } from 'ng5-slider';
     MdcTypographyModule,
     MdcSelectModule,
     Ng5SliderModule,
+    TagCloudModule,
     HttpClientModule
   ],
   providers: [SearchService, DataService, ChartService],

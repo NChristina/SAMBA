@@ -2,6 +2,7 @@
 @import '~@angular/material/prebuilt-themes/indigo-pink.css';
 @import '~@angular-mdc/theme/material';
 
+
 $mdc-theme-primary: #cacaca;
 $mdc-theme-secondary: #388e3c;
 $mdc-theme-background: #fff;
@@ -109,7 +110,7 @@ body {
 }
 
 .bottom-comment {
-  color: #acb4c2;
+  color: #999999;
 }
 
 .comment-date {
@@ -156,14 +157,19 @@ body {
 }
 
 
+#sentimentChart svg g .axis .tick text,
 #likeChart svg g .axis .tick text {
   visibility: hidden;
 }
 
+#sentimentChart svg g .axis .tick,
 #likeChart svg g .axis .tick {
   visibility: hidden;
 }
 
+#sentimentChart svg g .axis,
 #likeChart svg g .axis {
   visibility: hidden;
 }
+
+

@@ -1,38 +1,17 @@
-<!-- EXAMPLE ACCORDION -->
-
-<!-- <button class="accordion">Section 1</button>
-<div class="panel">
-  <p>Lorem ipsum...</p>
-</div>
-
-<button class="accordion">Section 2</button>
-<div class="panel">
-  <p>Lorem ipsum...</p>
-</div>
-
-<button class="accordion">Section 3</button>
-<div class="panel">
-  <p>Lorem ipsum...</p>
-</div>  https://www.w3schools.com/howto/howto_js_accordion.asp -->
 <div class="grid-container">
-  <mat-grid-list cols="2" rowHeight ="50px">
-    <mat-grid-tile [colspan]="1" [rowspan]="1">
-        <h2>Comments</h2>
-    </mat-grid-tile>
-    <mat-grid-tile [colspan]="1" [rowspan]="1">
-        <div class="filterComp">
-            <mdc-select #select placeholder="select order" ngModel #demoSelectModel="ngModel" name="filter"
-            (selectionChange)="onSelectionChange($event)">
-             <option *ngFor="let fi of filter" [value]="fi.value">
-               {{fi.description}}
-             </option>
-           </mdc-select>
-          </div>
-        </mat-grid-tile>
+  <mat-grid-list cols="2" rowHeight="50px">
+      <div class="filterComp" style="float:right;top:0;">
+        <mdc-select #select placeholder="select order" ngModel #demoSelectModel="ngModel" name="filter"
+          (selectionChange)="onSelectionChange($event)">
+          <option *ngFor="let fi of filter" [value]="fi.value">
+            {{fi.description}}
+          </option>
+        </mdc-select>
+      </div>
+
+      <h2>Comments</h2>
   </mat-grid-list>
 </div>
-<hr/>
-<div style="width: 100%; height: 100%;">
-  <div id="commentSection">
-  </div>
+<hr />
+<div id="commentSection">
 </div>

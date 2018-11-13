@@ -73,6 +73,7 @@ export class HardfactsComponent implements OnInit {
       .useViewBoxResizing(true)
       .dimension(this.dimension)
       .yAxisLabel('Likes / Dislikes')
+      .ordinalColors(['#377eb8','#e41a1c'])
       .x(d3.scaleBand())
       .y(d3.scaleLog().clamp(true).domain([1, this.getMaxLikesAndDislikes()]))
       .xUnits(dc.units.ordinal)

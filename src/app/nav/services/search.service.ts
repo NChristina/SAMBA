@@ -10,10 +10,26 @@ export class SearchService {
 
   constructor(private dataService: DataService) {
     // subscribes to the data from the data service
-    dataService.getData().subscribe((data) => {
-      this.data = data;
-    });
+    // dataService.getData().subscribe((data) => {
+    //   this.data = data;
+    // });
   }
+
+  // file search
+  // searchFromFile(value: string, dataSelection: number): Observable<any[]> {
+  //   this.searchResultSource.next(this.searchSplitter(value));
+  //   return this.currentSearchResult;
+  // }
+
+  searchFromDb(value: string): Promise<any> {
+    console.log('entered searchFromDb() in search.service.ts');
+    if (value.length < 1) {
+      return;
+    }
+    console.log('???: ', this.dataService.search(value));
+    return this.dataService.search(value);
+  }
+
 
   search(value: string): Observable<any[]> {
     this.searchResultSource.next(this.searchSplitter(value));

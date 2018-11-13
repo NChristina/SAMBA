@@ -1,3 +1,6 @@
+@import '~bootstrap/dist/css/bootstrap.css';
+
+
 .contentmargin {
   width: 100vw;
   height: 100vh;
@@ -33,6 +36,10 @@
   right: 20px;
 }
 
+.search_icon:focus, button:focus {
+  outline: none;
+}
+
 .mdc-drawer {
   width: 400px;
 }
@@ -59,7 +66,8 @@
 .tooltip {
   position: relative;
   display: inline-block;
-  border-bottom: 1px dotted black; /* If you want dots under the hoverable text */
+  background-color: red;
+  // border-bottom: 1px dotted black; /* If you want dots under the hoverable text */
 }
 
 /* Tooltip text */
@@ -85,4 +93,19 @@
 /* Show the tooltip text when you mouse over the tooltip container */
 .tooltip:hover .tooltiptext {
   visibility: visible;
+}
+
+#searchFeedback{
+  margin: 0px auto;
+}
+
+#searchFeedback img{
+  display: none;
+  margin: 30px auto;
+}
+
+#searchFeedback p{
+  color: #666666;
+  display: none;
+  margin: 30px auto;
 }

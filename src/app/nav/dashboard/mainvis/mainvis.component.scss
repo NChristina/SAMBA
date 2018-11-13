@@ -8,10 +8,11 @@ $color-change-list: /*#a6cee3*/ #1f78b4 #b2df8a #33a02c #fb9a99 #e31a1c #ff0084 
 }
 .fab_button {
   float: left !important;
-  height: 35px !important;
+  height: 34px !important;
   margin-right: 2px;
   margin-top: 8px;
   margin-left: 2px;
+  font-size: 10px;
 }
 
 .fab_button:first-child {

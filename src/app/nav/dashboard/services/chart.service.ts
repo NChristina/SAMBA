@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import * as d3 from 'd3';
 import * as crossfilter from 'crossfilter';
-import { Observable, BehaviorSubject } from '../../../../../node_modules/rxjs';
+import { Observable, BehaviorSubject, ReplaySubject } from '../../../../../node_modules/rxjs';
 
 // The Chart Service allows to use one data for all the charts
 @Injectable()
@@ -19,6 +19,7 @@ export class ChartService {
   constructor() {
     this.GetData().subscribe((data) => {
       this.changeCrossfilter(crossfilter(data));
+      // console.log('this is the actual data from crossfilter: ', data);
     });
   }
 
@@ -38,13 +39,7 @@ export class ChartService {
     this.cfilterSource.next(filter);
   }
 
-  resetCrossfilter() {
-    // this.cfilterSource.next(null);
-    // Need to apply filter to all first
-    //  dc.filterAll();
-    //  // Then call remove
-    //  crossFilter.remove();
-  }
+
 
   // function, which is used to subscribe to the crossfilter
   getCrossfilter(): Observable<CrossFilter.CrossFilter<{}>> {
@@ -57,8 +52,16 @@ export class ChartService {
   // if something is missing just add it
   private dataStructure(data): any[] {
     const comments = [];
+    let repliesArray = [];
+    // console.log('data in chartservice, where is replies?', data);
     data.forEach(song => {
       song.comment.forEach(comment => {
+        repliesArray = [];
+        song.reply.forEach(reply => {
+          if (reply.snippet.parentId === comment._key) {
+            repliesArray.push(reply);
+          }
+        });
         comments.push({
           _key: comment._key,
           authorDisplayName: comment.snippet.topLevelComment.snippet.authorDisplayName,
@@ -71,12 +74,16 @@ export class ChartService {
           song_id: song.song._id,
           artist: song.artist[0].name,
           analysis: comment.analysis,
+          video_key: song.data[0]._key,
           videoLikes: song.data[0].statistics.likeCount,
           videoDislikes: song.data[0].statistics.dislikeCount,
-          videoViews: song.data[0].statistics.viewCount
+          videoViews: song.data[0].statistics.viewCount,
+          replies: repliesArray
         });
       });
     });
+
+    // console.log(data);
     // the comments have to be sorted for the charts
     comments.sort((a, b) => {
       return new Date(a.publishedAt) > new Date(b.publishedAt) ? -1 : 1;

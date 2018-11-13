@@ -2,7 +2,7 @@
   <mat-grid-list cols="3" rowHeight="200px">
     <mat-grid-tile [colspan]="1" [rowspan]="2">
       <mat-card class="dashboard-card">
-        <mat-card-content class="dashboard-card-content">
+        <mat-card-content>
           <div>
               <app-language></app-language>
             </div>
@@ -20,30 +20,49 @@
     </mat-grid-tile>
     <mat-grid-tile class="grid_title_overflow" [colspan]="1" [rowspan]="2">
       <mat-card class="dashboard-card">
-        <mat-card-content class="dashboard-card-content">
+        <mat-card-content>
           <div>
             <app-hardfacts></app-hardfacts>
           </div>
         </mat-card-content>
       </mat-card>
     </mat-grid-tile>
-    <mat-grid-tile [colspan]="2" [rowspan]="4">
+    <mat-grid-tile [colspan]="2" [rowspan]="5">
       <mat-card class="dashboard-card" style="overflow-y: scroll;">
-        <mat-card-content class="dashboard-card-content">
+        <mat-card-content>
           <div>
             <app-comment></app-comment>
           </div>
         </mat-card-content>
       </mat-card>
     </mat-grid-tile>
-    <mat-grid-tile [colspan]="1" [rowspan]="1">
+    <mat-grid-tile class="grid_title_overflow" [colspan]="1" [rowspan]="2">
       <mat-card class="dashboard-card">
-        <mat-card-content class="dashboard-card-content">
+        <mat-card-content>
           <div>
               <app-sentiment></app-sentiment>
           </div>
         </mat-card-content>
       </mat-card>
     </mat-grid-tile>
+
+    <mat-grid-tile class="grid_title_overflow" [colspan]="1" [rowspan]="2">
+      <mat-card class="dashboard-card">
+        <mat-card-content>
+          <div>
+              <app-topic></app-topic>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </mat-grid-tile>
+
+    <mat-grid-tile class="grid_title_overflow" [colspan]="3" [rowspan]="1">
+      <mat-card class="dashboard-card"><mat-card-content class="dashboard-card-content">
+        <a id="footlink" href="https://samba.fhstp.ac.at/" target="_blank" style="text-decoration: none; color:#888888; margin-top: -10px;">
+          Smart Data for Music Business Administration (SAMBA)
+        </a>
+      </mat-card-content></mat-card>
+    </mat-grid-tile>
+    
   </mat-grid-list>
 </div>

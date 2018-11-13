@@ -118,6 +118,7 @@ export class LanguageComponent implements OnInit {
         .renderArea(true)
         .width(300)
         .height(200)
+        .ordinalColors(['#8c564b', '#e377c2', '#bcbd22', '#17becf', '#7f7f7f', '#9467bd', '#d62728', '#2ca02c', '#ff7f0e', '#1f77b4'])
         .useViewBoxResizing(true)
         .dimension(this.dimension)
         .x(d3.scaleTime().domain([d3.min(this.data, (d: any) => new Date(d.publishedAt)),

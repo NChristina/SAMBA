@@ -1,0 +1,17 @@
+<div class="grid-container">
+  <mat-grid-list cols="1" rowHeight="40px">
+      <img height="24px" title="Main topics extracted from the selected comments." style="float:right" src="../../assets/000-info.svg">
+      <h2>Topic</h2>        
+  </mat-grid-list>
+</div>
+<hr />
+
+<div (window:resize)="reDraw()">
+  <angular-tag-cloud
+    [data]="dataCloud"
+    [width]="options.width"
+    [height]="options.height"
+    [overflow]="options.overflow"
+    [strict]="true">
+  </angular-tag-cloud>
+</div>
