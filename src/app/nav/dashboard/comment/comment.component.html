@@ -1,17 +1,37 @@
 <div class="grid-container">
   <mat-grid-list cols="2" rowHeight="50px">
-      <div class="filterComp" style="float:right;top:0;">
-        <mdc-select #select placeholder="replies desc" ngModel #demoSelectModel="ngModel" name="filter"
-          (selectionChange)="onSelectionChange($event)">
-          <option *ngFor="let fi of filter" [value]="fi.value">
-            {{fi.description}}
-          </option>
-        </mdc-select>
-      </div>
-
+    <div class="filterComp" style="float:right;top:0;">
+      <mdc-select
+        #select
+        placeholder="replies desc"
+        ngModel
+        #demoSelectModel="ngModel"
+        name="filter"
+        (selectionChange)="onSelectionChange($event)"
+      >
+        <option *ngFor="let fi of filter" [value]="fi.value"> {{ fi.description }} </option>
+      </mdc-select>
+    </div>
+    <div class="row">
       <h2>Comments</h2>
+     <mat-icon style="cursor: pointer;" title="the more comments you fetch, the longer it will take">info</mat-icon>
+    </div>
   </mat-grid-list>
 </div>
+<form class="inline">
+  <label>showing&nbsp;</label>
+  <input
+    #box
+    id="showCommentsAmmount"
+    value="{{ commentTable.size() }}"
+    type="number"
+    (keyup.enter)="onEnter(box.value)"
+  />
+
+  <label
+    >&nbsp;of <b>{{ cfilter.size() }}</b> comments</label
+  >
+</form>
+
 <hr />
-<div id="commentSection">
-</div>
+<div id="commentSection"></div>
