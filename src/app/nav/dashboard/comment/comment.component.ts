@@ -111,12 +111,12 @@ export class CommentComponent implements OnInit {
               <img src="../../../../assets/010-up.svg" height="15px" id="iUp_` + d._key + `" style="display:none;margin: 0px 3px">
             </a> |
             <a style="text-decoration: none; cursor: pointer;" class="sentBttn" id="sentBttn_` + d._key + `">
-              ` + this.getSentiment(d.analysis.sentiment, 'mean') + `
+              ` + this.getSentiment(d.analysis, 'mean') + `
             </a>
             <div class="pSt" id="pSt_` + d._key + `" style="display:none; background:#aaa; color:#fff; font-size:0.8em; padding:1px 5px;">
-              NLTK: ` + this.getSentiment(d.analysis.sentiment, 'nltk') +
-              ` | TextBlob: ` + this.getSentiment(d.analysis.sentiment, 'blob') +
-              ` | AFINN: ` + this.getSentiment(d.analysis.sentiment, 'afinn') + `
+              NLTK: ` + this.getSentiment(d.analysis, 'nltk') +
+              ` | TextBlob: ` + this.getSentiment(d.analysis, 'blob') +
+              ` | AFINN: ` + this.getSentiment(d.analysis, 'afinn') + `
             </div>
           </div>
           <div class="panelAc" id="replyPanel_` + d._key + `" style="display: none; margin-top: 40px;">
@@ -207,8 +207,9 @@ export class CommentComponent implements OnInit {
   }
 
   // get sentiment
-  private getSentiment (sentiment: any, mode: string) {
-    if (sentiment) {
+  private getSentiment (analysis: any, mode: string) {
+    if (analysis && analysis.sentiment) {
+      const sentiment = analysis.sentiment;
       if (mode === 'main') {
         return this.printSentiment(sentiment.mainSentiment, true);
       } else if (mode === 'nltk') {

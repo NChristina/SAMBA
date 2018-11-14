@@ -39,7 +39,7 @@ export class TopicComponent implements OnInit {
     const words = [];
 
     this.data.forEach((d) => {
-      if (d.analysis.mainLanguage === 'en') {
+      if (d.analysis && d.analysis.mainLanguage === 'en') {
         const topicSent = this.getSentiment(d);
         let word_tokens = tokenizerPunct.tokenize(d.text);
         word_tokens = sw.removeStopwords(word_tokens);
