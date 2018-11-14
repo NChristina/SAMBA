@@ -48,8 +48,6 @@ export class CommentComponent implements OnInit {
     // crossfilter is needed to view the comments which are selected in any chart
     this.chartService.getCrossfilter().subscribe((filter) => {
       this.cfilter = filter;
-
-      // console.log('cfilter:', this.cfilter);
       this.setDimension();
       this.renderCommentTable();
     });
@@ -58,7 +56,6 @@ export class CommentComponent implements OnInit {
   // sets the dimension
   setDimension() {
     this.dimension = this.cfilter.dimension((d: any) => {
-      console.log('was ist da drinnen:', d);
       return new Date(d.publishedAt.split('T')[0]);
     });
   }
@@ -77,7 +74,6 @@ export class CommentComponent implements OnInit {
 
   // renders the comment table and sets the design and look
   renderCommentTable() {
-    console.log('rerender');
     const dateGroup = this.dimension.group();
     this.orderDataAfterCurrentCriteria();
     this.commentTable
