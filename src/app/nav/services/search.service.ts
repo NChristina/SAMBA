@@ -22,11 +22,11 @@ export class SearchService {
   // }
 
   searchFromDb(value: string): Promise<any> {
-    console.log('entered searchFromDb() in search.service.ts');
+    // console.log('entered searchFromDb() in search.service.ts');
     if (value.length < 1) {
       return;
     }
-    console.log('???: ', this.dataService.search(value));
+    // console.log('???: ', this.dataService.search(value));
     return this.dataService.search(value);
   }
 

@@ -22,37 +22,38 @@ export class NavComponent implements OnInit {
   }
   // is called when the user hits enter (searchBar)
   submitSearch(value: string) {
-    // Entered submitSearch in nav comp
-    document.getElementById('sFtext').style.display = 'none'; // Remove any alert
-    document.getElementById('sFimg').style.display = 'block'; // Spinner ON
+    if (value) {
+      // Entered submitSearch in nav comp
+      document.getElementById('sFtext').style.display = 'none'; // Remove any alert
+      document.getElementById('sFimg').style.display = 'block'; // Spinner ON
 
-    this.searchMatchList = [];
-    this.isSearching = true;
-    this.searcher.searchFromDb(value.trim()).then((results) => {
-      document.getElementById('sFimg').style.display = 'none'; // Spinner OFF
-      if (results.body.length === 0) {
-        document.getElementById('sFtext').style.display = 'block'; // Display alert
-      }
+      this.searchMatchList = [];
+      this.isSearching = true;
+      this.searcher.searchFromDb(value.trim()).then((results) => {
+        document.getElementById('sFimg').style.display = 'none'; // Spinner OFF
+        if (results.body.length === 0) {
+          document.getElementById('sFtext').style.display = 'block'; // Display alert
+        }
 
-      // console.log('result::' + results.body);
-      const list = [];
-      results.body.forEach(record => {
-        list.push({ displayName: record.data[0].snippet.title, data: record });
+        // console.log('result::' + results.body);
+        const list = [];
+        results.body.forEach(record => {
+          list.push({ displayName: record.data[0].snippet.title, data: record });
+        });
+        this.searchMatchList = list;
+        this.isSearching = false;
       });
-      this.searchMatchList = list;
-      this.isSearching = false;
-    });
-    console.log('this is the end of submitSearch');
+      // console.log('this is the end of submitSearch');
+    }
   }
 
   // is called when the user selects a song
   // it checks if the user has already selected the song
   // it also updates the data for all charts via the chartService
   selectSong(index: number, checkbox) {
-    console.log('checkbox was touched');
-    console.log('new value of checkbox: ', checkbox);
+    // console.log('checkbox was touched');
+    // console.log('new value of checkbox: ', checkbox);
     if (checkbox.target.checked) {
-
       if (this.selectedList.length === 8) {
         const snackBar = this.snackbar.show('You can only pick 8 songs', 'OK', {});
         // checkbox.toggle();

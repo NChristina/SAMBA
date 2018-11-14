@@ -210,4 +210,41 @@ margin-left: 50px;
 //   background-color: hotpink;
 // }
 
+form {
+  font-size: 1.1em;
+  color: #333333;
+  margin-right: -90px;
+}
 
+input {
+  display: inline;
+  border: none;
+  border-bottom: solid 1px #888888;
+  color: #666666;
+  background: #f5f5f5;
+  padding: 18px 5px 18px 10px;
+}
+
+.tooltInfo:hover .tooltInfo_text {
+  visibility: visible;
+  opacity: 1; 
+}
+
+.tooltInfo_text {
+  visibility: hidden;
+  opacity: 0.7;
+  width: 300px;
+  height: fit-content;
+  background-color: #444;
+  color: white;
+  border-radius: 6px;
+  padding: 5px 5px;
+  position: absolute;
+  z-index: 1;
+  top: 0%;
+  margin-left: 0;
+  opacity: 0;
+  transition: opacity 0.3s;
+  top: -30%;
+  left: -20px;
+}

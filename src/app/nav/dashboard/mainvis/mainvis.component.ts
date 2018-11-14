@@ -66,11 +66,11 @@ export class MainvisComponent implements OnInit {
         .key((d: any) => d.song_key)
         .key((d: any) => d.song)
         .entries(this.data);
-      console.log(this.songs);
+      // console.log(this.songs);
       if (this.showTotalComments) {
         this.songs.push({ key: '-------', values: [{ key: 'Total Comments', values: this.data }]});
       }
-      console.log(this.songs);
+      // console.log(this.songs);
     });
   }
 
@@ -94,7 +94,7 @@ export class MainvisComponent implements OnInit {
       const lineChart = dc.lineChart(this.compositeChart);
       // comulative show option
       if (this.chartShowOption === 3) {
-        let dataLength = this.data.length;
+        const dataLength = this.data.length;
         const dates = d3.nest().key((d: any) => this.getDateStringByShowOption(d.publishedAt)).entries(song.values);
         for (let i = 0; i < dates.length; i++) {
           if ((i + 1) === dates.length) {
@@ -105,7 +105,7 @@ export class MainvisComponent implements OnInit {
           const daysBetween = Math.floor( (date.getTime() - date2.getTime()) / 86400000); // 86400000 = one day
           this.addDaysToData(daysBetween, dates[i].values.length, date, song.key);
         }
-        console.log(dataLength, this.data.length);
+        // console.log(dataLength, this.data.length);
         lineChart.interpolate('monotone');
 
       }

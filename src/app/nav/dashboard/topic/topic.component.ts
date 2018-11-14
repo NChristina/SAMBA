@@ -76,13 +76,13 @@ export class TopicComponent implements OnInit {
     if (cWds.length > 0) {
       cWds.sort(function(a, b) { return b.count - a.count; });
 
-      let size = 8;
+      let size = 10;
       let i = 0;
       while (i < 10) {
         const sentcolor = this.getColor(cWds[i].sentiment / cWds[i].count);
         dataForCloud.push({ text: cWds[i].text.toString(), weight: size, color: sentcolor.toString() });
         i++;
-        size -= (size / 10);
+        size -= 1;
       }
     }
 
@@ -128,6 +128,13 @@ export class TopicComponent implements OnInit {
     });
 
     if (countPos > 0 && countNeg > 0) { return true; } else { return false; }
+  }
+
+  // sets the tooltip on mouseover
+  setTooltipInfo(event: MouseEvent, tooltip: HTMLSpanElement) {
+    tooltip.style.position = 'fixed';
+    tooltip.style.top = (event.clientY - tooltip.offsetHeight) + 'px';
+    tooltip.style.left = (event.clientX + 5) + 'px';
   }
 }
 

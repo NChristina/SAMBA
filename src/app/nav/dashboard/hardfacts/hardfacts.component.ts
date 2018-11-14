@@ -73,7 +73,7 @@ export class HardfactsComponent implements OnInit {
       .useViewBoxResizing(true)
       .dimension(this.dimension)
       .yAxisLabel('Likes / Dislikes')
-      .ordinalColors(['#377eb8','#e41a1c'])
+      .ordinalColors(['#377eb8', '#e41a1c'])
       .x(d3.scaleBand())
       .y(d3.scaleLog().clamp(true).domain([1, this.getMaxLikesAndDislikes()]))
       .xUnits(dc.units.ordinal)
@@ -143,10 +143,18 @@ export class HardfactsComponent implements OnInit {
     });
     return views;
   }
+
   // sets the tooltip on mouseover
   setTooltip(event: MouseEvent, tooltip: HTMLSpanElement) {
     tooltip.style.position = 'fixed';
     tooltip.style.top = (event.clientY - tooltip.offsetHeight - 20) + 'px';
     tooltip.style.left = (event.clientX - tooltip.offsetWidth / 2) + 'px';
+  }
+
+  // sets the tooltip on mouseover
+  setTooltipInfo(event: MouseEvent, tooltip: HTMLSpanElement) {
+    tooltip.style.position = 'fixed';
+    tooltip.style.top = (event.clientY - tooltip.offsetHeight) + 'px';
+    tooltip.style.left = (event.clientX + 5) + 'px';
   }
 }

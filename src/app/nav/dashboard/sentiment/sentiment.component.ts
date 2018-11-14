@@ -139,10 +139,9 @@ export class SentimentComponent implements OnInit {
         groupedValue = (sentSummNeg * 100) / sumAll;
       } else if (sentiment === 'Mixed') {
         groupedValue = (sentSummMix * 100) / sumAll;
-      } else { console.log('Which sentiment??'); }
-
+      } else if (sentiment !== 'NA') { console.log('Sentiment' + sentiment + ' does not exist'); }
     } else {
-      console.log('Not in the list');
+      if (sentiment === 'NA') { return 100; }
     }
 
     return groupedValue;
@@ -160,12 +159,11 @@ export class SentimentComponent implements OnInit {
       checklist.push({ song: d.song, value: value });
       return value;
     });
-    // azul, verde, vermelho...
-    // .ordinalColors(['#377eb8','#4daf4a','#e41a1c','#984ea3','#ff7f00','#ffff33','#a65628'])
+
     this.sentimentChart
       .width(300)
       .height(200)
-      .ordinalColors(['#4daf4a', '#cccccc', '#ff7f00', '#984ea3'])
+      .ordinalColors(['#4daf4a', '#cccccc', '#ff7f00', '#984ea3', '#eeeeee'])
       .useViewBoxResizing(true)
       .dimension(this.dimension)
       .yAxisLabel('Sentiment (%)')
@@ -202,23 +200,42 @@ export class SentimentComponent implements OnInit {
       return value;
     }), 'Negative');
 
-     // stacks the mixed sentiment
-     this.sentimentChart
-     .stack(this.dimension.group().reduceSum((d: any) => {
-       let returning = false;
-       const value = this.getGroupedSentiment(d.song, 'Mixed');
+    // stacks the mixed sentiment
+    this.sentimentChart
+    .stack(this.dimension.group().reduceSum((d: any) => {
+      let returning = false;
+      const value = this.getGroupedSentiment(d.song, 'Mixed');
 
-       checklist.forEach((e) => { if (e.song === d.song && e.value === value) { returning = true; } });
-       if (returning) { return 0; }
-       checklist.push({ song: d.song, value: value });
-       return value;
-     }), 'Mixed');
+      checklist.forEach((e) => { if (e.song === d.song && e.value === value) { returning = true; } });
+      if (returning) { return 0; }
+      checklist.push({ song: d.song, value: value });
+      return value;
+    }), 'Mixed');
+
+    // stacks the non assessed sentiment collumn
+    this.sentimentChart
+    .stack(this.dimension.group().reduceSum((d: any) => {
+      let returning = false;
+      const value = this.getGroupedSentiment(d.song, 'NA');
+
+      checklist.forEach((e) => { if (e.song === d.song && e.value === value) { returning = true; } });
+      if (returning) { return 0; }
+      checklist.push({ song: d.song, value: value });
+      return value;
+    }), 'N/A');
 
     this.sentimentChart.margins().right = 80;
     this.sentimentChart.margins().left = 50;
     this.sentimentChart.margins().bottom = 30;
     this.sentimentChart.legend(dc.legend().gap(5).x(220).y(10));
     this.sentimentChart.render();
+  }
+
+  // sets the tooltip on mouseover
+  setTooltipInfo(event: MouseEvent, tooltip: HTMLSpanElement) {
+    tooltip.style.position = 'fixed';
+    tooltip.style.top = (event.clientY - tooltip.offsetHeight) + 'px';
+    tooltip.style.left = (event.clientX + 5) + 'px';
   }
 
 }

@@ -1,7 +1,7 @@
     <div class="demo-content__drawer demo-content__drawer--persistent">
       <mdc-drawer #persistent drawer='persistent'>
         <mdc-drawer-spacer>
-          <mdc-text-field #searchText [box]="false" formControlName="searchTitle" label="search for songs" maxlength="30" (change)="submitSearch(searchText.value)">
+          <mdc-text-field #searchText [box]="false" label="search for songs" maxlength="30" (change)="submitSearch(searchText.value)">
             <mdc-icon class="search_icon" trailing #searchicon  [clickable]="true">search</mdc-icon>
           </mdc-text-field>
         </mdc-drawer-spacer>

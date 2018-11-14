@@ -1,6 +1,9 @@
 <div class="grid-container">
     <mat-grid-list cols="1" rowHeight="40px">
-        <img height="24px" title="The comments are summed up in months" style="float:right" src="../../assets/000-info.svg">
+        <div class="wrapper" (mouseover)="setTooltipInfo($event, tooltipinfo);" style="float:right" class="tooltInfo"> 
+            <img height="24px" style="float:right" src="../../assets/000-info.svg"> 
+            <span #tooltipinfo class="tooltInfo_text">The comments are summed up in months.</span>
+        </div>
         <h2>Language</h2>        
     </mat-grid-list>
 </div>

@@ -156,4 +156,11 @@ export class LanguageComponent implements OnInit {
       });
     this.languageChart.render();
   }
+
+  // sets the tooltip on mouseover
+  setTooltipInfo(event: MouseEvent, tooltip: HTMLSpanElement) {
+    tooltip.style.position = 'fixed';
+    tooltip.style.top = (event.clientY - tooltip.offsetHeight) + 'px';
+    tooltip.style.left = (event.clientX + 5) + 'px';
+  }
 }

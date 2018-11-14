@@ -156,20 +156,24 @@ body {
   top: 2px;
 }
 
-
-#sentimentChart svg g .axis .tick text,
-#likeChart svg g .axis .tick text {
-  visibility: hidden;
+#sentimentChart,
+#likeChart{
+  margin-top:15px;
 }
 
-#sentimentChart svg g .axis .tick,
-#likeChart svg g .axis .tick {
-  visibility: hidden;
+#sentimentChart svg g .y .tick text,
+#likeChart svg g .y .tick text {
+  display: none;
 }
 
-#sentimentChart svg g .axis,
-#likeChart svg g .axis {
-  visibility: hidden;
+#sentimentChart svg g .axis .tick line,
+#likeChart svg g .axis .tick line{
+  display: none;
+}
+
+#sentimentChart svg g .axis .domain,
+#likeChart svg g .axis .domain {
+  display: none;
 }
 
 

@@ -2,3 +2,28 @@
     max-width: 350px;
     max-height: 250px;
   }
+
+  .tooltInfo:hover .tooltInfo_text {
+    visibility: visible;
+    opacity: 1; 
+  }
+  
+  .tooltInfo_text {
+    visibility: hidden;
+    opacity: 0.7;
+    width: 300px;
+    height: fit-content;
+    background-color: #444;
+    color: white;
+    border-radius: 6px;
+    padding: 5px 5px;
+    position: absolute;
+    z-index: 1;
+    top: 0%;
+    margin-left: 0;
+    opacity: 0;
+    transition: opacity 0.3s;
+    top: -30%;
+    left: -20px;
+  }
+  

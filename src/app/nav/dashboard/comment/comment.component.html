@@ -1,37 +1,28 @@
 <div class="grid-container">
   <mat-grid-list cols="2" rowHeight="50px">
-    <div class="filterComp" style="float:right;top:0;">
-      <mdc-select
-        #select
-        placeholder="replies desc"
-        ngModel
-        #demoSelectModel="ngModel"
-        name="filter"
-        (selectionChange)="onSelectionChange($event)"
-      >
-        <option *ngFor="let fi of filter" [value]="fi.value"> {{ fi.description }} </option>
-      </mdc-select>
-    </div>
-    <div class="row">
+      <div class="filterComp" style="float:right;top:0;">
+          <form style="display:inline">
+            <label>Showing&nbsp;</label>
+            <input #box id="showCommentsAmmount" value="{{ commentTable.size() }}" type="number" required="" (keyup.enter)="onEnter(box.value)" />
+            <label>&nbsp;of {{ cfilter.size() }} comments</label>
+          </form>
+
+          <div class="wrapper" (mouseover)="setTooltipInfo($event, tooltipinfo);" style="float:right;margin:15px 0 0 25px;" class="tooltInfo"> 
+              <img height="30px" style="float:right" src="../../assets/000-info.svg"> 
+              <span #tooltipinfo class="tooltInfo_text">The more comments you fetch, the longer it will take.</span>
+          </div>
+
+          <mdc-select #select placeholder="replies desc" ngModel #demoSelectModel="ngModel" name="filter" style="float:right;" (selectionChange)="onSelectionChange($event)">
+            <option *ngFor="let fi of filter" [value]="fi.value"> {{ fi.description }} </option>
+          </mdc-select>
+
+        </div>
+
       <h2>Comments</h2>
-     <mat-icon style="cursor: pointer;" title="the more comments you fetch, the longer it will take">info</mat-icon>
-    </div>
+   
   </mat-grid-list>
 </div>
-<form class="inline">
-  <label>showing&nbsp;</label>
-  <input
-    #box
-    id="showCommentsAmmount"
-    value="{{ commentTable.size() }}"
-    type="number"
-    (keyup.enter)="onEnter(box.value)"
-  />
-
-  <label
-    >&nbsp;of <b>{{ cfilter.size() }}</b> comments</label
-  >
-</form>
 
 <hr />
+
 <div id="commentSection"></div>

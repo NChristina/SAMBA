@@ -52,7 +52,7 @@ export class CommentComponent implements OnInit {
   // sets the dimension
   setDimension() {
     this.dimension = this.cfilter.dimension((d: any) => {
-      console.log('was ist da drinnen:', d);
+      // console.log('was ist da drinnen:', d);
       return new Date(d.publishedAt.split('T')[0]);
     });
   }
@@ -71,7 +71,6 @@ export class CommentComponent implements OnInit {
 
   // renders the comment table and sets the design and look
   renderCommentTable() {
-    console.log('rerender');
     const dateGroup = this.dimension.group();
     this.orderDataAfterCurrentCriteria();
     this.commentTable
@@ -326,4 +325,12 @@ export class CommentComponent implements OnInit {
     this.sizeforTable = value;
     this.renderCommentTable();
   }
+
+  // sets the tooltip on mouseover
+  setTooltipInfo(event: MouseEvent, tooltip: HTMLSpanElement) {
+    tooltip.style.position = 'fixed';
+    tooltip.style.top = (event.clientY - tooltip.offsetHeight) + 'px';
+    tooltip.style.left = (event.clientX - tooltip.offsetWidth - 5) + 'px';
+  }
+
 }
