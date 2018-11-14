@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import * as d3 from 'd3';
 import * as crossfilter from 'crossfilter';
 import * as dc from 'dc';
 import { ChartService } from '../services/chart.service';
 import { FormControl } from '@angular/forms';
+import { MdcCheckbox, MdcSnackbar, MdcTextField } from '@angular-mdc/web';
 
 
 @Component({
@@ -15,9 +15,6 @@ import { FormControl } from '@angular/forms';
 export class CommentComponent implements OnInit {
   foodControl = new FormControl();
   whatOrder = 0;
-
-
-
 
   filter = [
     { value: 'replies desc', description: 'replies desc'},
@@ -33,14 +30,11 @@ export class CommentComponent implements OnInit {
   cfilter: CrossFilter.CrossFilter<{}>;
   dimension: CrossFilter.Dimension<{}, Date>;
   data: any[];
-  orderedCrossfilter;
-
+  sizeforTable = 25;
 
   constructor(private chartService: ChartService) { }
 
   ngOnInit() {
-
-
 
     this.commentTable = dc.dataGrid('#commentSection');
 
@@ -147,7 +141,7 @@ export class CommentComponent implements OnInit {
         return html;
 
       }) // orders the comments by likes
-      .size(25)
+      .size(this.sizeforTable)
       .renderLabel(false)
       .renderTitle(false);
     this.commentTable.render();
@@ -156,7 +150,6 @@ export class CommentComponent implements OnInit {
   }
 
   onSelectionChange(event: { index: any, value: any }) {
-
 
     switch (event.value) {
       case 'replies desc':
@@ -328,5 +321,9 @@ export class CommentComponent implements OnInit {
           }
         });
       }
+  }
+  onEnter(value) {
+    this.sizeforTable = value;
+    this.renderCommentTable();
   }
 }
