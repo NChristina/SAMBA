@@ -157,7 +157,6 @@ export class CommentComponent implements OnInit {
 
   onSelectionChange(event: { index: any, value: any }) {
 
-    // console.log(`onSelectionChange: ${event.value}`);
 
     switch (event.value) {
       case 'replies desc':
