@@ -1,7 +1,7 @@
 <div class="grid-container">
   <mat-grid-list cols="2" rowHeight="50px">
       <div class="filterComp" style="float:right;top:0;">
-        <mdc-select #select placeholder="select order" ngModel #demoSelectModel="ngModel" name="filter"
+        <mdc-select #select placeholder="replies desc" ngModel #demoSelectModel="ngModel" name="filter"
           (selectionChange)="onSelectionChange($event)">
           <option *ngFor="let fi of filter" [value]="fi.value">
             {{fi.description}}

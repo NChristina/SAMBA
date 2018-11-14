@@ -4,7 +4,7 @@ import * as crossfilter from 'crossfilter';
 import * as dc from 'dc';
 import { ChartService } from '../services/chart.service';
 import { FormControl } from '@angular/forms';
-// import { ViewEncapsulation } from '@angular/core';
+
 
 @Component({
   selector: 'app-comment',
@@ -20,12 +20,12 @@ export class CommentComponent implements OnInit {
 
 
   filter = [
-    { value: 'comments asc', description: 'replies desc'},
-    { value: 'comments desc', description: 'replies asc'},
-    { value: 'likes asc', description: 'likes desc'},
-    { value: 'likes desc', description: 'likes asc'},
-    { value: 'date asc', description: 'date desc'},
-    { value: 'date desc', description: 'date asc' },
+    { value: 'replies desc', description: 'replies desc'},
+    { value: 'replies asc', description: 'replies asc'},
+    { value: 'likes desc', description: 'likes desc'},
+    { value: 'likes asc', description: 'likes asc'},
+    { value: 'date desc', description: 'date desc'},
+    { value: 'date asc', description: 'date asc' },
   ];
 
 
@@ -33,6 +33,9 @@ export class CommentComponent implements OnInit {
   cfilter: CrossFilter.CrossFilter<{}>;
   dimension: CrossFilter.Dimension<{}, Date>;
   data: any[];
+  orderedCrossfilter;
+
+
   constructor(private chartService: ChartService) { }
 
   ngOnInit() {
@@ -45,6 +48,7 @@ export class CommentComponent implements OnInit {
     // crossfilter is needed to view the comments which are selected in any chart
     this.chartService.getCrossfilter().subscribe((filter) => {
       this.cfilter = filter;
+
       // console.log('cfilter:', this.cfilter);
       this.setDimension();
       this.renderCommentTable();
@@ -54,14 +58,28 @@ export class CommentComponent implements OnInit {
   // sets the dimension
   setDimension() {
     this.dimension = this.cfilter.dimension((d: any) => {
-      // console.log('was ist da drinnen:', d);
+      console.log('was ist da drinnen:', d);
       return new Date(d.publishedAt.split('T')[0]);
     });
   }
 
+  orderDataAfterCurrentCriteria() {
+
+      this.dimension = this.cfilter.dimension((d: any) => {
+        if (this.whatOrder === 0) { return d.replies;
+        } else if (this.whatOrder === 1) {return d.replies[d.replies.length];
+        } else if (this.whatOrder === 2) {return d.likeCount;
+        } else if (this.whatOrder === 3) {return d.likeCount[d.likeCount.length];
+        } else if (this.whatOrder === 4) {return new Date(d.publishedAt.split('T')[0]);
+        } else if (this.whatOrder === 5) {return new Date(d.publishedAt.split('T')[d.publishedAt.length]); }
+      });
+  }
+
   // renders the comment table and sets the design and look
   renderCommentTable() {
+    console.log('rerender');
     const dateGroup = this.dimension.group();
+    this.orderDataAfterCurrentCriteria();
     this.commentTable
       .dimension(this.dimension)
       .group(function (d) {
@@ -129,27 +147,7 @@ export class CommentComponent implements OnInit {
         return html;
 
       }) // orders the comments by likes
-      .size(500)
-      .order(d3.ascending)
-      .order((a, b) => {
-        // to decide after what critera the comments should be ordered
-        // console.log('I am rendering.');
-        if (this.whatOrder === 0) {
-          return a.replyCount > b.replyCount ? -1 : 1;
-        } else if (this.whatOrder === 1) {
-          return a.replyCount < b.replyCount ? -1 : 1;
-        } else if (this.whatOrder === 2) {
-          return a.likeCount > b.likeCount ? -1 : 1;
-        } else if (this.whatOrder === 3) {
-          return a.likeCount < b.likeCount ? -1 : 1;
-        } else if (this.whatOrder === 4) {
-          return a.publishedAt > b.publishedAt ? -1 : 1;
-        } else if (this.whatOrder === 5) {
-          return a.publishedAt < b.publishedAt ? -1 : 1;
-        }
-        // console.log('a datapoint: ', a, '; b datapoint: ', b);
-      return a.replyCount > b.replyCount ? -1 : 1;
-      })
+      .size(25)
       .renderLabel(false)
       .renderTitle(false);
     this.commentTable.render();
@@ -158,46 +156,54 @@ export class CommentComponent implements OnInit {
   }
 
   onSelectionChange(event: { index: any, value: any }) {
+
     // console.log(`onSelectionChange: ${event.value}`);
 
     switch (event.value) {
-      case 'comments asc':
+      case 'replies desc':
       // console.log('valueChanged: ', event.value);
       this.whatOrder = 0;
+      this.orderDataAfterCurrentCriteria();
       this.renderCommentTable();
       break;
 
-      case 'comments desc':
+      case 'replies asc':
       // console.log('valueChanged: ', event.value);
       this.whatOrder = 1;
-      this.renderCommentTable();
-      break;
-
-      case 'likes asc':
-      // console.log('valueChanged: ', event.value);
-      this.whatOrder = 2;
+      this.orderDataAfterCurrentCriteria();
       this.renderCommentTable();
       break;
 
       case 'likes desc':
       // console.log('valueChanged: ', event.value);
-      this.whatOrder = 3;
+      this.whatOrder = 2;
+      this.orderDataAfterCurrentCriteria();
       this.renderCommentTable();
       break;
 
-      case 'date asc':
+      case 'likes asc':
       // console.log('valueChanged: ', event.value);
-      this.whatOrder = 4;
+      this.whatOrder = 3;
+      this.orderDataAfterCurrentCriteria();
       this.renderCommentTable();
       break;
 
       case 'date desc':
       // console.log('valueChanged: ', event.value);
+      this.whatOrder = 4;
+      this.orderDataAfterCurrentCriteria();
+      this.renderCommentTable();
+      break;
+
+      case 'date asc':
+      // console.log('valueChanged: ', event.value);
       this.whatOrder = 5;
+      this.orderDataAfterCurrentCriteria();
       this.renderCommentTable();
       break;
 
     }
+
 
   }
 
