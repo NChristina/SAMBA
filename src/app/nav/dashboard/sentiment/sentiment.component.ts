@@ -40,9 +40,8 @@ export class SentimentComponent implements OnInit {
   // summarizes the sentiment for positive, neutral, and negative scores
   countSentiment() {
     const sentSummAux = [];
-
     this.data.forEach((d) => {
-      if (d.analysis.sentiment) {
+      if (d.analysis && d.analysis.sentiment) {
         let inList = false;
         let countedSongidx = 0;
 
