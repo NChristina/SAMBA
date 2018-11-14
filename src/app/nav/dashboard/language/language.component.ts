@@ -69,11 +69,19 @@ export class LanguageComponent implements OnInit {
     const groups: { group: CrossFilter.Group<{}, Date, any>, lang: string}[] = [];
     // group by language
     const nested = d3.nest()
-      .key((d: any) =>  d.analysis.mainLanguage)
+      .key((d: any) => {
+        if (d.analysis && d.analysis.mainLanguage) {
+          return d.analysis.mainLanguage;
+        }
+        return 'N/A';
+      })
       .entries(this.data);
     nested.forEach((language) => {
       const g = this.dimension.group().reduceSum((d: any) => {
-        return d.analysis.mainLanguage === language.key;
+        if (d.analysis && d.analysis.mainLanguage) {
+          return d.analysis.mainLanguage === language.key;
+        }
+        return false;
       });
       groups.push({group: g, lang: language.key });
     });
