@@ -61,7 +61,7 @@ export class LanguageComponent implements OnInit {
     });
   }
 
-  // returns a crossfilter-group for each language
+  // returns a crossfilter-group for each language x
   private getLanguageGroups(): { group: CrossFilter.Group<{}, Date, any>, lang: string}[] {
     if (this.data.length < 0) {
       return;
