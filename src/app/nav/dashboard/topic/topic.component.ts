@@ -9,6 +9,8 @@ import { ChartService } from '../services/chart.service';
 })
 export class TopicComponent implements OnInit {
   @ViewChild(TagCloudComponent) tagCloudComponent: TagCloudComponent;
+  aggrView = true;
+  compView = false;
   options: CloudOptions = { width: 1, height: 250, overflow: true };
   dataCloud: CloudData[] = [];
   cfilter: CrossFilter.CrossFilter<{}>;
@@ -29,6 +31,8 @@ export class TopicComponent implements OnInit {
         this.createWordCloud();
       }
     });
+
+    this.setVisibilityofViews();
   }
 
   createWordCloud() {
@@ -136,5 +140,32 @@ export class TopicComponent implements OnInit {
     tooltip.style.top = (event.clientY - tooltip.offsetHeight) + 'px';
     tooltip.style.left = (event.clientX + 5) + 'px';
   }
+
+  switchView(button: string) {
+    if (button === 'aggrButton' && !this.aggrView) {
+      this.aggrView = true;
+      this.compView = false;
+      document.getElementsByClassName('topicAggr')[0].classList.toggle('active');
+      document.getElementsByClassName('topicComp')[0].classList.toggle('active');
+    } else if (button === 'compButton' && !this.compView) {
+      this.aggrView = false;
+      this.compView = true;
+      document.getElementsByClassName('topicAggr')[0].classList.toggle('active');
+      document.getElementsByClassName('topicComp')[0].classList.toggle('active');
+    }
+    this.setVisibilityofViews();
+  }
+
+  setVisibilityofViews() {
+    if (this.aggrView) {
+      document.getElementById('topiccloudTag').classList.remove('hide');
+      document.getElementById('topicList').classList.add('hide');
+    } else if (this.compView) {
+      document.getElementById('topiccloudTag').classList.add('hide');
+      document.getElementById('topicList').classList.remove('hide');
+    }
+    this.reDraw();
+  }
+
 }
 

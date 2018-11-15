@@ -4,15 +4,18 @@
           <img height="24px" style="float:right" src="../../assets/000-info.svg"> 
           <span #tooltipinfo class="tooltInfo_text">Absolute number of likes, views, and comments per song selected.</span>
       </div>
+      <button (click)="switchView('compButton');" class="hardComp compButton active" style="float:right"><img height="24px" title="Comparison View" src="../../assets/000-barchart.svg"> </button>
+      <button (click)="switchView('aggrButton');" class="hardAggr aggrButton" style="float:right"><img height="24px" title="Aggregated View" src="../../assets/000-chart.svg"> </button>
 
       <h2>Hardfacts</h2>        
   </mat-grid-list>
 </div>
 <hr />
 
-<div id="likeChart" class="maxSize"></div>
+<div id="likeChartLine" class="maxSize aggregationView">...</div>
+<div id="likeChart" class="maxSize comparisonView"></div>
 
-<div class="wrapper" *ngIf="this.data.length">
+<div class="wrapper" *ngIf="this.data.length && this.compView">
   <div (mouseover)="setTooltip($event, tooltip1);" class="fab_button"> 
     Total Comments: {{ this.data.length }} 
     <span #tooltip1 class="tooltip_text">
@@ -38,3 +41,6 @@
     </span>
   </div>
 </div>
+
+
+

@@ -4,12 +4,15 @@
         <img height="24px" style="float:right" src="../../assets/000-info.svg"> 
         <span #tooltipinfo class="tooltInfo_text">Main topics extracted from the selected comments.</span>
     </div>
+    <button (click)="switchView('compButton');" class="topicComp compButton" style="float:right"><img height="24px" title="Comparison View" src="../../assets/000-list.svg"> </button>
+    <button (click)="switchView('aggrButton');" class="topicAggr aggrButton active" style="float:right"><img height="24px" title="Aggregated View" src="../../assets/000-bubblechart.svg"> </button>
+
     <h2>Topic</h2>        
   </mat-grid-list>
 </div>
 <hr />
 
-<div (window:resize)="reDraw()">
+<div (window:resize)="reDraw()" class="aggregationView" id="topiccloudTag">
   <angular-tag-cloud
     [data]="dataCloud"
     [width]="options.width"
@@ -17,4 +20,8 @@
     [overflow]="options.overflow"
     [strict]="true">
   </angular-tag-cloud>
+</div>
+
+<div id="topicList" class="maxSize comparisonView">
+...
 </div>

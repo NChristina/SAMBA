@@ -10,6 +10,8 @@ import * as dc from 'dc';
   styleUrls: ['./hardfacts.component.scss']
 })
 export class HardfactsComponent implements OnInit {
+  aggrView = false;
+  compView = true;
   data: any[];
   likeChart: dc.BarChart;
   dimension: CrossFilter.Dimension<{}, number>;
@@ -30,6 +32,7 @@ export class HardfactsComponent implements OnInit {
         this.renderChart();
       }
     });
+    this.setVisibilityofViews();
   }
 
   // sets the dimension based on the songs
@@ -156,5 +159,30 @@ export class HardfactsComponent implements OnInit {
     tooltip.style.position = 'fixed';
     tooltip.style.top = (event.clientY - tooltip.offsetHeight) + 'px';
     tooltip.style.left = (event.clientX + 5) + 'px';
+  }
+
+  switchView(button: string) {
+    if (button === 'aggrButton' && !this.aggrView) {
+      this.aggrView = true;
+      this.compView = false;
+      document.getElementsByClassName('hardAggr')[0].classList.toggle('active');
+      document.getElementsByClassName('hardComp')[0].classList.toggle('active');
+    } else if (button === 'compButton' && !this.compView) {
+      this.aggrView = false;
+      this.compView = true;
+      document.getElementsByClassName('hardAggr')[0].classList.toggle('active');
+      document.getElementsByClassName('hardComp')[0].classList.toggle('active');
+    }
+    this.setVisibilityofViews();
+  }
+
+  setVisibilityofViews() {
+    if (this.aggrView) {
+      document.getElementById('likeChartLine').classList.remove('hide');
+      document.getElementById('likeChart').classList.add('hide');
+    } else if (this.compView) {
+      document.getElementById('likeChartLine').classList.add('hide');
+      document.getElementById('likeChart').classList.remove('hide');
+    }
   }
 }

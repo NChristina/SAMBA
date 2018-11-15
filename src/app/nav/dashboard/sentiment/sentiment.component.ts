@@ -10,6 +10,8 @@ import * as dc from 'dc';
   styleUrls: ['./sentiment.component.scss']
 })
 export class SentimentComponent implements OnInit {
+  aggrView = false;
+  compView = true;
   sentimentChart: dc.BarChart;
   data: any[];
   cfilter: CrossFilter.CrossFilter<{}>;
@@ -35,6 +37,8 @@ export class SentimentComponent implements OnInit {
         this.renderChart();
       }
     });
+
+    this.setVisibilityofViews();
   }
 
   // summarizes the sentiment for positive, neutral, and negative scores
@@ -168,7 +172,7 @@ export class SentimentComponent implements OnInit {
       .dimension(this.dimension)
       .yAxisLabel('Sentiment (%)')
       .x(d3.scaleBand())
-      .y(d3.scaleLog().clamp(true).domain([1, 100]))
+      .y(d3.scaleLinear().domain([0, 100]))
       .xUnits(dc.units.ordinal)
       .brushOn(false)
       .controlsUseVisibility(true)
@@ -236,6 +240,31 @@ export class SentimentComponent implements OnInit {
     tooltip.style.position = 'fixed';
     tooltip.style.top = (event.clientY - tooltip.offsetHeight) + 'px';
     tooltip.style.left = (event.clientX + 5) + 'px';
+  }
+
+  switchView(button: string) {
+    if (button === 'aggrButton' && !this.aggrView) {
+      this.aggrView = true;
+      this.compView = false;
+      document.getElementsByClassName('sentAggr')[0].classList.toggle('active');
+      document.getElementsByClassName('sentComp')[0].classList.toggle('active');
+    } else if (button === 'compButton' && !this.compView) {
+      this.aggrView = false;
+      this.compView = true;
+      document.getElementsByClassName('sentAggr')[0].classList.toggle('active');
+      document.getElementsByClassName('sentComp')[0].classList.toggle('active');
+    }
+    this.setVisibilityofViews();
+  }
+
+  setVisibilityofViews() {
+    if (this.aggrView) {
+      document.getElementById('sentimentChartLine').classList.remove('hide');
+      document.getElementById('sentimentChart').classList.add('hide');
+    } else if (this.compView) {
+      document.getElementById('sentimentChartLine').classList.add('hide');
+      document.getElementById('sentimentChart').classList.remove('hide');
+    }
   }
 
 }

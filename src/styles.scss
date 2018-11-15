@@ -156,24 +156,52 @@ body {
   top: 2px;
 }
 
+#languageBarGraph,
 #sentimentChart,
 #likeChart{
   margin-top:15px;
 }
 
+#languageBarGraph svg g .y .tick text,
 #sentimentChart svg g .y .tick text,
 #likeChart svg g .y .tick text {
   display: none;
 }
 
+#languageBarGraph svg g .axis .tick line,
 #sentimentChart svg g .axis .tick line,
 #likeChart svg g .axis .tick line{
   display: none;
 }
 
+#languageBarGraph svg g .axis .domain,
 #sentimentChart svg g .axis .domain,
 #likeChart svg g .axis .domain {
   display: none;
 }
 
+.aggrButton,
+.compButton{
+  background:#ffffff;
+  outline: none;
+}
 
+.aggrButton.active,
+.compButton.active{
+  background:#eeeeee;
+}
+
+.compButton{
+  margin: -5px 15px 0 0px;
+  border-radius: 0px 5px 5px 0px;
+}
+
+.aggrButton{
+  margin: -5px 0 0 15px;
+  border-radius: 5px 0px 0px 5px;
+}
+
+.aggregationView.hide,
+.comparisonView.hide{
+  display: none;
+}

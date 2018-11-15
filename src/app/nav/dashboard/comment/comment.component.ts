@@ -73,6 +73,7 @@ export class CommentComponent implements OnInit {
   renderCommentTable() {
     const dateGroup = this.dimension.group();
     this.orderDataAfterCurrentCriteria();
+
     this.commentTable
       .dimension(this.dimension)
       .group(function (d) {
@@ -194,8 +195,6 @@ export class CommentComponent implements OnInit {
       break;
 
     }
-
-
   }
 
   // get sentiment

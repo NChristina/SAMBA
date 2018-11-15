@@ -10,13 +10,17 @@ import * as dc from 'dc';
   styleUrls: ['./language.component.scss']
 })
 export class LanguageComponent implements OnInit {
-
+  aggrView = true;
+  compView = false;
+  langSumm = [];
   cfilter: CrossFilter.CrossFilter<{}>;
   dimension: CrossFilter.Dimension<{}, Date>;
+  dimensionBar: CrossFilter.Dimension<{}, number>;
   data: any[];
   languageChart: dc.LineChart;
-
-  groups: CrossFilter.Group<{}, Date, any>[];
+  barChart: dc.BarChart;
+  dataChange = 0;
+  langGroups: { group: CrossFilter.Group<{}, Date, any>, lang: string}[];
   private maxGroupValue;
 
   constructor(private chartService: ChartService) { }
@@ -24,11 +28,17 @@ export class LanguageComponent implements OnInit {
   ngOnInit() {
     // initialization of the chart
     this.languageChart = dc.lineChart('#languageGraph');
+    this.barChart = dc.barChart('#languageBarGraph');
     this.chartService.getCrossfilter().subscribe((filter) => {
       this.cfilter = filter;
       this.setDimension();
-      if (this.data !== undefined && this.data.length > 0) {
+      this.setBarDimension();
+      if (this.data && this.data.length !== this.dataChange) {
+        this.dataChange = this.data.length;
+        this.langGroups = this.getLanguageGroups();
+        this.countMainLang();
         this.renderChart();
+        this.renderBarChart();
       }
     });
     this.chartService.GetData().subscribe((data) => {
@@ -51,6 +61,7 @@ export class LanguageComponent implements OnInit {
         }
       }
     });
+    this.setVisibilityofViews();
   }
 
   // sets the crossfilter dimension
@@ -58,6 +69,13 @@ export class LanguageComponent implements OnInit {
     this.dimension = this.cfilter.dimension((d: any) => {
       const splitted = d.publishedAt.split('-');
       return new Date(splitted[0] + '-' + splitted[1]);
+    });
+  }
+
+  // sets the dimension based on the songs
+  setBarDimension() {
+    this.dimensionBar = this.cfilter.dimension(function (d: any) {
+      return d.song;
     });
   }
 
@@ -103,7 +121,51 @@ export class LanguageComponent implements OnInit {
         return 1;
       }
     });
+
     return groups;
+  }
+
+  countMainLang() {
+    const langSummAux = [];
+    this.data.forEach((d) => {
+      if (d.analysis && d.analysis.mainLanguage) {
+        let inList = false;
+        let countedSongidx = 0;
+
+        // Is the song already in the list?
+        langSummAux.forEach((lang) => {
+          if (inList === false) {
+            if (lang.song === d.song) { inList = true; } else { countedSongidx++; }
+          }
+        });
+
+        // Get values for sentiment
+        if (inList) {
+          if (d.analysis.mainLanguage === this.langGroups[0].lang) {
+            langSummAux[countedSongidx].firstLang++;
+          } else if (d.analysis.mainLanguage === this.langGroups[1].lang) {
+            langSummAux[countedSongidx].secondLang++;
+          } else if (d.analysis.mainLanguage === this.langGroups[2].lang) {
+            langSummAux[countedSongidx].thirdLang++;
+          } else {
+            langSummAux[countedSongidx].otherLang++;
+          }
+        } else {
+          if (d.analysis.mainLanguage === this.langGroups[0].lang) {
+            langSummAux.push({ song: d.song, firstLang: 1, secondLang: 0, thirdLang: 0, otherLang: 0 });
+          } else if (d.analysis.mainLanguage === this.langGroups[1].lang) {
+            langSummAux.push({ song: d.song, firstLang: 0, secondLang: 1, thirdLang: 0, otherLang: 0 });
+          } else if (d.analysis.mainLanguage === this.langGroups[2].lang) {
+            langSummAux.push({ song: d.song, firstLang: 0, secondLang: 0, thirdLang: 1, otherLang: 0 });
+          } else {
+            langSummAux.push({ song: d.song, firstLang: 0, secondLang: 0, thirdLang: 0, otherLang: 1 });
+          }
+        }
+
+      }
+    });
+
+    this.langSumm = langSummAux;
   }
 
   // returns the max value for the domain of the chart
@@ -119,14 +181,13 @@ export class LanguageComponent implements OnInit {
 
   // renders the chart
   renderChart () {
-    const groups: { group: CrossFilter.Group<{}, Date, any>, lang: string}[] = this.getLanguageGroups();
     this.maxGroupValue = this.getMaxGroupValue();
-    const group1 = groups[0];
+    const group1 = this.langGroups[0];
     this.languageChart
         .renderArea(true)
         .width(300)
         .height(200)
-        .ordinalColors(['#8c564b', '#e377c2', '#bcbd22', '#17becf', '#7f7f7f', '#9467bd', '#d62728', '#2ca02c', '#ff7f0e', '#1f77b4'])
+        .ordinalColors(['#8c564b', '#bcbd22', '#e377c2', '#17becf', '#7f7f7f', '#9467bd', '#d62728', '#2ca02c', '#ff7f0e', '#1f77b4'])
         .useViewBoxResizing(true)
         .dimension(this.dimension)
         .x(d3.scaleTime().domain([d3.min(this.data, (d: any) => new Date(d.publishedAt)),
@@ -143,7 +204,7 @@ export class LanguageComponent implements OnInit {
         })
         .xAxis().ticks(4);
       let maxLang = 0;
-      groups.forEach((group) => {
+      this.langGroups.forEach((group) => {
         if (group.group === group1.group || maxLang === 2) {
           return;
         }
@@ -157,10 +218,136 @@ export class LanguageComponent implements OnInit {
     this.languageChart.render();
   }
 
+  getPercentLang (id: any, lang: string) {
+    let groupedValue = 0;
+    let countedSongidx = 0;
+    let inList = false;
+    let sumAll = 0;
+
+    this.langSumm.forEach((sent) => {
+      if (inList === false) {
+        if (sent.song === id) { inList = true; } else { countedSongidx++; }
+      }
+    });
+
+    if (inList) { // song: d.song, firstLang: 0, secondLang: 0, thirdLang: 0, otherLang
+      const langOne = this.langSumm[countedSongidx].firstLang;
+      const langTwo = this.langSumm[countedSongidx].secondLang;
+      const langThree = this.langSumm[countedSongidx].thirdLang;
+      const langOthers = this.langSumm[countedSongidx].otherLang;
+      sumAll = langOne + langTwo + langThree + langOthers;
+
+      if (lang === this.langGroups[0].lang) {
+        groupedValue = (langOne * 100) / sumAll;
+      } else if (lang === this.langGroups[1].lang) {
+        groupedValue = (langTwo * 100) / sumAll;
+      } else if (lang === this.langGroups[2].lang) {
+        groupedValue = (langThree * 100) / sumAll;
+      } else if (lang === 'RemainingLang') {
+        groupedValue = (langOthers * 100) / sumAll;
+      } else if (lang !== 'NA') { console.log('lang' + lang + ' does not exist'); }
+    } else {
+      if (lang === 'NA') { return 100; }
+    }
+
+    return groupedValue;
+  }
+
+   // renders the chart
+   renderBarChart() {
+    const checklist = [];
+
+    const group = this.dimensionBar.group().reduceSum((d: any) => {
+      let returning = false;
+      const value = this.langGroups[0].lang;
+      checklist.forEach((e) => { if (e.song === d.song && e.value === value) { returning = true; } });
+      if (returning) { return 0; }
+      checklist.push({ song: d.song, value: value });
+      return this.getPercentLang(d.song, this.langGroups[0].lang);
+    });
+
+    this.barChart
+      .width(300)
+      .height(200)
+      .ordinalColors(['#8c564b', '#bcbd22', '#e377c2', '#EEEEEE'])
+      .useViewBoxResizing(true)
+      .dimension(this.dimensionBar)
+      .yAxisLabel('Language (%)')
+      .x(d3.scaleBand())
+      .y(d3.scaleLinear().domain([0, 100]))
+      .xUnits(dc.units.ordinal)
+      .brushOn(false)
+      .controlsUseVisibility(true)
+      .barPadding(0.1)
+      .outerPadding(0.05)
+      .group(group, this.langGroups[0].lang);
+
+      this.barChart
+      .stack(this.dimensionBar.group().reduceSum((d: any) => {
+        let returning = false;
+        const value = this.langGroups[1].lang;
+        checklist.forEach((e) => {if (e.song === d.song && e.value === value) { returning = true; } });
+        if (returning) { return 0; }
+        checklist.push({ song: d.song, value: value });
+        return this.getPercentLang(d.song, this.langGroups[1].lang);
+      }), this.langGroups[1].lang);
+
+      this.barChart
+      .stack(this.dimensionBar.group().reduceSum((d: any) => {
+        let returning = false;
+        const value = this.langGroups[2].lang;
+        checklist.forEach((e) => { if (e.song === d.song && e.value === value) { returning = true; } });
+        if (returning) { return 0; }
+        checklist.push({ song: d.song, value: value });
+        return this.getPercentLang(d.song, this.langGroups[2].lang);
+      }), this.langGroups[2].lang);
+
+      this.barChart
+      .stack(this.dimensionBar.group().reduceSum((d: any) => {
+        let returning = false;
+        const value = 'RemainingLang';
+        checklist.forEach((e) => { if (e.song === d.song && e.value === value) { returning = true; } });
+        if (returning) { return 0; }
+        checklist.push({ song: d.song, value: value });
+        return this.getPercentLang(d.song, 'RemainingLang');
+      }), 'others');
+
+      this.barChart.margins().right = 80;
+      this.barChart.margins().left = 50;
+      this.barChart.margins().bottom = 30;
+      this.barChart.legend(dc.legend().gap(5).x(220).y(10));
+      this.barChart.render();
+    }
+
   // sets the tooltip on mouseover
   setTooltipInfo(event: MouseEvent, tooltip: HTMLSpanElement) {
     tooltip.style.position = 'fixed';
     tooltip.style.top = (event.clientY - tooltip.offsetHeight) + 'px';
     tooltip.style.left = (event.clientX + 5) + 'px';
+  }
+
+  switchView(button: string) {
+    if (button === 'aggrButton' && !this.aggrView) {
+      this.aggrView = true;
+      this.compView = false;
+      document.getElementsByClassName('langAggr')[0].classList.toggle('active');
+      document.getElementsByClassName('langComp')[0].classList.toggle('active');
+    } else if (button === 'compButton' && !this.compView) {
+      this.aggrView = false;
+      this.compView = true;
+      document.getElementsByClassName('langAggr')[0].classList.toggle('active');
+      document.getElementsByClassName('langComp')[0].classList.toggle('active');
+    }
+    this.setVisibilityofViews();
+  }
+
+  setVisibilityofViews() {
+    if (this.aggrView) {
+      document.getElementById('languageGraph').classList.remove('hide');
+      document.getElementById('languageBarGraph').classList.add('hide');
+    } else if (this.compView) {
+      document.getElementById('languageGraph').classList.add('hide');
+      document.getElementById('languageBarGraph').classList.remove('hide');
+    }
   }
 }
