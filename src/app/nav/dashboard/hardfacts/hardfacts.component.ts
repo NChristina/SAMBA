@@ -35,7 +35,7 @@ export class HardfactsComponent implements OnInit {
       this.cfilter = filter;
       this.setDimension();
       this.setBarDimension();
-      if (this.data.length > 0) {
+      if (this.data && this.data.length > 0) {
         this.likeGroups = this.getLikeGroups();
         this.renderChart();
         this.renderBarChart();

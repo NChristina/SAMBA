@@ -19,7 +19,6 @@ export class LanguageComponent implements OnInit {
   data: any[];
   languageChart: dc.LineChart;
   barChart: dc.BarChart;
-  dataChange = 0;
   langGroups: { group: CrossFilter.Group<{}, Date, any>, lang: string}[];
   private maxGroupValue;
   renderedChart = false;
@@ -34,8 +33,7 @@ export class LanguageComponent implements OnInit {
       this.cfilter = filter;
       this.setDimension();
       this.setBarDimension();
-      if (this.data && this.data.length !== this.dataChange) {
-        this.dataChange = this.data.length;
+      if (this.data && this.data.length > 0) {
         this.langGroups = this.getLanguageGroups();
         this.countMainLang();
         this.renderChart();

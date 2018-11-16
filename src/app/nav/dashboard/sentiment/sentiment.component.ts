@@ -21,7 +21,6 @@ export class SentimentComponent implements OnInit {
   sentimentBarChart: dc.BarChart;
   private maxGroupValue;
   sentSumm = [];
-  dataChange = 0;
   renderedChart = false;
 
   constructor(private chartService: ChartService, private _element: ElementRef) { }
@@ -38,8 +37,7 @@ export class SentimentComponent implements OnInit {
       this.cfilter = filter;
       this.setDimension();
       this.setBarDimension();
-      if (this.data.length !== this.dataChange) {
-        this.dataChange = this.data.length;
+      if (this.data && this.data.length > 0) {
         this.sentGroups = this.getSentGroups();
         this.countSentiment();
         this.renderChart();

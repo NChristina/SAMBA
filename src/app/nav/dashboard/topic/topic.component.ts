@@ -14,8 +14,24 @@ export class TopicComponent implements OnInit {
   options: CloudOptions = { width: 1, height: 250, overflow: true };
   dataCloud: CloudData[] = [];
   cfilter: CrossFilter.CrossFilter<{}>;
-  dataChange = 0;
+  listSongs = [];
+  wordCounted = [];
   data: any[];
+  NLTKstopwords = ['i', 'me', 'my', 'myself', 'we', 'our', 'ours', 'ourselves', 'you',
+    're', 've', 'll', 'd', 'your', 'yours', 'yourself', 'yourselves',
+    'he', 'him', 'his', 'himself', 'she', 's', 'her', 'hers', 'herself', 'it',
+    'its', 'itself', 'they', 'them', 'their', 'theirs', 'themselves', 'what',
+    'which', 'who', 'whom', 'this', 'that', 'these', 'those', 'am', 'is',
+    'are', 'was', 'were', 'be', 'been', 'being', 'have', 'has', 'had', 'having', 'do',
+    'does', 'did', 'doing', 'a', 'an', 'the', 'and', 'but', 'if', 'or', 'because', 'as', 'until',
+    'while', 'of', 'at', 'by', 'for', 'with', 'about', 'against', 'between', 'into', 'through',
+    'during', 'before', 'after', 'above', 'below', 'to', 'from', 'up', 'down', 'in', 'out', 'on',
+    'off', 'over', 'under', 'again', 'further', 'then', 'once', 'here', 'there', 'when', 'where',
+    'why', 'how', 'all', 'any', 'both', 'each', 'few', 'more', 'most', 'other', 'some', 'such', 'no',
+    'nor', 'not', 'only', 'own', 'same', 'so', 'than', 'too', 'very', 's', 't', 'can', 'will',
+    'just', 'don',  'should',  'now', 'd', 'll', 'm', 'o', 're', 've', 'y',
+    'ain', 'aren',  'couldn', 'didn', 'doesn', 'hadn', 'hasn',  'haven', 'isn', 'ma', 'mightn',
+    'mustn', 'needn', 't', 'shan', 'shouldn', 'wasn', 'weren', 'won', 'wouldn'];
 
   constructor(private chartService: ChartService, private _element: ElementRef) { }
 
@@ -26,15 +42,17 @@ export class TopicComponent implements OnInit {
 
     this.chartService.getCrossfilter().subscribe((filter) => {
       this.cfilter = filter;
-      if (this.data.length !== this.dataChange) {
-        this.dataChange = this.data.length;
-        this.createWordCloud();
-      }
+      this.listSongs = [];
+      this.wordCounted = [];
+
+      this.createWordCloud();
+      this.createLists();
     });
 
     this.setVisibilityofViews();
   }
 
+  // Tokenize, clean, and count
   createWordCloud() {
     // Tokenize it
     const natural = require('natural');
@@ -46,51 +64,106 @@ export class TopicComponent implements OnInit {
       if (d.analysis && d.analysis.mainLanguage === 'en') {
         const topicSent = this.getSentiment(d);
         let word_tokens = tokenizerPunct.tokenize(d.text);
-        word_tokens = sw.removeStopwords(word_tokens);
+        word_tokens = sw.removeStopwords(word_tokens, this.NLTKstopwords);
         word_tokens.forEach((word) => {
-          words.push({ topic: word, sentiment: topicSent }); // canAdd song: d.song
+          words.push({ topic: word, sentiment: topicSent, song: d.song });
         });
+
+        if (this.listSongs.indexOf(d.song.toString()) === -1) {
+          this.listSongs.push(d.song.toString());
+        }
       }
     });
 
     this.counter(words);
   }
 
+  // Receive a list with words and the sentiment and song name from the comment the wors came from
   private counter(words: any) {
     const cWds = [];
 
     words.forEach((w) => {
       let inList = false;
-      let countedWordidx = 0;
+      let idxcw = 0;
+      // searches the position of the element if it is in the list
       cWds.forEach((cw) => {
         if (inList === false) {
-          if (cw.text.trim().toLowerCase() === w.topic.trim().toLowerCase()) { inList = true; } else { countedWordidx++; }
+          if (cw.text.trim().toLowerCase() === w.topic.trim().toLowerCase()) { inList = true; } else { idxcw++; }
         }
       });
 
       if (inList) {
-        cWds[countedWordidx].count++;
-        cWds[countedWordidx].sentiment += w.sentiment;
+        cWds[idxcw].count++;
+        cWds[idxcw].sentiment += w.sentiment;
+        if (cWds[idxcw].songs.indexOf(w.song.toString()) === -1) {
+          cWds[idxcw].songs.push(w.song.toString());
+        }
       } else {
-        cWds.push({ text: w.topic.toString(), count: 1, sentiment: w.sentiment });
+        cWds.push({ text: w.topic.toString(), count: 1, sentiment: w.sentiment, songs: [w.song.toString()] });
       }
     });
 
     const dataForCloud = [];
     if (cWds.length > 0) {
       cWds.sort(function(a, b) { return b.count - a.count; });
+      this.wordCounted = cWds;
 
       let size = 10;
       let i = 0;
       while (i < 10) {
         const sentcolor = this.getColor(cWds[i].sentiment / cWds[i].count);
-        dataForCloud.push({ text: cWds[i].text.toString(), weight: size, color: sentcolor.toString() });
+        dataForCloud.push({ text: cWds[i].text.toString(), weight: size, color: sentcolor.toString()}); // tooltip: cWds[i].songs.join(', ')
         i++;
         size -= 1;
       }
     }
 
     this.dataCloud = dataForCloud;
+  }
+
+  // Topics by song
+  createLists() {
+    // Clean div to append new list
+    const list = document.getElementById('topicList');
+    while (list.hasChildNodes()) { list.removeChild(list.firstChild); }
+    const size = 95 / this.listSongs.length;
+
+    // Look in the most frequent words, five topics by artist
+    this.listSongs.forEach((song) => {
+      const div = document.createElement('div');
+      const b = document.createElement('b');
+      let title = document.createTextNode(song);
+      if (song.length > 20) {
+        title = document.createTextNode(song.substring(0, 15) + '...');
+      }
+
+      b.appendChild(title);
+      div.appendChild(b);
+      div.style.cssFloat = 'left';
+      div.style.width = size + '%';
+      div.style.borderRight = '1px solid #eeeeee';
+      div.style.wordWrap = 'break-word';
+      div.style.textAlign = 'center';
+
+      let i = 0;
+      let j = 0;
+      while (i < 10 && j < this.wordCounted.length) {
+        if (this.wordCounted[j].songs.indexOf(song) !== -1) {
+          const p = document.createElement('p');
+          const topic = document.createTextNode('- ' + this.wordCounted[j].text.toString());
+          p.appendChild(topic);
+          const sentcolor = this.getColor(this.wordCounted[j].sentiment / this.wordCounted[j].count);
+          p.style.color = sentcolor;
+          p.style.marginBottom = '-10px';
+          div.appendChild(p);
+          i++;
+        }
+        j++;
+      }
+
+      // Add the lists to the comparison view
+      document.getElementById('topicList').appendChild(div);
+    });
   }
 
   reDraw() {
@@ -166,6 +239,5 @@ export class TopicComponent implements OnInit {
     }
     this.reDraw();
   }
-
 }
 
