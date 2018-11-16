@@ -31,7 +31,7 @@ export class HardfactsComponent implements OnInit {
       if (this.data.length > 0) {
         this.renderChart();
       }
-    }); 
+    });
 
     this.renderedChart = false;
   }
@@ -87,6 +87,7 @@ export class HardfactsComponent implements OnInit {
       .barPadding(0.1)
       .clipPadding(100)
       // .outerPadding(0.05)
+      .renderTitle(false)
       .group(group, 'Likes');
 
     // stacks the dislikes
@@ -94,11 +95,13 @@ export class HardfactsComponent implements OnInit {
       .stack(this.dimension.group().reduceSum((d: any) => {
         let returning = false;
         const value = (parseInt(d.videoDislikes, 10));
+
         checklist.forEach((e) => {
           if (e.song === d.song && e.value === value) {
             returning = true;
           }
         });
+
         if (returning) {
           return 0;
         }
@@ -115,12 +118,35 @@ export class HardfactsComponent implements OnInit {
         return d.data.key;
       });
 
-    this.getLikesandDislikes();
+    //let datasTest = this.getLikesandDislikes();
+    //get likes and dislikes for the tooltip in the hardfacts section
+
+    //legende
     this.likeChart.legend(dc.legend().gap(5).x(220).y(10));
+
+    // this.getLikesandDislikes();
     this.likeChart.render();
     this.renderedChart = true;
 
+    let tooltipBar = d3.selectAll('.tooltipBar');
 
+    this.likeChart.renderlet((chart) => {
+      chart.selectAll('.bar')
+        .on('mouseover.samba', (d, e) => {          
+
+          tooltipBar.transition().duration(150).style('opacity', .9);
+
+          const currBar = this.getLikesandDislikes()[e];
+
+          tooltipBar.html(currBar.name + '<br/>' + 'Likes: ' + currBar.likes + '<br/>' + 'Dislikes: ' + currBar.dislikes)
+            .style('left', ((<any>d3).event.pageX) - 10 + 'px')
+            .style('top', ((<any>d3).event.pageY) + 'px');
+        })
+        .on('mouseout.samba', (d) => {
+          console.log('Moused out');
+          tooltipBar.transition().duration(350).style('opacity', 0);
+        });
+    })
   }
 
   // returns the views and song name for each song (tooltip)
@@ -137,7 +163,6 @@ export class HardfactsComponent implements OnInit {
     return returner;
   }
 
-  
 
   // returns the amount of comments and the song for the tooltip
   getSongsAndComments(): any[] {
@@ -150,31 +175,29 @@ export class HardfactsComponent implements OnInit {
         { name: d.key, comments: d.values.length }
       );
     });
+    //console.log('comments', returner);
     return returner;
   }
 
-  getLikesandDislikes () {
-    let likes = 0;
-    let dislikes = 0;
-
+  getLikesandDislikes() {
     const nest = d3.nest()
       .key((d: any) => d.song)
       .entries(this.data);
 
-      console.log('daten', this.data, 'nest', nest);
-      nest.forEach((d) => {
-      likes += parseInt(d.values[0].videoLikes, 10);
-    });
+    let likesDislikes = [];
 
     nest.forEach((d) => {
-      dislikes += parseInt(d.values[0].videoDislikes, 10);
+      likesDislikes.push(
+        {
+          name: d.key,
+          likes: d.values[0].videoLikes,
+          dislikes: d.values[0].videoDislikes
+        });
+
     });
-    console.log('likes', likes, 'dislikes', dislikes);
-    return {
-      likes: likes,
-      dislikes: dislikes
-     };  
+    return likesDislikes;
   }
+
 
   // returns the total views
   getTotalViews() {
