@@ -12,13 +12,13 @@ import * as dc from 'dc';
 export class SentimentComponent implements OnInit {
   aggrView = true;
   compView = false;
-  sentimentLineChart: dc.LineChart;
-  sentimentBarChart: dc.BarChart;
   data: any[];
   cfilter: CrossFilter.CrossFilter<{}>;
   dimension: CrossFilter.Dimension<{}, Date>;
   dimensionBar: CrossFilter.Dimension<{}, number>;
   sentGroups: { group: CrossFilter.Group<{}, Date, any>, sent: string}[];
+  sentimentLineChart: dc.LineChart;
+  sentimentBarChart: dc.BarChart;
   private maxGroupValue;
   sentSumm = [];
   dataChange = 0;

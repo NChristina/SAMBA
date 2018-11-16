@@ -10,36 +10,71 @@ import * as dc from 'dc';
   styleUrls: ['./hardfacts.component.scss']
 })
 export class HardfactsComponent implements OnInit {
-  aggrView = false;
-  compView = true;
+  aggrView = true;
+  compView = false;
   data: any[];
-  likeChart: dc.BarChart;
-  dimension: CrossFilter.Dimension<{}, number>;
   cfilter: CrossFilter.CrossFilter<{}>;
+  dimension: CrossFilter.Dimension<{}, Date>;
+  dimensionBar: CrossFilter.Dimension<{}, number>;
+  likeGroups: { group: CrossFilter.Group<{}, Date, any>, likes: string}[];
+  likeLineChart: dc.LineChart;
+  likeBarChart: dc.BarChart;
+  private maxGroupValue;
   renderedChart = false;
 
   constructor(private chartService: ChartService, private _element: ElementRef) { }
 
   ngOnInit() {
     // initialization of the chart
-    this.likeChart = dc.barChart('#likeChart');
+    this.likeLineChart = dc.lineChart('#likeChartLine');
+    this.likeBarChart = dc.barChart('#likeChart');
     this.chartService.GetData().subscribe((data) => {
       this.data = data;
     });
     this.chartService.getCrossfilter().subscribe((filter) => {
       this.cfilter = filter;
       this.setDimension();
+      this.setBarDimension();
       if (this.data.length > 0) {
+        this.likeGroups = this.getLikeGroups();
         this.renderChart();
+        this.renderBarChart();
       }
     });
+
+    // gets the range through the chart service from the mainVis Component
+    this.chartService.getChartRange().subscribe((range) => {
+      if (this.data !== undefined && range.range !== null && range.range !== undefined) {
+        this.likeLineChart
+          .x(d3.scaleTime().domain([range.range[0], range.range[1]]))
+          .y(d3.scaleLinear().domain([0, this.getMaxGroupValue()]))
+          .round(d3.timeMonth);
+        this.likeLineChart.redraw();
+      } else {
+        if (!dc.chartRegistry.list().some((c) => c.hasFilter())) {
+          this.likeLineChart
+            .x(d3.scaleTime().domain([d3.min(this.data, (d: any) => new Date(d.publishedAt)),
+              d3.max(this.data, (d: any) => new Date(d.publishedAt))]))
+            .y(d3.scaleLinear().domain([0, this.maxGroupValue]));
+        }
+      }
+    });
+
     this.renderedChart = false;
     this.setVisibilityofViews();
   }
 
-  // sets the dimension based on the songs
+  // sets the crossfilter dimension
   setDimension() {
-    this.dimension = this.cfilter.dimension(function (d: any) {
+    this.dimension = this.cfilter.dimension((d: any) => {
+      const splitted = d.publishedAt.split('-');
+      return new Date(splitted[0] + '-' + splitted[1]);
+    });
+  }
+
+  // sets the dimension based on the songs
+  setBarDimension() {
+    this.dimensionBar = this.cfilter.dimension(function (d: any) {
       return d.song;
     });
   }
@@ -55,13 +90,99 @@ export class HardfactsComponent implements OnInit {
     return m;
   }
 
+  // returns a crossfilter-group for each language x
+  private getLikeGroups(): { group: CrossFilter.Group<{}, Date, any>, likes: string}[] {
+    if (this.data.length < 0) { return; }
+    const groups: { group: CrossFilter.Group<{}, Date, any>, likes: string}[] = [];
+
+    // group by likes
+    const nested = d3.nest().key((d: any) => {
+      if (d.likeCount > 0) { return 'Liked'; } else { return 'Others'; }
+    })
+    .entries(this.data);
+    nested.forEach((like) => {
+      const g = this.dimension.group().reduceSum((d: any) => {
+        let catg = '';
+        if (d.likeCount > 0) { catg = 'Liked'; } else { catg = 'Others'; }
+        return catg === like.key;
+      });
+      groups.push({group: g, likes: like.key });
+    });
+
+    return groups;
+  }
+
+  // Reorder groups by category: liked comments and other comments
+  reorderGroups() {
+    const groups: { group: CrossFilter.Group<{}, Date, any>, likes: string}[] = [];
+
+    this.likeGroups.forEach((g) => {
+      if (g.likes === 'Liked') {
+        groups[0] = g;
+      } else if (g.likes === 'Others') {
+        groups[1] = g;
+      }
+    });
+
+    return groups;
+  }
+
+  // returns the max value for the domain of the chart
+  getMaxGroupValue(): number {
+    let m = 0;
+    this.dimension.group().all().forEach((date: any) => {
+      if (date.value > m) { m = date.value; }
+    });
+    return m;
+  }
+
+  // Renders line chart (aggregation)
+  renderChart () {
+    this.maxGroupValue = this.getMaxGroupValue();
+    const sentGroupsOrdered = this.reorderGroups();
+    const group1 = sentGroupsOrdered[0];
+    this.likeLineChart
+        .renderArea(true)
+        .width(300)
+        .height(200)
+        .ordinalColors(['#377eb8', '#eeeeee'])
+        .useViewBoxResizing(true)
+        .dimension(this.dimension)
+        .x(d3.scaleTime().domain([d3.min(this.data, (d: any) => new Date(d.publishedAt)),
+          d3.max(this.data, (d: any) => new Date(d. publishedAt))]))
+        .xAxisLabel('Date')
+        .y(d3.scaleLinear().domain([0, this.maxGroupValue]))
+        .yAxisLabel('Comment Amount')
+        .interpolate('monotone')
+        .legend(dc.legend().x(250).y(10).itemHeight(13).gap(5))
+        .brushOn(true)
+        .group(group1.group, group1.likes)
+        .valueAccessor(function (d) {
+            return d.value;
+        })
+        .xAxis().ticks(4);
+      let maxSent = 0;
+      sentGroupsOrdered.forEach((group) => {
+        if (group.group === group1.group || maxSent === 1) {
+          return;
+        }
+        // stacks the groups
+        this.likeLineChart
+          .stack(group.group, group.likes, function (d) {
+          return d.value;
+        });
+        maxSent++;
+      });
+    this.likeLineChart.render();
+  }
+
   // renders the chart
-  renderChart() {
+  renderBarChart() {
     const checklist = [];
     const barOrder = [];
 
     // Get values for first group (Likes)
-    const group = this.dimension.group().reduceSum((d: any) => {
+    const group = this.dimensionBar.group().reduceSum((d: any) => {
       let returning = false;
       const value = parseInt(d.videoLikes, 10);
       checklist.forEach((e) => { if (e.song === d.song && e.value === value) { returning = true; } });
@@ -71,11 +192,11 @@ export class HardfactsComponent implements OnInit {
     });
 
     // Set chart and stacks first group (Likes)
-    this.likeChart
+    this.likeBarChart
       .width(300)
       .height(200)
       .useViewBoxResizing(true)
-      .dimension(this.dimension)
+      .dimension(this.dimensionBar)
       .yAxisLabel('Likes / Dislikes')
       .ordinalColors(['#377eb8', '#e41a1c'])
       .x(d3.scaleBand())
@@ -89,8 +210,8 @@ export class HardfactsComponent implements OnInit {
       .group(group, 'Likes');
 
       // Stacks second group (Dislikes)
-      this.likeChart
-      .stack(this.dimension.group().reduceSum((d: any) => {
+      this.likeBarChart
+      .stack(this.dimensionBar.group().reduceSum((d: any) => {
         let returning = false;
         const value = (parseInt(d.videoDislikes, 10));
         checklist.forEach((e) => { if (e.song === d.song && e.value === value) { returning = true; } });
@@ -99,17 +220,17 @@ export class HardfactsComponent implements OnInit {
         return value;
       }), 'Dislikes');
 
-    this.likeChart.margins().right = 80;
-    this.likeChart.margins().left = 50;
-    this.likeChart.margins().bottom = 30;
-    this.likeChart.renderLabel(true).label(function (d) { barOrder.push({ label: d.data.key.toString() }); return d.data.key; });
-    this.likeChart.legend(dc.legend().gap(5).x(220).y(10));
-    this.likeChart.render();
+    this.likeBarChart.margins().right = 80;
+    this.likeBarChart.margins().left = 50;
+    this.likeBarChart.margins().bottom = 30;
+    this.likeBarChart.renderLabel(true).label(function (d) { barOrder.push({ label: d.data.key.toString() }); return d.data.key; });
+    this.likeBarChart.legend(dc.legend().gap(5).x(220).y(10));
+    this.likeBarChart.render();
     this.renderedChart = true;
     const tooltipBar = d3.selectAll('.tooltipBar');
 
     // Callback functions to display tooltips over each bar
-    this.likeChart.renderlet((chart) => {
+    this.likeBarChart.renderlet((chart) => {
       chart.selectAll('.bar')
         .on('mouseover.samba', (d, e) => {
           tooltipBar.transition().duration(150).style('opacity', .9);
