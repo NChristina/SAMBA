@@ -16,6 +16,7 @@ export class HardfactsComponent implements OnInit {
   likeChart: dc.BarChart;
   dimension: CrossFilter.Dimension<{}, number>;
   cfilter: CrossFilter.CrossFilter<{}>;
+  renderedChart = false;
 
   constructor(private chartService: ChartService, private _element: ElementRef) { }
 
@@ -32,6 +33,7 @@ export class HardfactsComponent implements OnInit {
         this.renderChart();
       }
     });
+    this.renderedChart = false;
     this.setVisibilityofViews();
   }
 
@@ -56,20 +58,19 @@ export class HardfactsComponent implements OnInit {
   // renders the chart
   renderChart() {
     const checklist = [];
+    const barOrder = [];
+
+    // Get values for first group (Likes)
     const group = this.dimension.group().reduceSum((d: any) => {
       let returning = false;
       const value = parseInt(d.videoLikes, 10);
-      checklist.forEach((e) => {
-        if (e.song === d.song && e.value === value) {
-          returning = true;
-        }
-      });
-      if (returning) {
-        return 0;
-      }
+      checklist.forEach((e) => { if (e.song === d.song && e.value === value) { returning = true; } });
+      if (returning) { return 0; }
       checklist.push({ song: d.song, value: value });
       return value;
     });
+
+    // Set chart and stacks first group (Likes)
     this.likeChart
       .width(300)
       .height(200)
@@ -84,28 +85,64 @@ export class HardfactsComponent implements OnInit {
       .controlsUseVisibility(true)
       .barPadding(0.1)
       .outerPadding(0.05)
+      .renderTitle(false)
       .group(group, 'Likes');
-      // stacks the dislikes
+
+      // Stacks second group (Dislikes)
       this.likeChart
       .stack(this.dimension.group().reduceSum((d: any) => {
         let returning = false;
         const value = (parseInt(d.videoDislikes, 10));
-        checklist.forEach((e) => {
-          if (e.song === d.song && e.value === value) {
-            returning = true;
-          }
-        });
-        if (returning) {
-          return 0;
-        }
+        checklist.forEach((e) => { if (e.song === d.song && e.value === value) { returning = true; } });
+        if (returning) { return 0; }
         checklist.push({ song: d.song, value: value });
         return value;
       }), 'Dislikes');
+
     this.likeChart.margins().right = 80;
     this.likeChart.margins().left = 50;
     this.likeChart.margins().bottom = 30;
+    this.likeChart.renderLabel(true).label(function (d) { barOrder.push({ label: d.data.key.toString() }); return d.data.key; });
     this.likeChart.legend(dc.legend().gap(5).x(220).y(10));
     this.likeChart.render();
+    this.renderedChart = true;
+    const tooltipBar = d3.selectAll('.tooltipBar');
+
+    // Callback functions to display tooltips over each bar
+    this.likeChart.renderlet((chart) => {
+      chart.selectAll('.bar')
+        .on('mouseover.samba', (d, e) => {
+          tooltipBar.transition().duration(150).style('opacity', .9);
+          const AllLikesDeslikes = this.getLikesandDislikes();
+          // If there is any summ of likes and deslikes, generate tooltip
+          if (AllLikesDeslikes && barOrder[e]) {
+            let currBar;
+            AllLikesDeslikes.forEach((song) => {
+              if (song.name === barOrder[e].label) { currBar = song; }
+            });
+            tooltipBar.html(currBar.name + '<br/>' + 'Likes: ' + currBar.likes + '<br/>' + 'Dislikes: ' + currBar.dislikes)
+              .style('left', ((<any>d3).event.pageX) - 10 + 'px')
+              .style('top', ((<any>d3).event.pageY) + 'px');
+            }
+        })
+        .on('mouseout.samba', (d) => { tooltipBar.transition().duration(350).style('opacity', 0); });
+    });
+  }
+
+  // Summary of likes and dislikes for tooltips in the chart bar
+  getLikesandDislikes() {
+    const nest = d3.nest().key((d: any) => d.song).entries(this.data);
+    const likesDislikes = [];
+
+    nest.forEach((d) => {
+      likesDislikes.push({
+        name: d.key,
+        likes: d.values[0].videoLikes,
+        dislikes: d.values[0].videoDislikes
+      });
+    });
+
+    return likesDislikes;
   }
 
   // returns the views and song name for each song (tooltip)

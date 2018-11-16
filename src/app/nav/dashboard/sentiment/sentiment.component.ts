@@ -10,18 +10,19 @@ import * as dc from 'dc';
   styleUrls: ['./sentiment.component.scss']
 })
 export class SentimentComponent implements OnInit {
-  aggrView = false;
-  compView = true;
+  aggrView = true;
+  compView = false;
   sentimentLineChart: dc.LineChart;
   sentimentBarChart: dc.BarChart;
   data: any[];
   cfilter: CrossFilter.CrossFilter<{}>;
   dimension: CrossFilter.Dimension<{}, Date>;
   dimensionBar: CrossFilter.Dimension<{}, number>;
+  sentGroups: { group: CrossFilter.Group<{}, Date, any>, sent: string}[];
   private maxGroupValue;
   sentSumm = [];
   dataChange = 0;
-  sentGroups: { group: CrossFilter.Group<{}, Date, any>, sent: string}[];
+  renderedChart = false;
 
   constructor(private chartService: ChartService, private _element: ElementRef) { }
 
@@ -64,6 +65,7 @@ export class SentimentComponent implements OnInit {
       }
     });
 
+    this.renderedChart = false;
     this.setVisibilityofViews();
   }
 
@@ -276,7 +278,7 @@ export class SentimentComponent implements OnInit {
     return groups;
   }
 
-  // renders the chart
+  // Renders line chart (aggregation)
   renderChart () {
     this.maxGroupValue = this.getMaxGroupValue();
     const sentGroupsOrdered = this.reorderGroups();
@@ -316,17 +318,18 @@ export class SentimentComponent implements OnInit {
     this.sentimentLineChart.render();
   }
 
-  // renders the chart
+  // renders bar chart (comparison)
   renderBarChart() {
     const checklist = [];
+    const barOrder = [];
 
     const group = this.dimensionBar.group().reduceSum((d: any) => {
       let returning = false;
-      const value = this.getGroupedSentiment(d.song, 'Positive');
+      const value = 'Positive';
       checklist.forEach((e) => { if (e.song === d.song && e.value === value) { returning = true; } });
       if (returning) { return 0; }
       checklist.push({ song: d.song, value: value });
-      return value;
+      return this.getGroupedSentiment(d.song, 'Positive');
     });
 
     this.sentimentBarChart
@@ -343,61 +346,86 @@ export class SentimentComponent implements OnInit {
       .controlsUseVisibility(true)
       .barPadding(0.1)
       .outerPadding(0.05)
+      .renderTitle(false)
       .group(group, 'Positive');
 
     // stacks the neutrals
     this.sentimentBarChart
       .stack(this.dimensionBar.group().reduceSum((d: any) => {
         let returning = false;
-        const value = this.getGroupedSentiment(d.song, 'Neutral');
+        const value = 'Neutral';
 
         checklist.forEach((e) => { if (e.song === d.song && e.value === value) { returning = true; } });
         if (returning) { return 0; }
         checklist.push({ song: d.song, value: value });
-        return value;
+        return this.getGroupedSentiment(d.song, 'Neutral');
       }), 'Neutral');
 
       // stacks the negatives
     this.sentimentBarChart
     .stack(this.dimensionBar.group().reduceSum((d: any) => {
       let returning = false;
-      const value = this.getGroupedSentiment(d.song, 'Negative');
+      const value = 'Negative';
 
       checklist.forEach((e) => { if (e.song === d.song && e.value === value) { returning = true; } });
       if (returning) { return 0; }
       checklist.push({ song: d.song, value: value });
-      return value;
+      return this.getGroupedSentiment(d.song, 'Negative');
     }), 'Negative');
 
     // stacks the mixed sentiment
     this.sentimentBarChart
     .stack(this.dimensionBar.group().reduceSum((d: any) => {
       let returning = false;
-      const value = this.getGroupedSentiment(d.song, 'Mixed');
+      const value = 'Mixed';
 
       checklist.forEach((e) => { if (e.song === d.song && e.value === value) { returning = true; } });
       if (returning) { return 0; }
       checklist.push({ song: d.song, value: value });
-      return value;
+      return this.getGroupedSentiment(d.song, 'Mixed');
     }), 'Mixed');
 
     // stacks the non assessed sentiment collumn
     this.sentimentBarChart
     .stack(this.dimensionBar.group().reduceSum((d: any) => {
       let returning = false;
-      const value = this.getGroupedSentiment(d.song, 'NA');
+      const value = 'NA';
 
       checklist.forEach((e) => { if (e.song === d.song && e.value === value) { returning = true; } });
       if (returning) { return 0; }
       checklist.push({ song: d.song, value: value });
-      return value;
+      return this.getGroupedSentiment(d.song, 'NA');
     }), 'N/A');
 
     this.sentimentBarChart.margins().right = 80;
     this.sentimentBarChart.margins().left = 50;
     this.sentimentBarChart.margins().bottom = 30;
+    this.sentimentBarChart.renderLabel(true).label(function (d) { barOrder.push({ label: d.data.key.toString() }); return d.data.key; });
     this.sentimentBarChart.legend(dc.legend().gap(5).x(220).y(10));
     this.sentimentBarChart.render();
+    this.renderedChart = true;
+    const tooltipBar = d3.selectAll('.tooltipBar');
+
+    // Callback functions to display tooltips over each bar
+    this.sentimentBarChart.renderlet((chart) => {
+      chart.selectAll('.bar')
+        .on('mouseover.samba', (d, e) => {
+          tooltipBar.transition().duration(150).style('opacity', .9);
+          if (barOrder[e]) {
+            console.log();
+            // this.getGroupedSentiment(d.song, 'Mixed');
+            const tlPs = 'Pos: ' + this.getGroupedSentiment(barOrder[e].label, 'Positive').toFixed(1);
+            const tlNu = 'Neu: ' + this.getGroupedSentiment(barOrder[e].label, 'Neutral').toFixed(1);
+            const tlNg = 'Neg: ' + this.getGroupedSentiment(barOrder[e].label, 'Negative').toFixed(1);
+            const tlMx = 'Mix: ' + this.getGroupedSentiment(barOrder[e].label, 'Mixed').toFixed(1);
+            const tNA = 'N/A: ' + this.getGroupedSentiment(barOrder[e].label, 'NA').toFixed(1);
+            tooltipBar.html(barOrder[e].label + '<br/>' + tlPs + '%<br/>' + tlNu + '%<br/>' + tlNg + '%<br/>' + tlMx + '%<br/>' + tNA + '%')
+              .style('left', ((<any>d3).event.pageX) - 10 + 'px')
+              .style('top', ((<any>d3).event.pageY) + 'px');
+            }
+        })
+        .on('mouseout.samba', (d) => { tooltipBar.transition().duration(350).style('opacity', 0); });
+    });
   }
 
   // sets the tooltip on mouseover

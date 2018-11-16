@@ -22,6 +22,7 @@ export class LanguageComponent implements OnInit {
   dataChange = 0;
   langGroups: { group: CrossFilter.Group<{}, Date, any>, lang: string}[];
   private maxGroupValue;
+  renderedChart = false;
 
   constructor(private chartService: ChartService) { }
 
@@ -63,6 +64,7 @@ export class LanguageComponent implements OnInit {
       }
     });
 
+    this.renderedChart = false;
     this.setVisibilityofViews();
   }
 
@@ -258,6 +260,7 @@ export class LanguageComponent implements OnInit {
    // renders the bar chart
    renderBarChart() {
     const checklist = [];
+    const barOrder = [];
 
     const group = this.dimensionBar.group().reduceSum((d: any) => {
       let returning = false;
@@ -282,6 +285,7 @@ export class LanguageComponent implements OnInit {
       .controlsUseVisibility(true)
       .barPadding(0.1)
       .outerPadding(0.05)
+      .renderTitle(false)
       .group(group, this.langGroups[0].lang);
 
       this.barChart
@@ -317,8 +321,30 @@ export class LanguageComponent implements OnInit {
       this.barChart.margins().right = 80;
       this.barChart.margins().left = 50;
       this.barChart.margins().bottom = 30;
+      this.barChart.renderLabel(true).label(function (d) { barOrder.push({ label: d.data.key.toString() }); return d.data.key; });
       this.barChart.legend(dc.legend().gap(5).x(220).y(10));
       this.barChart.render();
+      this.renderedChart = true;
+      const tooltipBar = d3.selectAll('.tooltipBar');
+
+      // Callback functions to display tooltips over each bar
+      this.barChart.renderlet((chart) => {
+        chart.selectAll('.bar')
+          .on('mouseover.samba', (d, e) => {
+            tooltipBar.transition().duration(150).style('opacity', .9);
+            if (barOrder[e]) {
+              console.log();
+              const FirstLang = this.langGroups[0].lang + ': ' + this.getPercentLang(barOrder[e].label, this.langGroups[0].lang).toFixed(1);
+              const SecLang = this.langGroups[1].lang + ': ' + this.getPercentLang(barOrder[e].label, this.langGroups[1].lang).toFixed(1);
+              const ThrLang = this.langGroups[2].lang + ': ' + this.getPercentLang(barOrder[e].label, this.langGroups[2].lang).toFixed(1);
+              const OthLang = 'others: ' + this.getPercentLang(barOrder[e].label, 'RemainingLang').toFixed(1);
+              tooltipBar.html(barOrder[e].label + '<br/>' + FirstLang + '%<br/>' + SecLang + '%<br/>' + ThrLang + '%<br/>' + OthLang + '%')
+                .style('left', ((<any>d3).event.pageX) - 10 + 'px')
+                .style('top', ((<any>d3).event.pageY) + 'px');
+              }
+          })
+          .on('mouseout.samba', (d) => { tooltipBar.transition().duration(350).style('opacity', 0); });
+      });
     }
 
   // sets the tooltip on mouseover

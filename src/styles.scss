@@ -164,6 +164,7 @@ body {
 
 #languageBarGraph svg g .y .tick text,
 #sentimentChart svg g .y .tick text,
+#likeChart svg g .barLabel,
 #likeChart svg g .y .tick text {
   display: none;
 }
@@ -182,13 +183,13 @@ body {
 
 .aggrButton,
 .compButton{
-  background:#ffffff;
+  background:#eeeeee;
   outline: none;
 }
 
 .aggrButton.active,
 .compButton.active{
-  background:#eeeeee;
+  background:#ffffff;
 }
 
 .compButton{

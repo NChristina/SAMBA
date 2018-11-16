@@ -1,0 +1,17 @@
+div.tooltipBar {
+    opacity: 0;
+    width: auto;
+    height: fit-content;
+    background-color: #234;
+    color: white;
+    border-radius: 3px;
+    padding: 5px 5px;
+    position: absolute;
+    z-index: 1;
+    top: 0%;
+    margin-left: 0;     
+    top: -30%;
+    left: -20px;
+    font: 12px sans-serif;
+    z-index: 10000;   
+}
