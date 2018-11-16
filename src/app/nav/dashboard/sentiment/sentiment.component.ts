@@ -12,18 +12,23 @@ import * as dc from 'dc';
 export class SentimentComponent implements OnInit {
   aggrView = false;
   compView = true;
-  sentimentChart: dc.BarChart;
+  sentimentLineChart: dc.LineChart;
+  sentimentBarChart: dc.BarChart;
   data: any[];
   cfilter: CrossFilter.CrossFilter<{}>;
-  dimension: CrossFilter.Dimension<{}, number>;
+  dimension: CrossFilter.Dimension<{}, Date>;
+  dimensionBar: CrossFilter.Dimension<{}, number>;
+  private maxGroupValue;
   sentSumm = [];
   dataChange = 0;
+  sentGroups: { group: CrossFilter.Group<{}, Date, any>, sent: string}[];
 
   constructor(private chartService: ChartService, private _element: ElementRef) { }
 
   ngOnInit() {
     // initialization of the chart
-    this.sentimentChart = dc.barChart('#sentimentChart');
+    this.sentimentLineChart = dc.lineChart('#sentimentChartLine');
+    this.sentimentBarChart = dc.barChart('#sentimentChart');
     this.chartService.GetData().subscribe((data) => {
       this.data = data;
     });
@@ -31,10 +36,31 @@ export class SentimentComponent implements OnInit {
     this.chartService.getCrossfilter().subscribe((filter) => {
       this.cfilter = filter;
       this.setDimension();
+      this.setBarDimension();
       if (this.data.length !== this.dataChange) {
         this.dataChange = this.data.length;
+        this.sentGroups = this.getSentGroups();
         this.countSentiment();
         this.renderChart();
+        this.renderBarChart();
+      }
+    });
+
+    // gets the range through the chart service from the mainVis Component
+    this.chartService.getChartRange().subscribe((range) => {
+      if (this.data !== undefined && range.range !== null && range.range !== undefined) {
+        this.sentimentLineChart
+          .x(d3.scaleTime().domain([range.range[0], range.range[1]]))
+          .y(d3.scaleLinear().domain([0, this.getMaxGroupValue()]))
+          .round(d3.timeMonth);
+        this.sentimentLineChart.redraw();
+      } else {
+        if (!dc.chartRegistry.list().some((c) => c.hasFilter())) {
+          this.sentimentLineChart
+            .x(d3.scaleTime().domain([d3.min(this.data, (d: any) => new Date(d.publishedAt)),
+              d3.max(this.data, (d: any) => new Date(d.publishedAt))]))
+            .y(d3.scaleLinear().domain([0, this.maxGroupValue]));
+        }
       }
     });
 
@@ -109,9 +135,17 @@ export class SentimentComponent implements OnInit {
     if (countPos > 0 && countNeg > 0) { return true; } else { return false; }
   }
 
-  // sets the dimension based on the songs
+  // sets the crossfilter dimension
   setDimension() {
-    this.dimension = this.cfilter.dimension(function (d: any) {
+    this.dimension = this.cfilter.dimension((d: any) => {
+      const splitted = d.publishedAt.split('-');
+      return new Date(splitted[0] + '-' + splitted[1]);
+    });
+  }
+
+  // sets the dimension based on the songs
+  setBarDimension() {
+    this.dimensionBar = this.cfilter.dimension(function (d: any) {
       return d.song;
     });
   }
@@ -151,11 +185,142 @@ export class SentimentComponent implements OnInit {
     return groupedValue;
   }
 
+  // returns the max value for the domain of the chart
+  getMaxGroupValue(): number {
+    let m = 0;
+    this.dimension.group().all().forEach((date: any) => {
+      if (date.value > m) { m = date.value; }
+    });
+    return m;
+  }
+
+  // returns a crossfilter-group for each sentiment x
+  private getSentGroups(): { group: CrossFilter.Group<{}, Date, any>, sent: string}[] {
+    if (this.data.length < 0) { return; }
+    const groups: { group: CrossFilter.Group<{}, Date, any>, sent: string}[] = [];
+
+    // group by sentiment
+    const nested = d3.nest()
+      .key((d: any) => {
+        if (d.analysis && d.analysis.sentiment) {
+          const thisnltk = d.analysis.sentiment.nltk.compound;
+          const thisblob = d.analysis.sentiment.textBlob.polarity;
+          const thisafinn = d.analysis.sentiment.afinn.normalized;
+          if (this.isIconsistent([thisnltk, thisblob, thisafinn])) {
+            return 'Mix';
+          } else {
+            const sentPolarity = ((thisnltk + thisafinn + thisblob) / 3);
+            if (sentPolarity > 0) {
+              return 'Pos';
+            } else if (sentPolarity === 0) {
+              return 'Neu';
+            } else if (sentPolarity < 0) {
+              return 'Neg';
+            }
+          }
+        } else {
+          return 'N/A';
+        }
+      })
+      .entries(this.data);
+
+    nested.forEach((sentiment) => {
+      const g = this.dimension.group().reduceSum((d: any) => {
+        if (d.analysis && d.analysis.sentiment) {
+          let mainsentiment = '';
+          const thisnltk = d.analysis.sentiment.nltk.compound;
+          const thisblob = d.analysis.sentiment.textBlob.polarity;
+          const thisafinn = d.analysis.sentiment.afinn.normalized;
+          if (this.isIconsistent([thisnltk, thisblob, thisafinn])) {
+            mainsentiment = 'Mix';
+          } else {
+            const sentPolarity = ((thisnltk + thisafinn + thisblob) / 3);
+            if (sentPolarity > 0) {
+              mainsentiment = 'Pos';
+            } else if (sentPolarity === 0) {
+              mainsentiment = 'Neu';
+            } else if (sentPolarity < 0) {
+              mainsentiment = 'Neg';
+            }
+          }
+          return mainsentiment === sentiment.key;
+        } else {
+          return 'N/A' === sentiment.key;
+          // return false;
+        }
+      });
+
+      groups.push({group: g, sent: sentiment.key });
+    });
+
+    return groups;
+  }
+
+  reorderGroups() {
+    const groups: { group: CrossFilter.Group<{}, Date, any>, sent: string}[] = [];
+
+    this.sentGroups.forEach((g) => {
+      if (g.sent === 'Pos') {
+        groups[0] = g;
+      } else if (g.sent === 'Neu') {
+        groups[1] = g;
+      } else if (g.sent === 'Neg') {
+        groups[2] = g;
+      } else if (g.sent === 'Mix') {
+        groups[3] = g;
+      } else if (g.sent === 'N/A') {
+        groups[4] = g;
+      }
+    });
+
+    return groups;
+  }
+
   // renders the chart
-  renderChart() {
+  renderChart () {
+    this.maxGroupValue = this.getMaxGroupValue();
+    const sentGroupsOrdered = this.reorderGroups();
+    const group1 = sentGroupsOrdered[0];
+    this.sentimentLineChart
+        .renderArea(true)
+        .width(300)
+        .height(200)
+        .ordinalColors(['#4daf4a', '#cccccc', '#ff7f00', '#984ea3', '#eeeeee'])
+        .useViewBoxResizing(true)
+        .dimension(this.dimension)
+        .x(d3.scaleTime().domain([d3.min(this.data, (d: any) => new Date(d.publishedAt)),
+          d3.max(this.data, (d: any) => new Date(d. publishedAt))]))
+        .xAxisLabel('Date')
+        .y(d3.scaleLinear().domain([0, this.maxGroupValue]))
+        .yAxisLabel('Comment Amount')
+        .interpolate('monotone')
+        .legend(dc.legend().x(250).y(10).itemHeight(13).gap(5))
+        .brushOn(true)
+        .group(group1.group, group1.sent)
+        .valueAccessor(function (d) {
+            return d.value;
+        })
+        .xAxis().ticks(4);
+      let maxSent = 0;
+      sentGroupsOrdered.forEach((group) => {
+        if (group.group === group1.group || maxSent === 4) {
+          return;
+        }
+        // stacks the groups
+        this.sentimentLineChart
+          .stack(group.group, group.sent, function (d) {
+          return d.value;
+        });
+        maxSent++;
+      });
+    this.sentimentLineChart.render();
+  }
+
+  // renders the chart
+  renderBarChart() {
     const checklist = [];
 
-    const group = this.dimension.group().reduceSum((d: any) => {
+    const group = this.dimensionBar.group().reduceSum((d: any) => {
       let returning = false;
       const value = this.getGroupedSentiment(d.song, 'Positive');
       checklist.forEach((e) => { if (e.song === d.song && e.value === value) { returning = true; } });
@@ -164,12 +329,12 @@ export class SentimentComponent implements OnInit {
       return value;
     });
 
-    this.sentimentChart
+    this.sentimentBarChart
       .width(300)
       .height(200)
       .ordinalColors(['#4daf4a', '#cccccc', '#ff7f00', '#984ea3', '#eeeeee'])
       .useViewBoxResizing(true)
-      .dimension(this.dimension)
+      .dimension(this.dimensionBar)
       .yAxisLabel('Sentiment (%)')
       .x(d3.scaleBand())
       .y(d3.scaleLinear().domain([0, 100]))
@@ -181,8 +346,8 @@ export class SentimentComponent implements OnInit {
       .group(group, 'Positive');
 
     // stacks the neutrals
-    this.sentimentChart
-      .stack(this.dimension.group().reduceSum((d: any) => {
+    this.sentimentBarChart
+      .stack(this.dimensionBar.group().reduceSum((d: any) => {
         let returning = false;
         const value = this.getGroupedSentiment(d.song, 'Neutral');
 
@@ -193,8 +358,8 @@ export class SentimentComponent implements OnInit {
       }), 'Neutral');
 
       // stacks the negatives
-    this.sentimentChart
-    .stack(this.dimension.group().reduceSum((d: any) => {
+    this.sentimentBarChart
+    .stack(this.dimensionBar.group().reduceSum((d: any) => {
       let returning = false;
       const value = this.getGroupedSentiment(d.song, 'Negative');
 
@@ -205,8 +370,8 @@ export class SentimentComponent implements OnInit {
     }), 'Negative');
 
     // stacks the mixed sentiment
-    this.sentimentChart
-    .stack(this.dimension.group().reduceSum((d: any) => {
+    this.sentimentBarChart
+    .stack(this.dimensionBar.group().reduceSum((d: any) => {
       let returning = false;
       const value = this.getGroupedSentiment(d.song, 'Mixed');
 
@@ -217,8 +382,8 @@ export class SentimentComponent implements OnInit {
     }), 'Mixed');
 
     // stacks the non assessed sentiment collumn
-    this.sentimentChart
-    .stack(this.dimension.group().reduceSum((d: any) => {
+    this.sentimentBarChart
+    .stack(this.dimensionBar.group().reduceSum((d: any) => {
       let returning = false;
       const value = this.getGroupedSentiment(d.song, 'NA');
 
@@ -228,11 +393,11 @@ export class SentimentComponent implements OnInit {
       return value;
     }), 'N/A');
 
-    this.sentimentChart.margins().right = 80;
-    this.sentimentChart.margins().left = 50;
-    this.sentimentChart.margins().bottom = 30;
-    this.sentimentChart.legend(dc.legend().gap(5).x(220).y(10));
-    this.sentimentChart.render();
+    this.sentimentBarChart.margins().right = 80;
+    this.sentimentBarChart.margins().left = 50;
+    this.sentimentBarChart.margins().bottom = 30;
+    this.sentimentBarChart.legend(dc.legend().gap(5).x(220).y(10));
+    this.sentimentBarChart.render();
   }
 
   // sets the tooltip on mouseover

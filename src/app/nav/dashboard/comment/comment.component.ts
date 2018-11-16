@@ -5,7 +5,6 @@ import { ChartService } from '../services/chart.service';
 import { FormControl } from '@angular/forms';
 import { MdcCheckbox, MdcSnackbar, MdcTextField } from '@angular-mdc/web';
 
-
 @Component({
   selector: 'app-comment',
   templateUrl: './comment.component.html',
@@ -24,7 +23,6 @@ export class CommentComponent implements OnInit {
     { value: 'date desc', description: 'date desc'},
     { value: 'date asc', description: 'date asc' },
   ];
-
 
   commentTable: dc.DataGridWidget;
   cfilter: CrossFilter.CrossFilter<{}>;

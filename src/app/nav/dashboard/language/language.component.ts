@@ -44,13 +44,14 @@ export class LanguageComponent implements OnInit {
     this.chartService.GetData().subscribe((data) => {
       this.data = data;
     });
+
     // gets the range through the chart service from the mainVis Component
     this.chartService.getChartRange().subscribe((range) => {
       if (this.data !== undefined && range.range !== null && range.range !== undefined) {
         this.languageChart
-        .x(d3.scaleTime().domain([range.range[0], range.range[1]]))
-        .y(d3.scaleLinear().domain([0, this.getMaxGroupValue()]))
-        .round(d3.timeMonth);
+          .x(d3.scaleTime().domain([range.range[0], range.range[1]]))
+          .y(d3.scaleLinear().domain([0, this.getMaxGroupValue()]))
+          .round(d3.timeMonth);
         this.languageChart.redraw();
       } else {
         if (!dc.chartRegistry.list().some((c) => c.hasFilter())) {
@@ -61,6 +62,7 @@ export class LanguageComponent implements OnInit {
         }
       }
     });
+
     this.setVisibilityofViews();
   }
 
@@ -81,38 +83,39 @@ export class LanguageComponent implements OnInit {
 
   // returns a crossfilter-group for each language x
   private getLanguageGroups(): { group: CrossFilter.Group<{}, Date, any>, lang: string}[] {
-    if (this.data.length < 0) {
-      return;
-    }
+    if (this.data.length < 0) { return; }
     const groups: { group: CrossFilter.Group<{}, Date, any>, lang: string}[] = [];
+
     // group by language
     const nested = d3.nest()
       .key((d: any) => {
         if (d.analysis && d.analysis.mainLanguage) {
           return d.analysis.mainLanguage;
+        } else {
+          return 'N/A';
         }
-        return 'N/A';
       })
       .entries(this.data);
+
     nested.forEach((language) => {
       const g = this.dimension.group().reduceSum((d: any) => {
         if (d.analysis && d.analysis.mainLanguage) {
           return d.analysis.mainLanguage === language.key;
+        } else {
+          return false;
         }
-        return false;
       });
+
       groups.push({group: g, lang: language.key });
     });
+
     // sort by language groups which have the most data in it
     groups.sort((a, b) => {
       let anum = 0;
       let bnum = 0;
-      a.group.all().forEach((date) => {
-        anum += date.value;
-      });
-      b.group.all().forEach((date) => {
-        bnum += date.value;
-      });
+      a.group.all().forEach((date) => { anum += date.value; });
+      b.group.all().forEach((date) => { bnum += date.value; });
+
       if (anum > bnum) {
         return -1;
       } else if (anum === bnum) {
@@ -139,7 +142,7 @@ export class LanguageComponent implements OnInit {
           }
         });
 
-        // Get values for sentiment
+        // Get values for each language
         if (inList) {
           if (d.analysis.mainLanguage === this.langGroups[0].lang) {
             langSummAux[countedSongidx].firstLang++;
@@ -172,9 +175,7 @@ export class LanguageComponent implements OnInit {
   getMaxGroupValue(): number {
     let m = 0;
     this.dimension.group().all().forEach((date: any) => {
-      if (date.value > m) {
-        m = date.value;
-      }
+      if (date.value > m) { m = date.value; }
     });
     return m;
   }
@@ -218,6 +219,7 @@ export class LanguageComponent implements OnInit {
     this.languageChart.render();
   }
 
+  // Get summed values for the bar chart
   getPercentLang (id: any, lang: string) {
     let groupedValue = 0;
     let countedSongidx = 0;
@@ -253,7 +255,7 @@ export class LanguageComponent implements OnInit {
     return groupedValue;
   }
 
-   // renders the chart
+   // renders the bar chart
    renderBarChart() {
     const checklist = [];
 
