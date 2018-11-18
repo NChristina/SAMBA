@@ -54,16 +54,16 @@ export class TopicComponent implements OnInit {
 
   // Tokenize, clean, and count
   createWordCloud() {
-    // Tokenize it
-    const natural = require('natural');
     const sw = require('stopword');
-    const tokenizerPunct = new natural.RegexpTokenizer({pattern: /[^a-zA-Z0-9_#@]|\b\w\b ?/});
     const words = [];
 
+    // Tokenize and clean each [english] comment
     this.data.forEach((d) => {
       if (d.analysis && d.analysis.mainLanguage === 'en') {
         const topicSent = this.getSentiment(d);
-        let word_tokens = tokenizerPunct.tokenize(d.text);
+        let word_tokens = d.text.split(/[^a-zA-Z0-9_#@]|\b\w\b ?/);
+        while (word_tokens.indexOf('') !== -1) { word_tokens.splice( word_tokens.indexOf(''), 1); }
+
         word_tokens = sw.removeStopwords(word_tokens, this.NLTKstopwords);
         word_tokens.forEach((word) => {
           words.push({ topic: word, sentiment: topicSent, song: d.song });
@@ -75,6 +75,7 @@ export class TopicComponent implements OnInit {
       }
     });
 
+    // Count words
     this.counter(words);
   }
 
