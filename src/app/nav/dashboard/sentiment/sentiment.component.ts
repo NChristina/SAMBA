@@ -22,6 +22,7 @@ export class SentimentComponent implements OnInit {
   private maxGroupValue;
   sentSumm = [];
   renderedChart = false;
+  notDataWarn = false;
 
   constructor(private chartService: ChartService, private _element: ElementRef) { }
 
@@ -39,9 +40,16 @@ export class SentimentComponent implements OnInit {
       this.setBarDimension();
       if (this.data && this.data.length > 0) {
         this.sentGroups = this.getSentGroups();
-        this.countSentiment();
-        this.renderChart();
-        this.renderBarChart();
+
+        // If there is at least one sentiment group:
+        if (this.sentGroups[0]) {
+          this.notDataWarn = false;
+          this.countSentiment();
+          this.renderChart();
+          this.renderBarChart();
+        } else {
+          this.notDataWarn = true;
+        }
       }
     });
 
@@ -276,16 +284,36 @@ export class SentimentComponent implements OnInit {
     return groups;
   }
 
+  defineChartColors() {
+    switch (Object.keys(this.sentGroups).length) {
+      case 1:
+        return ['#EEEEEE'];
+        break;
+      case 2:
+        return ['#4daf4a', '#EEEEEE'];
+        break;
+      case 3:
+        return ['#4daf4a', '#cccccc', '#EEEEEE'];
+        break;
+      case 4:
+        return ['#4daf4a', '#cccccc', '#ff7f00', '#EEEEEE'];
+        break;
+      default:
+        return ['#4daf4a', '#cccccc', '#ff7f00', '#984ea3', '#EEEEEE'];
+    }
+  }
+
   // Renders line chart (aggregation)
   renderChart () {
     this.maxGroupValue = this.getMaxGroupValue();
     const sentGroupsOrdered = this.reorderGroups();
+    const chartColors = this.defineChartColors();
     const group1 = sentGroupsOrdered[0];
     this.sentimentLineChart
         .renderArea(true)
         .width(300)
         .height(200)
-        .ordinalColors(['#4daf4a', '#cccccc', '#ff7f00', '#984ea3', '#eeeeee'])
+        .ordinalColors(chartColors)
         .useViewBoxResizing(true)
         .dimension(this.dimension)
         .x(d3.scaleTime().domain([d3.min(this.data, (d: any) => new Date(d.publishedAt)),

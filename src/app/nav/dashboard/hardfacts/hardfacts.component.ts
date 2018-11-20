@@ -21,6 +21,7 @@ export class HardfactsComponent implements OnInit {
   likeBarChart: dc.BarChart;
   private maxGroupValue;
   renderedChart = false;
+  notDataWarn = false;
 
   constructor(private chartService: ChartService, private _element: ElementRef) { }
 
@@ -37,8 +38,15 @@ export class HardfactsComponent implements OnInit {
       this.setBarDimension();
       if (this.data && this.data.length > 0) {
         this.likeGroups = this.getLikeGroups();
-        this.renderChart();
-        this.renderBarChart();
+
+        // If there is at least one like group:
+        if (this.likeGroups[0]) {
+          this.notDataWarn = false;
+          this.renderChart();
+          this.renderBarChart();
+        } else {
+          this.notDataWarn = true;
+        }
       }
     });
 
@@ -116,13 +124,17 @@ export class HardfactsComponent implements OnInit {
   reorderGroups() {
     const groups: { group: CrossFilter.Group<{}, Date, any>, likes: string}[] = [];
 
-    this.likeGroups.forEach((g) => {
-      if (g.likes === 'Liked') {
-        groups[0] = g;
-      } else if (g.likes === 'Others') {
-        groups[1] = g;
-      }
-    });
+    if (Object.keys(this.likeGroups).length > 1) {
+      this.likeGroups.forEach((g) => {
+        if (g.likes === 'Liked') {
+          groups[0] = g;
+        } else if (g.likes === 'Others') {
+          groups[1] = g;
+        }
+      });
+    } else {
+      groups = this.likeGroups;
+    }
 
     return groups;
   }
@@ -136,16 +148,27 @@ export class HardfactsComponent implements OnInit {
     return m;
   }
 
+  defineChartColors() {
+    switch (Object.keys(this.likeGroups).length) {
+      case 1:
+        return ['#EEEEEE'];
+        break;
+      default:
+        return ['#377eb8', '#EEEEEE'];
+    }
+  }
+
   // Renders line chart (aggregation)
   renderChart () {
     this.maxGroupValue = this.getMaxGroupValue();
     const sentGroupsOrdered = this.reorderGroups();
+    const chartColors = this.defineChartColors();
     const group1 = sentGroupsOrdered[0];
     this.likeLineChart
         .renderArea(true)
         .width(300)
         .height(200)
-        .ordinalColors(['#377eb8', '#eeeeee'])
+        .ordinalColors(chartColors)
         .useViewBoxResizing(true)
         .dimension(this.dimension)
         .x(d3.scaleTime().domain([d3.min(this.data, (d: any) => new Date(d.publishedAt)),

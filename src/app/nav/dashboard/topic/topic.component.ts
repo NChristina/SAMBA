@@ -109,9 +109,12 @@ export class TopicComponent implements OnInit {
       cWds.sort(function(a, b) { return b.count - a.count; });
       this.wordCounted = cWds;
 
+      // Get 10 topics. If the list of counted words has less then 10 words we display only the existing topics
       let size = 10;
+      const maxTopics = 10;
+      if (cWds.length < 10) { size = cWds.length;  maxTopics = cWds.length; }
       let i = 0;
-      while (i < 10) {
+      while (i < maxTopics) {
         const sentcolor = this.getColor(cWds[i].sentiment / cWds[i].count);
         dataForCloud.push({ text: cWds[i].text.toString(), weight: size, color: sentcolor.toString()}); // tooltip: cWds[i].songs.join(', ')
         i++;

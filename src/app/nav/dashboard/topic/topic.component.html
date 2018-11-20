@@ -2,7 +2,11 @@
   <mat-grid-list cols="1" rowHeight="40px">
     <div class="wrapper" (mouseover)="setTooltipInfo($event, tooltipinfo);" style="float:right" class="tooltInfo"> 
         <img height="24px" style="float:right" src="../../assets/000-info.svg"> 
-        <span #tooltipinfo class="tooltInfo_text">Main topics extracted from the selected comments.</span>
+        <span #tooltipinfo class="tooltInfo_text">
+            <p><img height="15px" src="../../assets/000-bubblechart.svg"> The word cloud shows the most used words in the comments of the videos selected for each song.</p>
+            <p><img height="15px" src="../../assets/000-list.svg"> For the comparison view, you see a list of ten words for each song from the most used words in this set.</p> 
+            <p>The color of each word shows the mean sentiment of comments containing this word (positive, neutral, or negative).</p>
+        </span>
     </div>
     <button (click)="switchView('compButton');" class="topicComp compButton" style="float:right"><img height="24px" title="Comparison View" src="../../assets/000-list.svg"> </button>
     <button (click)="switchView('aggrButton');" class="topicAggr aggrButton active" style="float:right"><img height="24px" title="Aggregated View" src="../../assets/000-bubblechart.svg"> </button>

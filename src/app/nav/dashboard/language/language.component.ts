@@ -22,6 +22,7 @@ export class LanguageComponent implements OnInit {
   langGroups: { group: CrossFilter.Group<{}, Date, any>, lang: string}[];
   private maxGroupValue;
   renderedChart = false;
+  notDataWarn = false;
 
   constructor(private chartService: ChartService) { }
 
@@ -36,8 +37,16 @@ export class LanguageComponent implements OnInit {
       if (this.data && this.data.length > 0) {
         this.langGroups = this.getLanguageGroups();
         this.countMainLang();
-        this.renderChart();
-        this.renderBarChart();
+
+        // If there is at least one language group:
+        if (this.langGroups[0]) {
+          this.notDataWarn = false;
+          this.renderChart();
+          this.renderBarChart();
+        } else {
+          this.notDataWarn = true;
+        }
+
       }
     });
     this.chartService.GetData().subscribe((data) => {
@@ -239,11 +248,11 @@ export class LanguageComponent implements OnInit {
       const langOthers = this.langSumm[countedSongidx].otherLang;
       sumAll = langOne + langTwo + langThree + langOthers;
 
-      if (lang === this.langGroups[0].lang) {
+      if (this.langGroups[0] && lang === this.langGroups[0].lang) {
         groupedValue = (langOne * 100) / sumAll;
-      } else if (lang === this.langGroups[1].lang) {
+      } else if (this.langGroups[1] && lang === this.langGroups[1].lang) {
         groupedValue = (langTwo * 100) / sumAll;
-      } else if (lang === this.langGroups[2].lang) {
+      } else if (this.langGroups[2] && lang === this.langGroups[2].lang) {
         groupedValue = (langThree * 100) / sumAll;
       } else if (lang === 'RemainingLang') {
         groupedValue = (langOthers * 100) / sumAll;
@@ -255,10 +264,24 @@ export class LanguageComponent implements OnInit {
     return groupedValue;
   }
 
+  defineChartColors() {
+    switch (Object.keys(this.langGroups).length) {
+      case 1:
+        return ['#8c564b', '#EEEEEE'];
+        break;
+      case 2:
+        return ['#8c564b', '#bcbd22', '#EEEEEE'];
+        break;
+      default:
+        return ['#8c564b', '#bcbd22', '#e377c2', '#EEEEEE'];
+    }
+  }
+
    // renders the bar chart
    renderBarChart() {
     const checklist = [];
     const barOrder = [];
+    const chartColors = this.defineChartColors();
 
     const group = this.dimensionBar.group().reduceSum((d: any) => {
       let returning = false;
@@ -272,7 +295,7 @@ export class LanguageComponent implements OnInit {
     this.barChart
       .width(300)
       .height(200)
-      .ordinalColors(['#8c564b', '#bcbd22', '#e377c2', '#EEEEEE'])
+      .ordinalColors(chartColors)
       .useViewBoxResizing(true)
       .dimension(this.dimensionBar)
       .yAxisLabel('Language (%)')
@@ -286,25 +309,29 @@ export class LanguageComponent implements OnInit {
       .renderTitle(false)
       .group(group, this.langGroups[0].lang);
 
-      this.barChart
-      .stack(this.dimensionBar.group().reduceSum((d: any) => {
-        let returning = false;
-        const value = this.langGroups[1].lang;
-        checklist.forEach((e) => {if (e.song === d.song && e.value === value) { returning = true; } });
-        if (returning) { return 0; }
-        checklist.push({ song: d.song, value: value });
-        return this.getPercentLang(d.song, this.langGroups[1].lang);
-      }), this.langGroups[1].lang);
+      if (this.langGroups[1]) {
+        this.barChart
+        .stack(this.dimensionBar.group().reduceSum((d: any) => {
+          let returning = false;
+          const value = this.langGroups[1].lang;
+          checklist.forEach((e) => {if (e.song === d.song && e.value === value) { returning = true; } });
+          if (returning) { return 0; }
+          checklist.push({ song: d.song, value: value });
+          return this.getPercentLang(d.song, this.langGroups[1].lang);
+        }), this.langGroups[1].lang);
+      }
 
-      this.barChart
-      .stack(this.dimensionBar.group().reduceSum((d: any) => {
-        let returning = false;
-        const value = this.langGroups[2].lang;
-        checklist.forEach((e) => { if (e.song === d.song && e.value === value) { returning = true; } });
-        if (returning) { return 0; }
-        checklist.push({ song: d.song, value: value });
-        return this.getPercentLang(d.song, this.langGroups[2].lang);
-      }), this.langGroups[2].lang);
+      if (this.langGroups[2]) {
+        this.barChart
+        .stack(this.dimensionBar.group().reduceSum((d: any) => {
+          let returning = false;
+          const value = this.langGroups[2].lang;
+          checklist.forEach((e) => { if (e.song === d.song && e.value === value) { returning = true; } });
+          if (returning) { return 0; }
+          checklist.push({ song: d.song, value: value });
+          return this.getPercentLang(d.song, this.langGroups[2].lang);
+        }), this.langGroups[2].lang);
+      }
 
       this.barChart
       .stack(this.dimensionBar.group().reduceSum((d: any) => {
@@ -331,12 +358,27 @@ export class LanguageComponent implements OnInit {
           .on('mouseover.samba', (d, e) => {
             tooltipBar.transition().duration(150).style('opacity', .9);
             if (barOrder[e]) {
-              console.log();
-              const FirstLang = this.langGroups[0].lang + ': ' + this.getPercentLang(barOrder[e].label, this.langGroups[0].lang).toFixed(1);
-              const SecLang = this.langGroups[1].lang + ': ' + this.getPercentLang(barOrder[e].label, this.langGroups[1].lang).toFixed(1);
-              const ThrLang = this.langGroups[2].lang + ': ' + this.getPercentLang(barOrder[e].label, this.langGroups[2].lang).toFixed(1);
+              // First language info
+              let FirstLang = this.langGroups[0].lang + ': ' + this.getPercentLang(barOrder[e].label, this.langGroups[0].lang).toFixed(1);
+              FirstLang = FirstLang + '%<br/>';
+              let SecLang = '';
+              let ThrLang = '';
+
+              // Second language info
+              if (this.langGroups[1]) {
+                SecLang = this.langGroups[1].lang + ': ' + this.getPercentLang(barOrder[e].label, this.langGroups[1].lang).toFixed(1);
+                SecLang = SecLang + '%<br/>';
+              }
+
+              // Third language info
+              if (this.langGroups[2]) {
+                ThrLang = this.langGroups[2].lang + ': ' + this.getPercentLang(barOrder[e].label, this.langGroups[2].lang).toFixed(1);
+                ThrLang = ThrLang + '%<br/>';
+              }
+
+              // Remaining languages info and tooltips
               const OthLang = 'others: ' + this.getPercentLang(barOrder[e].label, 'RemainingLang').toFixed(1);
-              tooltipBar.html(barOrder[e].label + '<br/>' + FirstLang + '%<br/>' + SecLang + '%<br/>' + ThrLang + '%<br/>' + OthLang + '%')
+              tooltipBar.html(barOrder[e].label + '<br/>' + FirstLang + '' + SecLang + '' + ThrLang + '' + OthLang + '%')
                 .style('left', ((<any>d3).event.pageX) - 10 + 'px')
                 .style('top', ((<any>d3).event.pageY) + 'px');
               }

@@ -2,7 +2,10 @@
   <mat-grid-list cols="1" rowHeight="40px">
       <div class="wrapper" (mouseover)="setTooltipInfo($event, tooltipinfo);" style="float:right" class="tooltInfo"> 
           <img height="24px" style="float:right" src="../../assets/000-info.svg"> 
-          <span #tooltipinfo class="tooltInfo_text">Absolute number of likes, views, and comments per song selected.</span>
+          <span #tooltipinfo class="tooltInfo_text">
+            <p><img height="15px" src="../../assets/000-chart.svg"> The aggregated view shows the amount of comments on the videos selected for each song through time and how many of them received a like.</p>
+            <p><img height="15px" src="../../assets/000-barchart.svg"> For the comparison view, each bar of the chart shows the number of likes and dislikes on the videos selected for each song. If you select different videos for the same song, the numbers are summarized and are represented as one bar in the chart. By hovering over the bar you see the absolute value of likes and dislikes. At the bottom you see the total amount of comments and total amount of views for the whole selected set.</p>
+          </span>
       </div>
       <button (click)="switchView('compButton');" class="hardComp compButton" style="float:right"><img height="24px" title="Comparison View" src="../../assets/000-barchart.svg"> </button>
       <button (click)="switchView('aggrButton');" class="hardAggr aggrButton active" style="float:right"><img height="24px" title="Aggregated View" src="../../assets/000-chart.svg"> </button>
@@ -14,6 +17,7 @@
 
 <div id="likeChartLine" class="maxSize aggregationView"></div>
 <div id="likeChart" class="maxSize comparisonView"></div>
+<p *ngIf="this.notDataWarn">Not enough data to render chart.</p>
 
 <div class="wrapper" *ngIf="this.data.length && this.compView">
   <div (mouseover)="setTooltip($event, tooltip1);" class="fab_button"> 
