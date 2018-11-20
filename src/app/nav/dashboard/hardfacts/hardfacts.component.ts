@@ -122,7 +122,7 @@ export class HardfactsComponent implements OnInit {
 
   // Reorder groups by category: liked comments and other comments
   reorderGroups() {
-    const groups: { group: CrossFilter.Group<{}, Date, any>, likes: string}[] = [];
+    let groups: { group: CrossFilter.Group<{}, Date, any>, likes: string}[] = [];
 
     if (Object.keys(this.likeGroups).length > 1) {
       this.likeGroups.forEach((g) => {
