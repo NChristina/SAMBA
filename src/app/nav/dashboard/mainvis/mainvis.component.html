@@ -1,8 +1,16 @@
-<div class="selection_bar" [mdcElevation]="2">
+<div class="selection_bar" >
   <button #fab1 mdc-fab class="fab_button" (click)="setShowOption(2)" [ngStyle]="{'background-color': this.chartShowOption === 2 ? '#009688' : '#1976D2'}" [extended]="true" label="yearly">
   </button>
   <button #fab2 mdc-fab class="fab_button" (click)="setShowOption(1)" [ngStyle]="{'background-color': this.chartShowOption === 1 ? '#009688' : '#1976D2'}" [extended]="true" label="monthly"></button>
   <button #fab3 mdc-fab class="fab_button" (click)="setShowOption(0)" [ngStyle]="{'background-color': this.chartShowOption === 0 ? '#009688' : '#1976D2'}" [extended]="true" label="daily"></button>
+  
+  <div class="wrapper" (mouseover)="setTooltipInfo($event, tooltipinfo);" style="float:right;margin:15px 0 0 25px;" class="tooltInfo"> 
+      <img height="30px" style="float:right" src="../../assets/000-info.svg"> 
+      <span #tooltipinfo class="tooltInfo_text">
+        <p>In this chart you see the number of comments of the selected videos for each song over time. </p>
+        <p>If you select different videos of one song the numbers are summarized and are represented as one line in the chart. Each line has its own color, that you can distinguish between the selected song in the chart. Below you see a range slider. You can interact with the slider by click and holding the handle elements and moving to the right and the left. As you can see the time is changing based on your interactions.</p>
+      </span>
+  </div>
 </div>
 <!--<mdc-form-field class="selection_bar" [mdcElevation]="2">
   <mdc-checkbox #total (change)="this.showTotalComments = !this.showTotalComments"></mdc-checkbox><label>Show Total Comments</label>

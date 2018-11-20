@@ -294,4 +294,11 @@ export class MainvisComponent implements OnInit {
         return (date.split('T')[0]); // daily
     }
   }
+
+  // sets the tooltip on mouseover
+  setTooltipInfo(event: MouseEvent, tooltip: HTMLSpanElement) {
+    tooltip.style.position = 'fixed';
+    tooltip.style.top = (event.clientY) + 'px';
+    tooltip.style.left = (event.clientX - tooltip.offsetWidth - 5) + 'px';
+  }
 }

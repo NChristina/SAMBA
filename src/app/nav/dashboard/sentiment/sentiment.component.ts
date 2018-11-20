@@ -293,13 +293,13 @@ export class SentimentComponent implements OnInit {
         return ['#4daf4a', '#EEEEEE'];
         break;
       case 3:
-        return ['#4daf4a', '#cccccc', '#EEEEEE'];
+        return ['#4daf4a', '#666666', '#EEEEEE'];
         break;
       case 4:
-        return ['#4daf4a', '#cccccc', '#ff7f00', '#EEEEEE'];
+        return ['#4daf4a', '#666666', '#ff7f00', '#EEEEEE'];
         break;
       default:
-        return ['#4daf4a', '#cccccc', '#ff7f00', '#984ea3', '#EEEEEE'];
+        return ['#4daf4a', '#666666', '#ff7f00', '#984ea3', '#EEEEEE'];
     }
   }
 
@@ -361,7 +361,7 @@ export class SentimentComponent implements OnInit {
     this.sentimentBarChart
       .width(300)
       .height(200)
-      .ordinalColors(['#4daf4a', '#cccccc', '#ff7f00', '#984ea3', '#eeeeee'])
+      .ordinalColors(['#4daf4a', '#666666', '#ff7f00', '#984ea3', '#eeeeee'])
       .useViewBoxResizing(true)
       .dimension(this.dimensionBar)
       .yAxisLabel('Sentiment (%)')
@@ -421,7 +421,7 @@ export class SentimentComponent implements OnInit {
       if (returning) { return 0; }
       checklist.push({ song: d.song, value: value });
       return this.getGroupedSentiment(d.song, 'NA');
-    }), 'N/A');
+    }), 'NA hidden');
 
     this.sentimentBarChart.margins().right = 80;
     this.sentimentBarChart.margins().left = 50;

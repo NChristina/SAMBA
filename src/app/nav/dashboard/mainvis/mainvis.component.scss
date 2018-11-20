@@ -28,8 +28,8 @@ $color-change-list: /*#a6cee3*/ #1f78b4 #b2df8a #33a02c #fb9a99 #e31a1c #ff0084 
 }
 .selection_bar {
   height: 4em;
-  margin: -20px;
-  width: fit-content;
+  margin: -20px auto;
+  width: 100%;
 }
 #compositeChart {
   margin-top: 45px;
@@ -48,7 +48,7 @@ $color-change-list: /*#a6cee3*/ #1f78b4 #b2df8a #33a02c #fb9a99 #e31a1c #ff0084 
   height: fit-content;
   padding: 5px;
   float: right;
-  margin: -20px;
+  margin-top: 10px;
   margin-right: 10px;
 }
 .legendElement {
@@ -65,6 +65,31 @@ $color-change-list: /*#a6cee3*/ #1f78b4 #b2df8a #33a02c #fb9a99 #e31a1c #ff0084 
 .legend .rectText {
   float: left;
   margin: 0;
+}
+
+.tooltInfo:hover .tooltInfo_text {
+  visibility: visible;
+  opacity: 1; 
+}
+
+.tooltInfo_text {
+  text-align: left;
+  visibility: hidden;
+  opacity: 0.7;
+  width: 500px;
+  height: fit-content;
+  background-color: #444;
+  color: white;
+  border-radius: 6px;
+  padding: 5px 5px;
+  position: absolute;
+  z-index: 1;
+  top: 0%;
+  margin-left: 0;
+  opacity: 0;
+  transition: opacity 0.3s;
+  top: -30%;
+  left: -20px;
 }
 
 
