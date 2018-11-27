@@ -111,8 +111,8 @@ export class TopicComponent implements OnInit {
 
       // Get 10 topics. If the list of counted words has less then 10 words we display only the existing topics
       let size = 10;
-      const maxTopics = 10;
-      if (cWds.length < 10) { size = cWds.length;  maxTopics = cWds.length; }
+      let maxTopics = 10;
+      if (cWds.length < 10) { size = cWds.length; maxTopics = cWds.length; }
       let i = 0;
       while (i < maxTopics) {
         const sentcolor = this.getColor(cWds[i].sentiment / cWds[i].count);

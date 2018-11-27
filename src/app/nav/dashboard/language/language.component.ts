@@ -268,10 +268,8 @@ export class LanguageComponent implements OnInit {
     switch (Object.keys(this.langGroups).length) {
       case 1:
         return ['#8c564b', '#EEEEEE'];
-        break;
       case 2:
         return ['#8c564b', '#bcbd22', '#EEEEEE'];
-        break;
       default:
         return ['#8c564b', '#bcbd22', '#e377c2', '#EEEEEE'];
     }

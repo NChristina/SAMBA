@@ -288,16 +288,12 @@ export class SentimentComponent implements OnInit {
     switch (Object.keys(this.sentGroups).length) {
       case 1:
         return ['#EEEEEE'];
-        break;
       case 2:
         return ['#4daf4a', '#EEEEEE'];
-        break;
       case 3:
         return ['#4daf4a', '#666666', '#EEEEEE'];
-        break;
       case 4:
         return ['#4daf4a', '#666666', '#ff7f00', '#EEEEEE'];
-        break;
       default:
         return ['#4daf4a', '#666666', '#ff7f00', '#984ea3', '#EEEEEE'];
     }

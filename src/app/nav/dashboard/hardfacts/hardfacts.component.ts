@@ -152,7 +152,6 @@ export class HardfactsComponent implements OnInit {
     switch (Object.keys(this.likeGroups).length) {
       case 1:
         return ['#EEEEEE'];
-        break;
       default:
         return ['#377eb8', '#EEEEEE'];
     }
