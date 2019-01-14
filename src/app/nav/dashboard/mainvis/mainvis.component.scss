@@ -69,7 +69,7 @@ $color-change-list: /*#a6cee3*/ #1f78b4 #b2df8a #33a02c #fb9a99 #e31a1c #ff0084 
 
 .tooltInfo:hover .tooltInfo_text {
   visibility: visible;
-  opacity: 1; 
+  opacity: 1;
 }
 
 .tooltInfo_text {
@@ -92,4 +92,9 @@ $color-change-list: /*#a6cee3*/ #1f78b4 #b2df8a #33a02c #fb9a99 #e31a1c #ff0084 
   left: -20px;
 }
 
+
+// Custom STYLES
+._0 > path {
+  stroke: hotpink !important;
+}
 

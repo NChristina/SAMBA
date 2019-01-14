@@ -25,6 +25,8 @@ export class MainvisComponent implements OnInit {
   protected songs = [];
   rowtip;
   maxGroupValue;
+  currentFilterValues = [];
+
 
   // slider values
   protected value: number;
@@ -62,7 +64,6 @@ export class MainvisComponent implements OnInit {
     });
     this.chartService.GetData().subscribe(data => {
       this.data = data;
-      console.log('test');
       this.songs = d3
         .nest()
         .key((d: any) => d.song_key)
@@ -93,42 +94,51 @@ export class MainvisComponent implements OnInit {
       .key((comment: any) => comment.song)
       .entries(this.data);
     nestedData.forEach(song => {
-      const lineChart = dc.lineChart(this.compositeChart);
-      // comulative show option
-      if (this.chartShowOption === 3) {
-        const dataLength = this.data.length;
-        const dates = d3.nest().key((d: any) => this.getDateStringByShowOption(d.publishedAt)).entries(song.values);
-        for (let i = 0; i < dates.length; i++) {
-          if ((i + 1) === dates.length) {
-            break;
-          }
-          const date = new Date(this.getDateStringByShowOption(dates[i].key));
-          const date2 = new Date(this.getDateStringByShowOption(dates[i + 1].key));
-          const daysBetween = Math.floor( (date.getTime() - date2.getTime()) / 86400000); // 86400000 = one day
-          this.addDaysToData(daysBetween, dates[i].values.length, date, song.key);
+      const lineChart = dc.lineChart(this.compositeChart)
+      .ordinalColors(['red','green','blue'])
+      .colorAccessor(function(d, i) {
+        console.log('HEREEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE', d, i);
+        if (i % 2 === 0) {
+          return 0;
+        } else {
+          return 1;
         }
-        // console.log(dataLength, this.data.length);
-        lineChart.interpolate('monotone');
+      });
+      // comulative show option
+      // if (this.chartShowOption === 3) {
+      //   const dataLength = this.data.length;
+      //   const dates = d3.nest().key((d: any) => this.getDateStringByShowOption(d.publishedAt)).entries(song.values);
+      //   for (let i = 0; i < dates.length; i++) {
+      //     if ((i + 1) === dates.length) {
+      //       break;
+      //     }
+      //     const date = new Date(this.getDateStringByShowOption(dates[i].key));
+      //     const date2 = new Date(this.getDateStringByShowOption(dates[i + 1].key));
+      //     const daysBetween = Math.floor( (date.getTime() - date2.getTime()) / 86400000); // 86400000 = one day
+      //     this.addDaysToData(daysBetween, dates[i].values.length, date, song.key);
+      //   }
+      //   // console.log(dataLength, this.data.length);
+      //   lineChart.interpolate('monotone');
 
-      }
+      // }
       const group = this.dimension.group().reduceSum((d: any) => {
         return d.song === song.key;
       });
-      lineChart.group(group).renderDataPoints(true);
+      lineChart.group(group);
       charts.push(lineChart);
     });
     if (this.showTotalComments) {
-      charts.push(dc.lineChart(this.compositeChart).group(this.dimension.group()).renderDataPoints(true));
+      charts.push(dc.lineChart(this.compositeChart).group(this.dimension.group()).renderDataPoints(true).colors('red'));
     }
     return charts;
   }
 
   // renders the chart
   renderChart() {
-    console.log('test render');
     const dateGroup = this.dimension.group();
     this.chartRange1 = d3.min(this.data, (d: any) => new Date(d.publishedAt));
     this.chartRange2 = d3.max(this.data, (d: any) => new Date(d.publishedAt));
+
     this.compositeChart
       .width(900)
       .height(300)
@@ -163,7 +173,7 @@ export class MainvisComponent implements OnInit {
 
       // console.log('test filter', filter[1]);
       this.maxGroupValue = this.getMaxGroupValue(filter[0], filter[1]);
-      console.log('value of maxGroupValue: ', this.maxGroupValue);
+      // console.log('value of maxGroupValue: ', this.maxGroupValue);
       this.compositeChart.y(d3.scaleLinear().domain([0, this.maxGroupValue]));
       this.chartService.setChartRange({range: filter, chart: chart});
     });
@@ -310,26 +320,24 @@ export class MainvisComponent implements OnInit {
   // returns the max value for the domain of the chart
   getMaxGroupValue(begin, end): number { // ich brauche hier den max comment ammount für die gefilterte variante
     let m = 0;
-    const currentFilterValues = [];
-    let allDimension = this.dimension.group().all();
-    console.log('allDimension: ', allDimension);
-    console.log('begin: ', begin);
-    console.log('end: ', end);
+    this.currentFilterValues = [];
+    const allDimension = this.dimension.group().all();
 
     allDimension.forEach( d => {
       if (d['key'] <= end && d['key'] >= begin) {
-        currentFilterValues.push(d);
+        this.currentFilterValues.push(d);
       }
     });
-    console.log('xxx: ', currentFilterValues);
-    console.log('fitting values: ', currentFilterValues);
-    // console.log('dimension: ', this.dimension.group().all());
-    // console.log('begin: ', begin, '// end: ', end);
-    currentFilterValues.forEach((date: any) => {
-      console.log('dv:', date);
+    this.currentFilterValues.forEach((date: any) => {
+      // console.log('dv:', date);
       if (date.value > m) { m = date.value; }
     });
-    console.log('m: ', m);
-    return m+20;
+    // console.log('m: ', m);
+    return m / 100 * 110; // 10% padding oben drauf
+  }
+
+  getFilteredRange(begin, end) {
+
+
   }
 }
