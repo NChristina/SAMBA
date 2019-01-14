@@ -21,9 +21,10 @@ export class MainvisComponent implements OnInit {
   dimension: CrossFilter.Dimension<{}, Date>;
   data: any[];
   private lineCharts: dc.LineChart[];
-  chartShowOption = 0;
+  chartShowOption = 2;
   protected songs = [];
   rowtip;
+  maxGroupValue;
 
   // slider values
   protected value: number;
@@ -61,6 +62,7 @@ export class MainvisComponent implements OnInit {
     });
     this.chartService.GetData().subscribe(data => {
       this.data = data;
+      console.log('test');
       this.songs = d3
         .nest()
         .key((d: any) => d.song_key)
@@ -123,6 +125,7 @@ export class MainvisComponent implements OnInit {
 
   // renders the chart
   renderChart() {
+    console.log('test render');
     const dateGroup = this.dimension.group();
     this.chartRange1 = d3.min(this.data, (d: any) => new Date(d.publishedAt));
     this.chartRange2 = d3.max(this.data, (d: any) => new Date(d.publishedAt));
@@ -132,11 +135,7 @@ export class MainvisComponent implements OnInit {
       .useViewBoxResizing(true)
       .dimension(this.dimension)
       .x(d3.scaleTime().domain([this.chartRange1, this.chartRange2]))
-      .y(
-        d3
-          .scaleLinear()
-          .domain([0, d3.max(dateGroup.all(), (d: any) => d.value)])
-      )
+      .y(d3.scaleLinear().domain([0, d3.max(dateGroup.all(), (d: any) => d.value)]) )
       .xAxisLabel('Date')
       .yAxisLabel('Comment Amount')
       .shareTitle(true)
@@ -158,8 +157,14 @@ export class MainvisComponent implements OnInit {
     //         .on('mouseout', rowtip.hide);
     // });
 
-    // sends data to the language chart component on brush-filtering //   VL HIER????
+    // sends data to the language chart component on brush-filtering //
     this.compositeChart.on('filtered', (chart, filter) => {
+
+
+      // console.log('test filter', filter[1]);
+      this.maxGroupValue = this.getMaxGroupValue(filter[0], filter[1]);
+      console.log('value of maxGroupValue: ', this.maxGroupValue);
+      this.compositeChart.y(d3.scaleLinear().domain([0, this.maxGroupValue]));
       this.chartService.setChartRange({range: filter, chart: chart});
     });
     this.compositeChart.render();
@@ -226,7 +231,7 @@ export class MainvisComponent implements OnInit {
     this.value2 = new Date(dates[dates.length - 1].key).getTime();
     // scales the slider to the last week or the last 2 datapoints on daily-view
     if (this.chartShowOption === 0) {
-      let weeks = 604800000 * 4; // one week
+      let weeks = 604800000; // one week
       const diff =
         this.value2 - new Date(dates[dates.length - 2].key).getTime();
       while (weeks <= diff) {
@@ -300,5 +305,31 @@ export class MainvisComponent implements OnInit {
     tooltip.style.position = 'fixed';
     tooltip.style.top = (event.clientY) + 'px';
     tooltip.style.left = (event.clientX - tooltip.offsetWidth - 5) + 'px';
+  }
+
+  // returns the max value for the domain of the chart
+  getMaxGroupValue(begin, end): number { // ich brauche hier den max comment ammount für die gefilterte variante
+    let m = 0;
+    const currentFilterValues = [];
+    let allDimension = this.dimension.group().all();
+    console.log('allDimension: ', allDimension);
+    console.log('begin: ', begin);
+    console.log('end: ', end);
+
+    allDimension.forEach( d => {
+      if (d['key'] <= end && d['key'] >= begin) {
+        currentFilterValues.push(d);
+      }
+    });
+    console.log('xxx: ', currentFilterValues);
+    console.log('fitting values: ', currentFilterValues);
+    // console.log('dimension: ', this.dimension.group().all());
+    // console.log('begin: ', begin, '// end: ', end);
+    currentFilterValues.forEach((date: any) => {
+      console.log('dv:', date);
+      if (date.value > m) { m = date.value; }
+    });
+    console.log('m: ', m);
+    return m+20;
   }
 }

@@ -145,6 +145,7 @@ export class HardfactsComponent implements OnInit {
     this.dimension.group().all().forEach((date: any) => {
       if (date.value > m) { m = date.value; }
     });
+    console.log('hardfacts maxVal: ', m);
     return m;
   }
 
