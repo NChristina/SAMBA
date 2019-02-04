@@ -97,7 +97,6 @@ export class MainvisComponent implements OnInit {
       const lineChart = dc.lineChart(this.compositeChart)
       .ordinalColors(['red','green','blue'])
       .colorAccessor(function(d, i) {
-        console.log('HEREEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE', d, i);
         if (i % 2 === 0) {
           return 0;
         } else {

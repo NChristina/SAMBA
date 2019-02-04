@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
 import { SearchService } from './services/search.service';
-import { MdcCheckbox, MdcSnackbar } from '@angular-mdc/web';
+import { MdcSnackbar } from '@angular-mdc/web';
 import { ChartService } from './dashboard/services/chart.service';
 @Component({
   selector: 'app-nav',
@@ -51,12 +51,10 @@ export class NavComponent implements OnInit {
   // it checks if the user has already selected the song
   // it also updates the data for all charts via the chartService
   selectSong(index: number, checkbox) {
-    // console.log('checkbox was touched');
-    // console.log('new value of checkbox: ', checkbox);
+
     if (checkbox.target.checked) {
       if (this.selectedList.length === 8) {
         const snackBar = this.snackbar.show('You can only pick 8 songs', 'OK', {});
-        // checkbox.toggle();
         return;
       }
       this.selectedList.push(this.searchMatchList[index].data);
@@ -76,14 +74,17 @@ export class NavComponent implements OnInit {
     const song = this.selectedList[index];
     this.searchMatchList.forEach((songData, i) => {
       if (songData.data.data[0]._id === song.data[0]._id) {
+
+        let newT = this.searchMatchList[i];
         this.searchMatchList.splice(i, 1);
-        this.searchMatchList.push({displayName: song.song.artist + ' - ' + song.song.title, data: song});
+        this.searchMatchList.splice(i, 0, newT);
+        // this.searchMatchList.push({displayName: song.song.artist + ' - ' + song.song.title, data: song});
       }
     });
     // sorts the data by views (has to be updated by comments)
     // the sort is used to keep the list as it is, when removing
     // and pushing the removed song
-    // this.searchMatchList.sort((a, b) => {
+    // this.searchMatchList.sort((b, a) => {
     //   if (a.data.data[0].statistics === b.data.data[0].statistics) {
     //     return 0;
     //   }
