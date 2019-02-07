@@ -170,7 +170,7 @@ export class MainvisComponent implements OnInit {
     this.compositeChart.on('filtered', (chart, filter) => {
 
 
-      // console.log('test filter', filter[1]);
+      // console.log('test filter 1', filter[1], '// test filter 0: ', filter[0]);
       this.maxGroupValue = this.getMaxGroupValue(filter[0], filter[1]);
       // console.log('value of maxGroupValue: ', this.maxGroupValue);
       this.compositeChart.y(d3.scaleLinear().domain([0, this.maxGroupValue]));

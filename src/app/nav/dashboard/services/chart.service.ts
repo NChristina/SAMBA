@@ -27,8 +27,15 @@ export class ChartService {
   // the function sets also the crossfilter
   SetData(value: any[]) {
     const newData = this.dataStructure(value);
+
+    console.time('this.chartDataSource.next(newData)');
     this.chartDataSource.next(newData);
+    console.timeEnd('this.chartDataSource.next(newData)');
+
+    console.time('this.changeCrossfilter(crossfilter(newData))');
     this.changeCrossfilter(crossfilter(newData));
+    console.timeEnd('this.changeCrossfilter(crossfilter(newData))');
+
   }
   GetData(): Observable<any[]> {
     return this.currentChartData;
@@ -36,7 +43,12 @@ export class ChartService {
 
   // informs all crossfilter subscribers that the crossfilter variable has changed
   changeCrossfilter(filter: CrossFilter.CrossFilter<{}>) {
+    console.time('this.cfilterSource.next(filter)');
     this.cfilterSource.next(filter);
+    console.log('%c SONST FIND ICHS NED', 'background-color: black; color: hotpink;');
+    console.log(filter);
+    console.timeEnd('this.cfilterSource.next(filter)');
+
   }
 
 
@@ -53,7 +65,7 @@ export class ChartService {
   private dataStructure(data): any[] {
     const comments = [];
     let repliesArray = [];
-    // console.log('data in chartservice, where is replies?', data);
+    console.log('data in chartservice, where is replies?', data);
     data.forEach(song => {
       song.comment.forEach(comment => {
         repliesArray = [];

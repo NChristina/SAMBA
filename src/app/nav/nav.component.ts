@@ -67,12 +67,13 @@ export class NavComponent implements OnInit {
       });
     }
 
+    console.time('this.chartService.SetData()');
     this.chartService.SetData(this.selectedList); // update for all charts
+    console.timeEnd('this.chartService.SetData()');
   }
 
   // removes a song, which was already selected
   removeSelectedSong(index) {
-    console.log('triggered')
     const song = this.selectedList[index];
     this.searchMatchList.forEach((songData, i) => {
       if (songData.data.data[0]._id === song.data[0]._id) {

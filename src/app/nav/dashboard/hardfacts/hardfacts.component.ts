@@ -105,7 +105,11 @@ export class HardfactsComponent implements OnInit {
 
     // group by likes
     const nested = d3.nest().key((d: any) => {
-      if (d.likeCount > 0) { return 'Liked'; } else { return 'Others'; }
+      if (d.likeCount > 0) {
+        return 'Liked';
+      } else {
+        return 'Others';
+      }
     })
     .entries(this.data);
     nested.forEach((like) => {
@@ -145,16 +149,18 @@ export class HardfactsComponent implements OnInit {
     this.dimension.group().all().forEach((date: any) => {
       if (date.value > m) { m = date.value; }
     });
-    console.log('hardfacts maxVal: ', m);
+    // console.log('hardfacts maxVal: ', m);
     return m;
   }
 
   defineChartColors() {
     switch (Object.keys(this.likeGroups).length) {
       case 1:
-        return ['#EEEEEE'];
-      default:
-        return ['#377eb8', '#EEEEEE'];
+        return ['#a8a8a8'];
+      case 2:
+        return ['#377eb8', '#a8a8a8'];
+      case 3:
+          return ['#377eb8', '#a8a8a8', '#ff0000'];
     }
   }
 
