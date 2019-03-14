@@ -21,9 +21,12 @@ export class MainvisComponent implements OnInit {
   dimension: CrossFilter.Dimension<{}, Date>;
   data: any[];
   private lineCharts: dc.LineChart[];
-  chartShowOption = 0;
+  chartShowOption = 2;
   protected songs = [];
   rowtip;
+  maxGroupValue;
+  currentFilterValues = [];
+
 
   // slider values
   protected value: number;
@@ -91,32 +94,40 @@ export class MainvisComponent implements OnInit {
       .key((comment: any) => comment.song)
       .entries(this.data);
     nestedData.forEach(song => {
-      const lineChart = dc.lineChart(this.compositeChart);
-      // comulative show option
-      if (this.chartShowOption === 3) {
-        const dataLength = this.data.length;
-        const dates = d3.nest().key((d: any) => this.getDateStringByShowOption(d.publishedAt)).entries(song.values);
-        for (let i = 0; i < dates.length; i++) {
-          if ((i + 1) === dates.length) {
-            break;
-          }
-          const date = new Date(this.getDateStringByShowOption(dates[i].key));
-          const date2 = new Date(this.getDateStringByShowOption(dates[i + 1].key));
-          const daysBetween = Math.floor( (date.getTime() - date2.getTime()) / 86400000); // 86400000 = one day
-          this.addDaysToData(daysBetween, dates[i].values.length, date, song.key);
+      const lineChart = dc.lineChart(this.compositeChart)
+      .ordinalColors(['red','green','blue'])
+      .colorAccessor(function(d, i) {
+        if (i % 2 === 0) {
+          return 0;
+        } else {
+          return 1;
         }
-        // console.log(dataLength, this.data.length);
-        lineChart.interpolate('monotone');
+      });
+      // comulative show option
+      // if (this.chartShowOption === 3) {
+      //   const dataLength = this.data.length;
+      //   const dates = d3.nest().key((d: any) => this.getDateStringByShowOption(d.publishedAt)).entries(song.values);
+      //   for (let i = 0; i < dates.length; i++) {
+      //     if ((i + 1) === dates.length) {
+      //       break;
+      //     }
+      //     const date = new Date(this.getDateStringByShowOption(dates[i].key));
+      //     const date2 = new Date(this.getDateStringByShowOption(dates[i + 1].key));
+      //     const daysBetween = Math.floor( (date.getTime() - date2.getTime()) / 86400000); // 86400000 = one day
+      //     this.addDaysToData(daysBetween, dates[i].values.length, date, song.key);
+      //   }
+      //   // console.log(dataLength, this.data.length);
+      //   lineChart.interpolate('monotone');
 
-      }
+      // }
       const group = this.dimension.group().reduceSum((d: any) => {
         return d.song === song.key;
       });
-      lineChart.group(group).renderDataPoints(true);
+      lineChart.group(group);
       charts.push(lineChart);
     });
     if (this.showTotalComments) {
-      charts.push(dc.lineChart(this.compositeChart).group(this.dimension.group()).renderDataPoints(true));
+      charts.push(dc.lineChart(this.compositeChart).group(this.dimension.group()).renderDataPoints(true).colors('red'));
     }
     return charts;
   }
@@ -126,17 +137,14 @@ export class MainvisComponent implements OnInit {
     const dateGroup = this.dimension.group();
     this.chartRange1 = d3.min(this.data, (d: any) => new Date(d.publishedAt));
     this.chartRange2 = d3.max(this.data, (d: any) => new Date(d.publishedAt));
+
     this.compositeChart
       .width(900)
       .height(300)
       .useViewBoxResizing(true)
       .dimension(this.dimension)
       .x(d3.scaleTime().domain([this.chartRange1, this.chartRange2]))
-      .y(
-        d3
-          .scaleLinear()
-          .domain([0, d3.max(dateGroup.all(), (d: any) => d.value)])
-      )
+      .y(d3.scaleLinear().domain([0, d3.max(dateGroup.all(), (d: any) => d.value)]) )
       .xAxisLabel('Date')
       .yAxisLabel('Comment Amount')
       .shareTitle(true)
@@ -158,8 +166,14 @@ export class MainvisComponent implements OnInit {
     //         .on('mouseout', rowtip.hide);
     // });
 
-    // sends data to the language chart component on brush-filtering //   VL HIER????
+    // sends data to the language chart component on brush-filtering //
     this.compositeChart.on('filtered', (chart, filter) => {
+
+
+      // console.log('test filter 1', filter[1], '// test filter 0: ', filter[0]);
+      this.maxGroupValue = this.getMaxGroupValue(filter[0], filter[1]);
+      // console.log('value of maxGroupValue: ', this.maxGroupValue);
+      this.compositeChart.y(d3.scaleLinear().domain([0, this.maxGroupValue]));
       this.chartService.setChartRange({range: filter, chart: chart});
     });
     this.compositeChart.render();
@@ -226,7 +240,7 @@ export class MainvisComponent implements OnInit {
     this.value2 = new Date(dates[dates.length - 1].key).getTime();
     // scales the slider to the last week or the last 2 datapoints on daily-view
     if (this.chartShowOption === 0) {
-      let weeks = 604800000 * 4; // one week
+      let weeks = 604800000; // one week
       const diff =
         this.value2 - new Date(dates[dates.length - 2].key).getTime();
       while (weeks <= diff) {
@@ -300,5 +314,29 @@ export class MainvisComponent implements OnInit {
     tooltip.style.position = 'fixed';
     tooltip.style.top = (event.clientY) + 'px';
     tooltip.style.left = (event.clientX - tooltip.offsetWidth - 5) + 'px';
+  }
+
+  // returns the max value for the domain of the chart
+  getMaxGroupValue(begin, end): number { // ich brauche hier den max comment ammount für die gefilterte variante
+    let m = 0;
+    this.currentFilterValues = [];
+    const allDimension = this.dimension.group().all();
+
+    allDimension.forEach( d => {
+      if (d['key'] <= end && d['key'] >= begin) {
+        this.currentFilterValues.push(d);
+      }
+    });
+    this.currentFilterValues.forEach((date: any) => {
+      // console.log('dv:', date);
+      if (date.value > m) { m = date.value; }
+    });
+    // console.log('m: ', m);
+    return m / 100 * 110; // 10% padding oben drauf
+  }
+
+  getFilteredRange(begin, end) {
+
+
   }
 }

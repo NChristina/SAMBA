@@ -207,3 +207,73 @@ body {
 .comparisonView.hide{
   display: none;
 }
+
+// Custom STYLES
+.sub:nth-child(2) .chart-body .stack-list .stack .line {
+  stroke: #7fc97f !important;
+}
+
+.sub:nth-child(3) .chart-body .stack-list .stack .line {
+  stroke: #beaed4 !important;
+}
+
+.sub:nth-child(4) .chart-body .stack-list .stack .line {
+  stroke: #fdc086 !important;
+}
+
+.sub:nth-child(5) .chart-body .stack-list .stack .line {
+  stroke: #ffff99 !important;
+}
+
+.sub:nth-child(6) .chart-body .stack-list .stack .line {
+  stroke: #386cb0 !important;
+}
+
+.sub:nth-child(7) .chart-body .stack-list .stack .line {
+  stroke: #f0027f !important;
+}
+
+.sub:nth-child(8) .chart-body .stack-list .stack .line {
+  stroke: #bf5b17 !important;
+}
+
+.sub:nth-child(9) .chart-body .stack-list .stack .line {
+  stroke: #666666 !important;
+}
+
+.legendElement[_ngcontent-c7]:nth-child(1) .colorRect[_ngcontent-c7] {
+  background-color: #7fc97f !important;
+}
+
+.legendElement[_ngcontent-c7]:nth-child(2) .colorRect[_ngcontent-c7] {
+  background-color: #beaed4 !important;
+}
+
+.legendElement[_ngcontent-c7]:nth-child(3) .colorRect[_ngcontent-c7] {
+  background-color: #fdc086 !important;
+}
+
+.legendElement[_ngcontent-c7]:nth-child(4) .colorRect[_ngcontent-c7] {
+  background-color: #ffff99 !important;
+}
+
+.legendElement[_ngcontent-c7]:nth-child(5) .colorRect[_ngcontent-c7] {
+  background-color: #386cb0  !important;
+
+}
+
+.legendElement[_ngcontent-c7]:nth-child(6) .colorRect[_ngcontent-c7] {
+  background-color: #f0027f !important;
+
+}
+
+.legendElement[_ngcontent-c7]:nth-child(7) .colorRect[_ngcontent-c7] {
+  background-color: #bf5b17 !important;
+
+}
+
+.legendElement[_ngcontent-c7]:nth-child(8) .colorRect[_ngcontent-c7] {
+  background-color: #666666 !important;
+
+}
+

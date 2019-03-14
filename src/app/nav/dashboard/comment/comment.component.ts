@@ -9,7 +9,6 @@ import { MdcCheckbox, MdcSnackbar, MdcTextField } from '@angular-mdc/web';
   selector: 'app-comment',
   templateUrl: './comment.component.html',
   styleUrls: ['./comment.component.scss'],
-  // encapsulation: ViewEncapsulation.None
 })
 export class CommentComponent implements OnInit {
   foodControl = new FormControl();
@@ -40,8 +39,6 @@ export class CommentComponent implements OnInit {
     // crossfilter is needed to view the comments which are selected in any chart
     this.chartService.getCrossfilter().subscribe((filter) => {
       this.cfilter = filter;
-
-      // console.log('cfilter:', this.cfilter);
       this.setDimension();
       this.renderCommentTable();
     });
@@ -50,13 +47,11 @@ export class CommentComponent implements OnInit {
   // sets the dimension
   setDimension() {
     this.dimension = this.cfilter.dimension((d: any) => {
-      // console.log('was ist da drinnen:', d);
       return new Date(d.publishedAt.split('T')[0]);
     });
   }
 
   orderDataAfterCurrentCriteria() {
-
       this.dimension = this.cfilter.dimension((d: any) => {
         if (this.whatOrder === 0) { return d.replies;
         } else if (this.whatOrder === 1) {return d.replies[d.replies.length];
@@ -71,6 +66,8 @@ export class CommentComponent implements OnInit {
   renderCommentTable() {
     const dateGroup = this.dimension.group();
     this.orderDataAfterCurrentCriteria();
+    console.log('XXXXXXXXX');
+
 
     this.commentTable
       .dimension(this.dimension)
@@ -142,6 +139,7 @@ export class CommentComponent implements OnInit {
       .size(this.sizeforTable)
       .renderLabel(false)
       .renderTitle(false);
+    console.log('AFTER RENDER11');
     this.commentTable.render();
     this.buildReplyAccordion();
     this.buildSentimentBox();
