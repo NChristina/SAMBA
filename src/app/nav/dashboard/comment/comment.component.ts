@@ -66,7 +66,6 @@ export class CommentComponent implements OnInit {
   renderCommentTable() {
     const dateGroup = this.dimension.group();
     this.orderDataAfterCurrentCriteria();
-    console.log('XXXXXXXXX');
 
 
     this.commentTable
@@ -139,7 +138,6 @@ export class CommentComponent implements OnInit {
       .size(this.sizeforTable)
       .renderLabel(false)
       .renderTitle(false);
-    console.log('AFTER RENDER11');
     this.commentTable.render();
     this.buildReplyAccordion();
     this.buildSentimentBox();
@@ -149,42 +147,36 @@ export class CommentComponent implements OnInit {
 
     switch (event.value) {
       case 'replies desc':
-      // console.log('valueChanged: ', event.value);
       this.whatOrder = 0;
       this.orderDataAfterCurrentCriteria();
       this.renderCommentTable();
       break;
 
       case 'replies asc':
-      // console.log('valueChanged: ', event.value);
       this.whatOrder = 1;
       this.orderDataAfterCurrentCriteria();
       this.renderCommentTable();
       break;
 
       case 'likes desc':
-      // console.log('valueChanged: ', event.value);
       this.whatOrder = 2;
       this.orderDataAfterCurrentCriteria();
       this.renderCommentTable();
       break;
 
       case 'likes asc':
-      // console.log('valueChanged: ', event.value);
       this.whatOrder = 3;
       this.orderDataAfterCurrentCriteria();
       this.renderCommentTable();
       break;
 
       case 'date desc':
-      // console.log('valueChanged: ', event.value);
       this.whatOrder = 4;
       this.orderDataAfterCurrentCriteria();
       this.renderCommentTable();
       break;
 
       case 'date asc':
-      // console.log('valueChanged: ', event.value);
       this.whatOrder = 5;
       this.orderDataAfterCurrentCriteria();
       this.renderCommentTable();

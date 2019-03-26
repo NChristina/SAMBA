@@ -1,7 +1,7 @@
 <div class="grid-container">
     <mat-grid-list cols="1" rowHeight="40px">
-        <div class="wrapper" (mouseover)="setTooltipInfo($event, tooltipinfo);" style="float:right" class="tooltInfo"> 
-            <img height="24px" style="float:right" src="../../assets/000-info.svg"> 
+        <div class="wrapper" (mouseover)="setTooltipInfo($event, tooltipinfo);" style="float:right" class="tooltInfo">
+            <img height="24px" style="float:right" src="../../assets/000-info.svg">
             <span #tooltipinfo class="tooltInfo_text">
                     <p><img height="15px" src="../../assets/000-chart.svg"> In this chart you see the top three languages in which the comments are written. The numbers are aggregated per month and show the overall amount of comments per language.</p>
                     <p><img height="15px" src="../../assets/000-barchart.svg"> For the comparison view, each bar of the chart shows the percentage of comments per language in the videos selected for each song.</p>
@@ -9,7 +9,7 @@
         </div>
         <button (click)="switchView('compButton');" class="langComp compButton" style="float:right"><img height="24px" title="Comparison View" src="../../assets/000-barchart.svg"> </button>
         <button (click)="switchView('aggrButton');" class="langAggr aggrButton active" style="float:right"><img height="24px" title="Aggregated View" src="../../assets/000-chart.svg"> </button>
-        <h2>Language</h2>        
+        <h2>Language</h2>
     </mat-grid-list>
 </div>
 <hr />

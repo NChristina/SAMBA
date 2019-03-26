@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ChartService } from '../services/chart.service';
 import * as d3 from 'd3';
-import * as crossfilter from 'crossfilter';
 import * as dc from 'dc';
 
 @Component({
@@ -46,7 +45,6 @@ export class LanguageComponent implements OnInit {
         } else {
           this.notDataWarn = true;
         }
-
       }
     });
     this.chartService.GetData().subscribe((data) => {
