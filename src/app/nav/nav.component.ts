@@ -34,8 +34,6 @@ export class NavComponent implements OnInit {
         if (results.body.length === 0) {
           document.getElementById('sFtext').style.display = 'block'; // Display alert
         }
-
-        // console.log('result::' + results.body);
         const list = [];
         results.body.forEach(record => {
           list.push({ displayName: record.data[0].snippet.title, data: record });
@@ -43,7 +41,6 @@ export class NavComponent implements OnInit {
         this.searchMatchList = list;
         this.isSearching = false;
       });
-      // console.log('this is the end of submitSearch');
     }
   }
 

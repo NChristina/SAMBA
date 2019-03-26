@@ -5,16 +5,14 @@
             <mdc-icon class="search_icon" trailing #searchicon  [clickable]="true">search</mdc-icon>
           </mdc-text-field>
         </mdc-drawer-spacer>
-
           <div class="search-list list-group" >
             <!--List of search results-->
             <div id="searchFeedback">
-              <img id="sFimg" src="../../assets/000-loading.gif" alt="loading">
+              <img id="sFimg" src="../../assets/loading.gif" alt="loading">
               <p id="sFtext">No results were found for this search.</p>
             </div>
-            <div class="song_list_item list-group-item list-group-item-action flex-column align-items-start" *ngFor="let match of searchMatchList; let ix = index" > <!--(click)="checkbox1.toggle(); selectSong(i, checkbox1);"-->
+            <div class="song_list_item list-group-item list-group-item-action flex-column align-items-start" *ngFor="let match of searchMatchList; let ix = index" >
               <div class="d-flex w-100 justify-content-between">
-                  <!-- <mdc-checkbox #checkbox1 mdcListItemGraphic (change)="selectSong(i, checkbox1)"></mdc-checkbox> -->
                   <b class="mb-1">{{match.displayName}}</b>
                   <div class="checkbox" #checkbox1 (change)="selectSong(ix, $event)">
                       <label><input type="checkbox" id="{{'checkbox_'+ix}}" value=""></label>
@@ -24,9 +22,6 @@
                   <small>{{ match.data.comment.length }} Comments and replies</small>
                   <a class="song_link" href="https://www.youtube.com/watch?v={{match.data.data[0].id}}" target="_blank">
                     <img height="15px" src="../../assets/002-unlink.svg">
-                    <!-- <div class="tooltip">
-                      <span class="tooltiptext">link to video test</span>
-                    </div> -->
                   </a>
               </div>
             </div>
@@ -51,6 +46,8 @@
           </mdc-chip>
         </mdc-chip-set>
         <div class="contentmargin">
+            <app-loading-modal></app-loading-modal>
+
           <app-dashboard></app-dashboard>
         </div>
       </div>

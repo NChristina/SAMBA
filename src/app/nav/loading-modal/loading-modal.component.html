@@ -1,0 +1,14 @@
+<!-- Trigger/Open The Modal -->
+<button (click)="open()" id="myBtn">Open Modal</button>
+
+<!-- The Modal -->
+<div  id="myModal" [ngStyle]="{ display: display }" class="modal">
+  <!-- Modal content -->
+  <div class="modal-content">
+    <button (click)="close()"   #fab1 mdc-fab class="fab_button close">&times;</button>
+    <p>Your data is being fetched. This might take a moment.</p>
+    <img id="sFimg" src="../../assets/loading.gif" alt="loading">
+  </div>
+</div>
+
+

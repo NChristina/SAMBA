@@ -11,7 +11,8 @@ export class DataService {
   private db: Database;
   private service;
 
-
+// put this on another file and put it in gitignore
+// when rebase, ask alexis to change the credentials
   constructor(private httpClient: HttpClient) {
     this.db = new Database({
       url: 'http://10.0.1.26:8530'
