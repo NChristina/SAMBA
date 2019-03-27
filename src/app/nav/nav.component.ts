@@ -15,9 +15,13 @@ export class NavComponent implements OnInit {
   isSearching = false;
 
 
-  constructor(private searcher: SearchService, private chartService: ChartService, private snackbar: MdcSnackbar) { }
+
+  constructor(private searcher: SearchService, private chartService: ChartService, private snackbar: MdcSnackbar) {
+
+  }
 
   ngOnInit() {
+    document.getElementById('sFimg').style.display = 'none'; // Spinner OFF default
 
   }
   // is called when the user hits enter (searchBar)

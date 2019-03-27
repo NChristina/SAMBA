@@ -40,6 +40,7 @@ import { SentimentComponent } from './nav/dashboard/sentiment/sentiment.componen
 import { Ng5SliderModule } from 'ng5-slider';
 import { TopicComponent } from './nav/dashboard/topic/topic.component';
 import { LoadingModalComponent } from './nav/loading-modal/loading-modal.component';
+import { LoadingSvgComponent } from './shared/loading-svg/loading-svg.component';
 
 @NgModule({
   declarations: [
@@ -53,6 +54,7 @@ import { LoadingModalComponent } from './nav/loading-modal/loading-modal.compone
     SentimentComponent,
     TopicComponent,
     LoadingModalComponent,
+    LoadingSvgComponent,
   ],
   imports: [
     BrowserModule,

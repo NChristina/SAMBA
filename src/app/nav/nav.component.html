@@ -8,7 +8,11 @@
           <div class="search-list list-group" >
             <!--List of search results-->
             <div id="searchFeedback">
-              <img id="sFimg" src="../../assets/loading.gif" alt="loading">
+              <div id="sFimg">
+                <app-loading-modal></app-loading-modal>
+                <!-- <app-loading-svg></app-loading-svg> -->
+              </div>
+              <!-- <img id="sFimg" src="../../assets/loading.gif" alt="loading"> -->
               <p id="sFtext">No results were found for this search.</p>
             </div>
             <div class="song_list_item list-group-item list-group-item-action flex-column align-items-start" *ngFor="let match of searchMatchList; let ix = index" >
@@ -46,7 +50,6 @@
           </mdc-chip>
         </mdc-chip-set>
         <div class="contentmargin">
-          <app-loading-modal></app-loading-modal>
           <app-dashboard></app-dashboard>
         </div>
       </div>
