@@ -6,7 +6,7 @@
 /out-tsc
 
 # db auth constants
-/shared
+/app/shared
 
 # dependencies
 /node_modules
