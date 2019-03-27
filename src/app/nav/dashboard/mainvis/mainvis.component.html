@@ -2,7 +2,7 @@
   <button #fab1 mdc-fab class="fab_button" (click)="setShowOption(2)" [ngStyle]="{'background-color': this.chartShowOption === 2 ? '#009688' : '#1976D2'}" [extended]="true" label="yearly">
   </button>
   <button #fab2 mdc-fab class="fab_button" (click)="setShowOption(1)" [ngStyle]="{'background-color': this.chartShowOption === 1 ? '#009688' : '#1976D2'}" [extended]="true" label="monthly"></button>
-  <button #fab3 mdc-fab class="fab_button" (click)="setShowOption(0)" [ngStyle]="{'background-color': this.chartShowOption === 0 ? '#009688' : '#1976D2'}" [extended]="true" label="week"></button>
+  <button #fab3 mdc-fab class="fab_button" (click)="setShowOption(0)" [ngStyle]="{'background-color': this.chartShowOption === 0 ? '#009688' : '#1976D2'}" [extended]="true" label="weekly"></button>
 
 
   <div class="wrapper" (mouseover)="setTooltipInfo($event, tooltipinfo);" style="float:right;margin:15px 0 0 25px;" class="tooltInfo">
@@ -13,9 +13,7 @@
       </span>
   </div>
 </div>
-<!--<mdc-form-field class="selection_bar" [mdcElevation]="2">
-  <mdc-checkbox #total (change)="this.showTotalComments = !this.showTotalComments"></mdc-checkbox><label>Show Total Comments</label>
-</mdc-form-field>-->
+
 <div class="legend" [mdcElevation]="2" *ngIf="this.songs.length > 0">
   <div class="legendElement" *ngFor="let song of this.songs; let i = index">
     <div class="colorRect" ></div>
