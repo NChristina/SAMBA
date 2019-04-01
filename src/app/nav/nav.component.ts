@@ -25,7 +25,30 @@ export class NavComponent implements OnInit {
 
   }
   // is called when the user hits enter (searchBar)
-  submitSearch(value: string) {
+  // submitSearch(value: string) {
+  //   if (value) {
+  //     // Entered submitSearch in nav comp
+  //     document.getElementById('sFtext').style.display = 'none'; // Remove any alert
+  //     document.getElementById('sFimg').style.display = 'block'; // Spinner ON
+
+  //     this.searchMatchList = [];
+  //     this.isSearching = true;
+  //     this.searcher.searchFromDb(value.trim()).then((results) => {
+  //       document.getElementById('sFimg').style.display = 'none'; // Spinner OFF
+  //       if (results.body.length === 0) {
+  //         document.getElementById('sFtext').style.display = 'block'; // Display alert
+  //       }
+  //       const list = [];
+  //       results.body.forEach(record => {
+  //         list.push({ displayName: record.data[0].snippet.title, data: record });
+  //       });
+  //       this.searchMatchList = list;
+  //       this.isSearching = false;
+  //     });
+  //   }
+  // }
+
+  submitQuickSearch(value: string) {
     if (value) {
       // Entered submitSearch in nav comp
       document.getElementById('sFtext').style.display = 'none'; // Remove any alert
@@ -33,16 +56,17 @@ export class NavComponent implements OnInit {
 
       this.searchMatchList = [];
       this.isSearching = true;
-      this.searcher.searchFromDb(value.trim()).then((results) => {
+      this.searcher.quickSearchFromDb(value.trim()).then((results) => {
         document.getElementById('sFimg').style.display = 'none'; // Spinner OFF
+        console.log('I GOT A RESULT: ', results.body);
         if (results.body.length === 0) {
           document.getElementById('sFtext').style.display = 'block'; // Display alert
         }
-        const list = [];
-        results.body.forEach(record => {
-          list.push({ displayName: record.data[0].snippet.title, data: record });
-        });
-        this.searchMatchList = list;
+        this.searchMatchList = results.body;
+        // let list = [];
+        // results.body.forEach(record => {
+        //   list.push({ displayName: record.artist, title: record.title, versions: record.versions.length });
+        // });
         this.isSearching = false;
       });
     }

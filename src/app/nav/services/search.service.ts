@@ -14,12 +14,21 @@ export class SearchService {
 
 
   searchFromDb(value: string): Promise<any> {
-    // console.log('entered searchFromDb() in search.service.ts');
+    console.log('entered searchFromDb() in search.service.ts: ', value);
     if (value.length < 1) {
       return;
     }
-    // console.log('???: ', this.dataService.search(value));
+    console.log('???: ', this.dataService.search(value));
     return this.dataService.search(value);
+  }
+
+  quickSearchFromDb(value: string): Promise<any> {
+    console.log('entered quickSearchFromDb() in search.service.ts: ', value);
+    if (value.length < 1) {
+      return;
+    }
+    console.log('???quickieeeee: ', this.dataService.quickSearch(value));
+    return this.dataService.quickSearch(value);
   }
 
   // splits the value and the song title by words and look for each word if it

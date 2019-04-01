@@ -9,6 +9,7 @@ export class DataService {
   private data;
   private db: Database;
   private service;
+  private quickSearchService;
   private p_url = AppConstants.URL;
   private p_db_name = AppConstants.DB_NAME;
   private p_auth_name = AppConstants.AUTH_NAME;
@@ -23,6 +24,7 @@ export class DataService {
     this.db.useDatabase(this.p_db_name);
     this.db.useBasicAuth(this.p_auth_name, this.p_auth_password);
     this.service = this.db.route('search', {  });
+    this.quickSearchService = this.db.route('quickSearch', {  });
   }
 
   // implement the new endpoints right in here
@@ -33,5 +35,10 @@ export class DataService {
   search(value: string): Promise<any> {
     const search = value.replace(' ', '%20');
     return this.service.get('search/' + search);
+  }
+
+  quickSearch(value: string): Promise<any> {
+    const search = value.replace(' ', '%20');
+    return this.quickSearchService.get('quickSearch/' + search);
   }
 }
