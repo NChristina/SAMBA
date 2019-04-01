@@ -13,6 +13,7 @@ export class NavComponent implements OnInit {
   // list with all selected 'songs'
   selectedList = [];
   isSearching = false;
+  chevronDown = true;
 
 
 
@@ -110,5 +111,22 @@ export class NavComponent implements OnInit {
     });
     this.selectedList.splice(index, 1);
     this.chartService.SetData(this.selectedList);
+  }
+  toggleAccordion(index) {
+    console.log('accordion.....was toggled with index ', index, ' and the event is: ', event);
+    let element = document.getElementById('accordion_' + index);
+    let panel = document.getElementById('panel_' + index);
+    let img = document.getElementById('img_' + index);
+
+
+    if (panel.style.maxHeight) {
+      panel.style.maxHeight = null;
+      img.src = '../../assets/chevron_down.svg';
+    } else {
+      panel.style.maxHeight = panel.scrollHeight + 'px';
+      img.src = '../../assets/chevron_up.svg';
+
+    }
+
   }
 }

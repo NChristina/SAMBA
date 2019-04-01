@@ -1,61 +1,91 @@
-    <div class="demo-content__drawer demo-content__drawer--persistent">
-      <mdc-drawer #persistent drawer='persistent'>
-        <mdc-drawer-spacer>
-          <mdc-text-field #searchText [box]="false" label="search for songs" maxlength="30" (change)="submitQuickSearch(searchText.value)">
-              <!-- (change)="submitSearch(searchText.value)" -->
-            <mdc-icon class="search_icon" trailing #searchicon  [clickable]="true">search</mdc-icon>
-          </mdc-text-field>
-          <!-- <button (click)="submitQuickSearch(searchText.value)">quickSearch</button> -->
-        </mdc-drawer-spacer>
-          <div class="search-list list-group" >
-            <!--List of search results-->
-            <div id="searchFeedback">
-              <div id="sFimg">
-                <app-loading-modal></app-loading-modal>
-                <!-- <app-loading-svg></app-loading-svg> -->
-              </div>
-              <!-- <img id="sFimg" src="../../assets/loading.gif" alt="loading"> -->
-              <p id="sFtext">No results were found for this search.</p>
-            </div>
-            <div class="song_list_item list-group-item list-group-item-action flex-column align-items-start" *ngFor="let match of searchMatchList; let ix = index" >
-              <div class="d-flex w-100 justify-content-between">
-                  <b class="mb-1">{{match.artist}} - {{match.title}}</b>
-                  <div class="checkbox" #checkbox1 (change)="selectSong(ix, $event)">
-                      <label><input type="checkbox" id="{{'checkbox_'+ix}}" value=""></label>
-                  </div>
-              </div>
-              <div class="d-flex w-100 justify-content-between">
-                  <small>{{ match.versions.length }} Versions of this song</small>
-                   <!-- <a class="song_link" href="https://www.youtube.com/watch?v={{match.data.data[0].id}}" target="_blank">
-                    <img height="15px" src="../../assets/002-unlink.svg">
-                   </a> -->
-              </div>
-              <div class="song_list_item list-group-item list-group-item-action flex-column align-items-start" *ngFor="let version of match.versions">
-                {{version.snippet.title}}
-              </div>
+<div class="demo-content__drawer demo-content__drawer--persistent">
+  <mdc-drawer #persistent drawer="persistent">
+    <mdc-drawer-spacer>
+      <mdc-text-field
+        #searchText
+        [box]="false"
+        label="search for songs"
+        maxlength="30"
+        (change)="submitQuickSearch(searchText.value)"
+      >
+        <mdc-icon class="search_icon" trailing #searchicon [clickable]="true">search</mdc-icon>
+      </mdc-text-field>
+    </mdc-drawer-spacer>
+    <div class="search-list list-group">
+      <!--List of search results-->
+      <div id="searchFeedback">
+        <div id="sFimg">
+          <app-loading-modal></app-loading-modal>
+        </div>
+        <p id="sFtext">No results were found for this search.</p>
+      </div>
+      <div
+        (click)="toggleAccordion(ix)"
+        id="{{'accordion_' + ix}}"
+        class="accordion song_list_item list-group-item list-group-item-action flex-column align-items-start"
+        *ngFor="let match of searchMatchList; let ix = index"
+      >
+        <div class="d-flex w-100 justify-content-between">
+          <b class="mb-1">{{ match.artist }} - {{ match.title }}</b>
+          <div class="checkbox" #checkbox1 (change)="selectSong(ix, $event)">
+            <label><input type="checkbox" id="{{ 'checkbox_' + ix }}" value=""/></label>
+          </div>
+        </div>
+        <div class="d-flex w-100 justify-content-between">
+          <small>{{ match.versions.length }} Versions of this song</small>
+          <img id="{{'img_' + ix}}" height ="10px" src="../../assets/chevron_down.svg">
+        </div>
+        <div class="panel list-group "  id="{{'panel_' + ix}}">
+          <div
+            class="list-group-item flex-column align-items-start"
+            *ngFor="let version of match.versions"
+          >
+          <div class="d-flex w-100 justify-content-between">
+            <b>{{ version.snippet.title }}</b>
+            <div class="checkbox" (change)="selectSong(ix, $event)">
+              <label><input type="checkbox" id="{{ 'subcheckbox_' + ix }}" value=""/></label>
             </div>
           </div>
-      </mdc-drawer>
-      <div>
-        <mdc-toolbar>
-          <mdc-toolbar-row>
-            <mdc-toolbar-section [alignStart]="true" >
-              <mdc-icon mdc-toolbar-menu-icon (click)="persistent.open()">menu</mdc-icon>
-              <mdc-toolbar-title>Please select a song</mdc-toolbar-title>
-            </mdc-toolbar-section>
-            <mdc-toolbar-section [alignEnd]="true" [shrinkToFit]="true">
-              <img src="../../assets/Samba_Logo_rgb_transparent_cut.png" alt="samba logo" style="width:150px; margin-right: 15px;">
-            </mdc-toolbar-section>
-          </mdc-toolbar-row>
-        </mdc-toolbar>
-        <mdc-chip-set #inputchipset [input]="true">
-          <mdc-chip *ngFor="let element of selectedList; let i = index" label="{{element.data[0].snippet.title}}" (trailingIconInteraction)="removeSelectedSong(i)">
-            <mdc-chip-icon leading>music_note</mdc-chip-icon>
-            <mdc-chip-icon trailing>cancel</mdc-chip-icon>
-          </mdc-chip>
-        </mdc-chip-set>
-        <div class="contentmargin">
-          <app-dashboard></app-dashboard>
+          <div class="d-flex w-100 justify-content-between">
+            <small>{{version.statistics.nbCommentInDb}} comments | {{version.statistics.likeCount}} likes | {{version.statistics.dislikeCount}} dislikes</small>
+            <a class="song_link" href="https://www.youtube.com/watch?v={{ version.id }}" target="_blank">
+              <img height="15px" src="../../assets/002-unlink.svg"/>
+            </a>
+          </div>
+          <small>{{version.statistics.viewCount}} views</small>
+          </div>
         </div>
       </div>
     </div>
+  </mdc-drawer>
+  <div>
+    <mdc-toolbar>
+      <mdc-toolbar-row>
+        <mdc-toolbar-section [alignStart]="true">
+          <mdc-icon mdc-toolbar-menu-icon (click)="persistent.open()">menu</mdc-icon>
+          <mdc-toolbar-title>Please select a song</mdc-toolbar-title>
+        </mdc-toolbar-section>
+        <mdc-toolbar-section [alignEnd]="true" [shrinkToFit]="true">
+          <img
+            src="../../assets/Samba_Logo_rgb_transparent_cut.png"
+            alt="samba logo"
+            style="width:150px; margin-right: 15px;"
+          />
+        </mdc-toolbar-section>
+      </mdc-toolbar-row>
+    </mdc-toolbar>
+    <mdc-chip-set #inputchipset [input]="true">
+      <mdc-chip
+        *ngFor="let element of selectedList; let i = index"
+        label="{{ element.data[0].snippet.title }}"
+        (trailingIconInteraction)="removeSelectedSong(i)"
+      >
+        <mdc-chip-icon leading>music_note</mdc-chip-icon>
+        <mdc-chip-icon trailing>cancel</mdc-chip-icon>
+      </mdc-chip>
+    </mdc-chip-set>
+    <div class="contentmargin">
+      <app-dashboard></app-dashboard>
+    </div>
+  </div>
+</div>
