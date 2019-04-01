@@ -39,6 +39,8 @@ import { MainvisComponent } from './nav/dashboard/mainvis/mainvis.component';
 import { SentimentComponent } from './nav/dashboard/sentiment/sentiment.component';
 import { Ng5SliderModule } from 'ng5-slider';
 import { TopicComponent } from './nav/dashboard/topic/topic.component';
+import { LoadingModalComponent } from './nav/loading-modal/loading-modal.component';
+import { LoadingSvgComponent } from './shared/loading-svg/loading-svg.component';
 
 @NgModule({
   declarations: [
@@ -51,6 +53,8 @@ import { TopicComponent } from './nav/dashboard/topic/topic.component';
     MainvisComponent,
     SentimentComponent,
     TopicComponent,
+    LoadingModalComponent,
+    LoadingSvgComponent,
   ],
   imports: [
     BrowserModule,

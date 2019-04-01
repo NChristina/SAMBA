@@ -9,17 +9,9 @@ export class SearchService {
   private currentSearchResult = this.searchResultSource.asObservable();
 
   constructor(private dataService: DataService) {
-    // subscribes to the data from the data service
-    // dataService.getData().subscribe((data) => {
-    //   this.data = data;
-    // });
+
   }
 
-  // file search
-  // searchFromFile(value: string, dataSelection: number): Observable<any[]> {
-  //   this.searchResultSource.next(this.searchSplitter(value));
-  //   return this.currentSearchResult;
-  // }
 
   searchFromDb(value: string): Promise<any> {
     // console.log('entered searchFromDb() in search.service.ts');
@@ -28,12 +20,6 @@ export class SearchService {
     }
     // console.log('???: ', this.dataService.search(value));
     return this.dataService.search(value);
-  }
-
-
-  search(value: string): Observable<any[]> {
-    this.searchResultSource.next(this.searchSplitter(value));
-    return this.currentSearchResult;
   }
 
   // splits the value and the song title by words and look for each word if it

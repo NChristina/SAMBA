@@ -1,6 +1,7 @@
 import { Component, ViewChild , OnInit, ElementRef } from '@angular/core';
 import { CloudData, CloudOptions, TagCloudComponent } from 'angular-tag-cloud-module';
 import { ChartService } from '../services/chart.service';
+import * as sw from 'stopword';
 
 @Component({
   selector: 'app-topic',
@@ -54,7 +55,7 @@ export class TopicComponent implements OnInit {
 
   // Tokenize, clean, and count
   createWordCloud() {
-    const sw = require('stopword');
+    // const sw = require('stopword');
     const words = [];
 
     // Tokenize and clean each [english] comment

@@ -15,9 +15,13 @@ export class NavComponent implements OnInit {
   isSearching = false;
 
 
-  constructor(private searcher: SearchService, private chartService: ChartService, private snackbar: MdcSnackbar) { }
+
+  constructor(private searcher: SearchService, private chartService: ChartService, private snackbar: MdcSnackbar) {
+
+  }
 
   ngOnInit() {
+    document.getElementById('sFimg').style.display = 'none'; // Spinner OFF default
 
   }
   // is called when the user hits enter (searchBar)
@@ -34,8 +38,6 @@ export class NavComponent implements OnInit {
         if (results.body.length === 0) {
           document.getElementById('sFtext').style.display = 'block'; // Display alert
         }
-
-        // console.log('result::' + results.body);
         const list = [];
         results.body.forEach(record => {
           list.push({ displayName: record.data[0].snippet.title, data: record });
@@ -43,7 +45,6 @@ export class NavComponent implements OnInit {
         this.searchMatchList = list;
         this.isSearching = false;
       });
-      // console.log('this is the end of submitSearch');
     }
   }
 

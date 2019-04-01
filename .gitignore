@@ -5,6 +5,10 @@
 /tmp
 /out-tsc
 
+# db auth constants
+src/app/shared/app.constants.ts
+src/app/shared/app.constants.js
+
 # dependencies
 /node_modules
 

@@ -63,6 +63,7 @@ export class ChartService {
   // work with crossfilter and display it as visualization
   // if something is missing just add it
   private dataStructure(data): any[] {
+    console.log('XXXXXXX: ', data);
     const comments = [];
     let repliesArray = [];
     console.log('data in chartservice, where is replies?', data);

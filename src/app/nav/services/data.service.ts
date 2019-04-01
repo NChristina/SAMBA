@@ -1,33 +1,37 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { catchError } from 'rxjs/operators';
-import { Observable } from 'rxjs';
 import { Database } from 'arangojs/lib/web';
-import { ArrayCursor } from '../../../../node_modules/arangojs/lib/cjs/cursor';
+import { AppConstants } from '../../shared/app.constants';
+
 
 @Injectable()
 export class DataService {
   private data;
   private db: Database;
   private service;
+  private p_url = AppConstants.URL;
+  private p_db_name = AppConstants.DB_NAME;
+  private p_auth_name = AppConstants.AUTH_NAME;
+  private p_auth_password = AppConstants.AUTH_PASSWORD;
 
-
+// put this on another file and put it in gitignore
+// when rebase, ask alexis to change the credentials
   constructor(private httpClient: HttpClient) {
     this.db = new Database({
-      url: 'http://10.0.1.26:8530'
+      url: this.p_url
     });
-    this.db.useDatabase('ForTunesV0_1');
-    this.db.useBasicAuth('reader', 'hackathon');
+    this.db.useDatabase(this.p_db_name);
+    this.db.useBasicAuth(this.p_auth_name, this.p_auth_password);
     this.service = this.db.route('search', {  });
   }
+
+  // implement the new endpoints right in here
+  // search
+  // song details
+  // comments
 
   search(value: string): Promise<any> {
     const search = value.replace(' ', '%20');
     return this.service.get('search/' + search);
   }
-
-  // gets the data locally from the assets folder
-  // getData(): Observable<any[]> {
-  //   return this.httpClient.get('/assets/data.json') as any;
-  // }
 }
