@@ -41,4 +41,8 @@ export class DataService {
     const search = value.replace(' ', '%20');
     return this.quickSearchService.get('quickSearch/' + search);
   }
+
+  songDetails(value: string[]): Promise<any> {
+    return this.quickSearchService.get('quickSearch/' + value);
+  }
 }

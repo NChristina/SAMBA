@@ -64,10 +64,6 @@ export class NavComponent implements OnInit {
           document.getElementById('sFtext').style.display = 'block'; // Display alert
         }
         this.searchMatchList = results.body;
-        // let list = [];
-        // results.body.forEach(record => {
-        //   list.push({ displayName: record.artist, title: record.title, versions: record.versions.length });
-        // });
         this.isSearching = false;
       });
     }
@@ -77,25 +73,57 @@ export class NavComponent implements OnInit {
   // it checks if the user has already selected the song
   // it also updates the data for all charts via the chartService
   selectSong(index: number, checkbox) {
+    let id = checkbox.target.id;
+    console.log('event: ', checkbox.path[5].id);
+    console.log('checkbox: ', checkbox.target.id);
 
-    if (checkbox.target.checked) {
-      if (this.selectedList.length === 8) {
-        const snackBar = this.snackbar.show('You can only pick 8 songs', 'OK', {});
-        return;
-      }
-      this.selectedList.push(this.searchMatchList[index].data);
-    } else {
-      this.selectedList.forEach((song, i) => {
-        if (song.data[0]._id === this.searchMatchList[index].data.data[0]._id) {
-          this.selectedList.splice(i, 1);
-          console.log('this.selectedList: ', this.selectedList);
-        }
+    if (id === 'checkbox_' + index) {
+      let versionIDs: string[] = [];
+      this.searchMatchList[index].versions.forEach(version => {
+        versionIDs.push(version.id);
       });
+      if (checkbox.target.checked) {
+        console.log('add the whole group ', versionIDs);
+        // hier einfach songDetails triggern
+      } else {
+        console.log('remove the whole group', versionIDs);
+        // hier die elemente rauslöschen
+      }
+
+    } else if (id === 'subcheckbox_' + index){
+      let versionID: string[] = [];
+      versionID.push(this.searchMatchList[index].versions[index].id);
+
+
+      if (checkbox.target.checked) {
+        console.log('add only me: ', versionID);
+        // hier einfach songDetails triggern
+
+      } else {
+        console.log('remove only me: ', versionID);
+        // hier element rauslöschen
+
+      }
+
     }
 
-    console.time('this.chartService.SetData()');
-    this.chartService.SetData(this.selectedList); // update for all charts
-    console.timeEnd('this.chartService.SetData()');
+    // if (checkbox.target.checked) {
+    //   if (this.selectedList.length === 8) {
+    //     const snackBar = this.snackbar.show('You can only pick 8 songs', 'OK', {});
+    //     return;
+    //   }
+    //   this.selectedList.push(this.searchMatchList[index].data);
+    // } else {
+    //   this.selectedList.forEach((song, i) => {
+    //     if (song.data[0]._id === this.searchMatchList[index].data.data[0]._id) {
+    //       this.selectedList.splice(i, 1);
+    //       console.log('this.selectedList: ', this.selectedList);
+    //     }
+    //   });
+    // }
+    // console.time('this.chartService.SetData()');
+    // this.chartService.SetData(this.selectedList); // update for all charts
+    // console.timeEnd('this.chartService.SetData()');
   }
 
   // removes a song, which was already selected
@@ -112,12 +140,12 @@ export class NavComponent implements OnInit {
     this.selectedList.splice(index, 1);
     this.chartService.SetData(this.selectedList);
   }
-  toggleAccordion(index) {
+  toggleAccordion(index, event) {
+    console.log('XXXXX event: ', event);
     console.log('accordion.....was toggled with index ', index, ' and the event is: ', event);
     let element = document.getElementById('accordion_' + index);
     let panel = document.getElementById('panel_' + index);
     let img = document.getElementById('img_' + index);
-
 
     if (panel.style.maxHeight) {
       panel.style.maxHeight = null;
@@ -125,8 +153,9 @@ export class NavComponent implements OnInit {
     } else {
       panel.style.maxHeight = panel.scrollHeight + 'px';
       img.src = '../../assets/chevron_up.svg';
-
     }
+    // if(){
 
+    // }
   }
 }

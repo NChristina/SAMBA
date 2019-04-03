@@ -43,11 +43,11 @@ export class ChartService {
 
   // informs all crossfilter subscribers that the crossfilter variable has changed
   changeCrossfilter(filter: CrossFilter.CrossFilter<{}>) {
-    console.time('this.cfilterSource.next(filter)');
+    // console.time('this.cfilterSource.next(filter)');
     this.cfilterSource.next(filter);
-    console.log('%c SONST FIND ICHS NED', 'background-color: black; color: hotpink;');
-    console.log(filter);
-    console.timeEnd('this.cfilterSource.next(filter)');
+    // console.log('%c SONST FIND ICHS NED', 'background-color: black; color: hotpink;');
+    // console.log(filter);
+    // console.timeEnd('this.cfilterSource.next(filter)');
 
   }
 

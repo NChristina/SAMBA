@@ -27,8 +27,18 @@ export class SearchService {
     if (value.length < 1) {
       return;
     }
-    console.log('???quickieeeee: ', this.dataService.quickSearch(value));
+    // console.log('???quickieeeee: ', this.dataService.quickSearch(value));
     return this.dataService.quickSearch(value);
+  }
+
+  songDetailsFromDb(value: string[]) {
+    // console.log('entered searchFromDb() in search.service.ts: ', value);
+    if (value.length < 1) {
+      return;
+    }
+    // console.log('???: ', this.dataService.songDetails(value));
+    return this.dataService.songDetails(value);
+
   }
 
   // splits the value and the song title by words and look for each word if it
