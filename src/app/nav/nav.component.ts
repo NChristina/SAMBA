@@ -14,6 +14,7 @@ export class NavComponent implements OnInit {
   selectedList = [];
   isSearching = false;
   chevronDown = true;
+  loadedItems = [];
 
 
 
@@ -84,20 +85,32 @@ export class NavComponent implements OnInit {
       });
       if (checkbox.target.checked) {
         console.log('add the whole group ', versionIDs);
-        // hier einfach songDetails triggern
+        this.searcher.songDetailsFromDb(versionIDs).then((results) => {
+          console.log('I GOT A RESULT FROM SONGDETAILS: ', results.body);
+          this.loadedItems.push(results.body);
+          this.chartService.SetData(this.loadedItems);
+          this.upDateChips();
+        });
       } else {
         console.log('remove the whole group', versionIDs);
         // hier die elemente rauslöschen
       }
 
-    } else if (id === 'subcheckbox_' + index){
+    } else if (id === 'subcheckbox_' + index) {
       let versionID: string[] = [];
       versionID.push(this.searchMatchList[index].versions[index].id);
 
 
       if (checkbox.target.checked) {
         console.log('add only me: ', versionID);
-        // hier einfach songDetails triggern
+        this.searcher.songDetailsFromDb(versionID).then((results) => {
+          console.log('I GOT A RESULT FROM SONGDETAILS: ', results.body);
+          this.loadedItems.push(results.body);
+          this.chartService.SetData(this.loadedItems);
+          this.upDateChips();
+
+
+        });
 
       } else {
         console.log('remove only me: ', versionID);
@@ -124,6 +137,26 @@ export class NavComponent implements OnInit {
     // console.time('this.chartService.SetData()');
     // this.chartService.SetData(this.selectedList); // update for all charts
     // console.timeEnd('this.chartService.SetData()');
+  }
+
+  upDateChips(){
+    console.log('items to show in chips: ', this.loadedItems);
+    // if (checkbox.target.checked) {
+        if (this.selectedList.length === 8) {
+          const snackBar = this.snackbar.show('You can only pick 8 songs', 'OK', {});
+          return;
+        }
+        this.selectedList.push(this.loadedItems[0][this.loadedItems.length - 1]);
+        // this.selectedList.push(this.searchMatchList[index].data);
+      // } else {
+      //   this.selectedList.forEach((song, i) => {
+      //     if (song.data[0]._id === this.searchMatchList[index].data.data[0]._id) {
+      //       this.selectedList.splice(i, 1);
+      //       console.log('this.selectedList: ', this.selectedList);
+      //     }
+      //   });
+      // }
+
   }
 
   // removes a song, which was already selected

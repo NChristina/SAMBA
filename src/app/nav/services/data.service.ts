@@ -43,6 +43,6 @@ export class DataService {
   }
 
   songDetails(value: string[]): Promise<any> {
-    return this.quickSearchService.get('quickSearch/' + value);
+    return this.quickSearchService.get('songDetails/' + JSON.stringify(value));
   }
 }

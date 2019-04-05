@@ -66,8 +66,8 @@ export class ChartService {
     console.log('XXXXXXX: ', data);
     const comments = [];
     let repliesArray = [];
-    console.log('data in chartservice, where is replies?', data);
-    data.forEach(song => {
+    console.log('data in chartservice, where is replies?', data[0]);
+    data[0].forEach(song => {
       song.comment.forEach(comment => {
         repliesArray = [];
         song.reply.forEach(reply => {
