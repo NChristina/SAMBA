@@ -182,10 +182,10 @@ export class NavComponent implements OnInit {
 
     if (panel.style.maxHeight) {
       panel.style.maxHeight = null;
-      img.src = '../../assets/chevron_down.svg';
+      (img as HTMLImageElement).src = '../../assets/chevron_down.svg';
     } else {
       panel.style.maxHeight = panel.scrollHeight + 'px';
-      img.src = '../../assets/chevron_up.svg';
+      (img as HTMLImageElement).src = '../../assets/chevron_up.svg'; // set attribute
     }
     // if(){
 

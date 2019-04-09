@@ -43,6 +43,9 @@ export class DataService {
   }
 
   songDetails(value: string[]): Promise<any> {
-    return this.quickSearchService.get('songDetails/' + JSON.stringify(value));
+    // return this.quickSearchService.get('songDetails/' + JSON.stringify(value));
+    return this.quickSearchService.get('songDetailsNoText/' + JSON.stringify(value));
+
   }
+
 }
