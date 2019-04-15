@@ -27,7 +27,7 @@
       >
         <div class="d-flex w-100 justify-content-between">
           <b class="mb-1">{{ match.artist }} - {{ match.title }}</b>
-          <div class="checkbox" #checkbox1 (change)="selectSong(ix, $event)">
+          <div class="checkbox" #checkbox1 (change)="selectSong(ix, null, $event)">
             <label><input type="checkbox" id="{{ 'checkbox_' + ix }}" value=""/></label>
           </div>
         </div>
@@ -41,8 +41,8 @@
             *ngFor="let version of match.versions, let iy = index"
           >
           <div class="d-flex w-100 justify-content-between">
-            <b>{{ version.snippet.title }}</b>
-            <div class="checkbox" (change)="selectSong(iy, $event)">
+            <b>{{ version.snippet.title }}  // {{version.id}}</b>
+            <div class="checkbox" (change)="selectSong(ix, iy, $event)">
               <label><input type="checkbox" id="{{ 'subcheckbox_' + iy }}" value=""/></label>
             </div>
           </div>
@@ -76,9 +76,9 @@
     </mdc-toolbar>
     <mdc-chip-set #inputchipset [input]="true">
       <mdc-chip
-        *ngFor="let element of selectedList; let i = index"
-        label="{{ element.data[0].snippet.title }}"
-        (trailingIconInteraction)="removeSelectedSong(i)"
+        *ngFor="let element of loadedItems; let i = index"
+        label="{{ (element.length > 1) ? element[0].song.artist + ' - ' + element[0].song.title :  element[0].data[0].snippet.title}}"
+        (trailingIconInteraction)="removeSelectedSong(element)"
       >
         <mdc-chip-icon leading>music_note</mdc-chip-icon>
         <mdc-chip-icon trailing>cancel</mdc-chip-icon>

@@ -40,7 +40,7 @@ export class SearchService {
     //   console.log('!!!! in searchService');
     //   return;
     } else {
-    console.log('??? searchService: ', this.dataService.songDetails(value));
+    // console.log('??? searchService: ', this.dataService.songDetails(value));
     return this.dataService.songDetails(value);
 
   }

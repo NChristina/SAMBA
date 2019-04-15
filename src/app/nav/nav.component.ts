@@ -73,10 +73,11 @@ export class NavComponent implements OnInit {
   // is called when the user selects a song
   // it checks if the user has already selected the song
   // it also updates the data for all charts via the chartService
-  selectSong(index: number, checkbox) {
+  selectSong(index: number, childIndex: number, checkbox) {
     let id = checkbox.target.id;
-    console.log('event: ', checkbox.path[5].id);
+    console.log('event: ', checkbox.target.checked);
     console.log('checkbox: ', checkbox.target.id);
+
 
     if (id === 'checkbox_' + index) {
       let versionIDs: string[] = [];
@@ -87,16 +88,20 @@ export class NavComponent implements OnInit {
         console.log('add the whole group ', versionIDs);
         this.searcher.songDetailsFromDb(versionIDs).then((results) => {
           console.log('I GOT A RESULT FROM SONGDETAILS: ', results.body);
+          // this.selectedList.push(results.body);
+          // console.log('selectedList: ', this.selectedList);
+
           this.loadedItems.push(results.body);
-          this.chartService.SetData(this.loadedItems);
-          this.upDateChips();
+          console.log('lölölöl: ', this.loadedItems);
+
+          this.chartService.SetData(this.loadedItems, results.body);
+          this.upDateChips(false);
         });
       } else {
         console.log('remove the whole group', versionIDs);
-        // hier die elemente rauslöschen
+        this.makeTheRemoval(versionIDs);
       }
-
-    } else if (id === 'subcheckbox_' + index) {
+    } else if (id === 'subcheckbox_' + childIndex) {
       let versionID: string[] = [];
       versionID.push(this.searchMatchList[index].versions[index].id);
 
@@ -106,14 +111,19 @@ export class NavComponent implements OnInit {
         this.searcher.songDetailsFromDb(versionID).then((results) => {
           console.log('I GOT A RESULT FROM SONGDETAILS: ', results.body);
           this.loadedItems.push(results.body);
-          this.chartService.SetData(this.loadedItems);
-          this.upDateChips();
+          console.log('lölölöl: ', this.loadedItems);
+          // this.selectedList.push(results.body[0]);
+          // console.log('selectedList: ', this.selectedList);
+
+          this.chartService.SetData(this.loadedItems, results.body);
+          this.upDateChips(true);
 
 
         });
 
       } else {
         console.log('remove only me: ', versionID);
+        this.makeTheRemoval(versionID);
         // hier element rauslöschen
 
       }
@@ -139,14 +149,49 @@ export class NavComponent implements OnInit {
     // console.timeEnd('this.chartService.SetData()');
   }
 
-  upDateChips(){
-    console.log('items to show in chips: ', this.loadedItems);
-    // if (checkbox.target.checked) {
-        if (this.selectedList.length === 8) {
-          const snackBar = this.snackbar.show('You can only pick 8 songs', 'OK', {});
-          return;
+  makeTheRemoval(versionIDs) {
+    versionIDs.forEach( (id) => {
+      console.log('items: ', id);
+      this.loadedItems.forEach( (li, index) => {
+        for (let i = 0; i < li.length; i ++) {
+          console.log('xxx1');
+          if (id === li[i].data[0]['_key']) {
+            console.log('loadedItems before removal: ', this.loadedItems);
+            this.loadedItems.splice(index, 1);
+            this.selectedList.splice(index, 1);
+
+            console.log('end: ', li[i].data[0]['_key']);
+            console.log('endx: ', li[i]);
+            console.log('loadedItems after removal: ', this.loadedItems);
+          }
+          break;
         }
-        this.selectedList.push(this.loadedItems[0][this.loadedItems.length - 1]);
+      });
+    });
+  }
+
+  upDateChips(single) {
+    // console.log('items to show in chips: ', this.loadedItems);
+    // console.log('is single: ', single);
+    // console.log('OLOLOLOL: ', this.loadedItems[0][0].data[0].snippet.title);
+    // // if (checkbox.target.checked) {
+    //     if (this.selectedList.length === 8) {
+    //       const snackBar = this.snackbar.show('You can only pick 8 songs', 'OK', {});
+    //       return;
+    //     }
+
+    //     if(single) {
+    //       this.selectedList.push(this.loadedItems[this.loadedItems.length - 1][0]);
+    //       console.log('loadedItems: ', this.loadedItems);
+
+    //       console.log('loadedItems[this.loadedItems.length - 1]: ', this.loadedItems[this.loadedItems.length - 1]);
+    //       console.log('selectedList: ', this.selectedList);
+
+    //     } else {
+    //       this.selectedList.push(this.loadedItems[this.loadedItems.length - 1][0]);
+    //       console.log('selectedList: ', this.selectedList);
+    //     }
+
         // this.selectedList.push(this.searchMatchList[index].data);
       // } else {
       //   this.selectedList.forEach((song, i) => {
@@ -160,18 +205,47 @@ export class NavComponent implements OnInit {
   }
 
   // removes a song, which was already selected
-  removeSelectedSong(index) {
-    const song = this.selectedList[index];
-    this.searchMatchList.forEach((songData, i) => {
-      if (songData.data.data[0]._id === song.data[0]._id) {
+  removeSelectedSong(id) {
+    // const song = this.selectedList[id];
 
-        this.searchMatchList[i] = {displayName: song.song.artist + ' - ' + song.song.title, data: song};
+    console.log('SONGGGG: ', id);
+    console.log('MIMIMI: ', this.searchMatchList);
 
-        console.log('removeSelectedSong: this.serachMatchList: ', this.searchMatchList);
-      }
-    });
-    this.selectedList.splice(index, 1);
-    this.chartService.SetData(this.selectedList);
+
+
+
+    // for(let i = 0; i < this.searchMatchList.length; i ++) {
+    //   console.log('die mimi: ', this.searchMatchList[i]);
+
+    //   console.log('matchlist: ', this.searchMatchList[i].versions[0]['_key'], ' // ', id, ' && ', this.searchMatchList[i].versions[0]['_key'] === id );
+    //   console.log('test: ', 'doof' === 'doof');
+    //   if(this.searchMatchList[i].versions[0]['_key'] === id) {
+    //     console.log('ULULULULULULULULULUL');
+    //   }
+
+      // if () {
+
+      //   break;
+      // }
+
+    // }
+
+    // this.searchMatchList.forEach((songData, i) => {
+    // });
+
+    // this.searchMatchList.forEach((songData, i) => {
+    //   if (songData.data.data[0]._id === song.data[0]._id) {
+
+    //     this.searchMatchList[i] = {displayName: song.song.artist + ' - ' + song.song.title, data: song};
+
+    //     console.log('removeSelectedSong: this.serachMatchList: ', this.searchMatchList);
+    //     console.log('removeSelectedSong: this.loadedItems: ', this.loadedItems);
+
+    //   }
+    // });
+    // let additionalInfo = this.selectedList[index];
+    // this.selectedList.splice(index, 1);
+    // this.chartService.SetData(this.selectedList, additionalInfo);
   }
   toggleAccordion(index, event) {
     console.log('XXXXX event: ', event);
@@ -187,8 +261,5 @@ export class NavComponent implements OnInit {
       panel.style.maxHeight = panel.scrollHeight + 'px';
       (img as HTMLImageElement).src = '../../assets/chevron_up.svg'; // set attribute
     }
-    // if(){
-
-    // }
   }
 }
