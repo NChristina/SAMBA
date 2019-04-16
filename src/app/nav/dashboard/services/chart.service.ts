@@ -26,6 +26,7 @@ export class ChartService {
   // get and set of the data, the observable broadcasts the changed data to all its subscribers
   // the function sets also the crossfilter
   SetData(value: any[], additionalInfo: any[]) {
+    console.log('from chart service value: ', value);
     const newData = this.dataStructure(value);
 
     // const newData = this.dataStructureNew(value, additionalInfo);
@@ -103,6 +104,7 @@ export class ChartService {
     comments.sort((a, b) => {
       return new Date(a.publishedAt) > new Date(b.publishedAt) ? -1 : 1;
     });
+    console.log('ready structure for graphs: ', comments);
     return comments;
   }
 

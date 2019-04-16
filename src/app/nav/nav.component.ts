@@ -9,7 +9,7 @@ import { ChartService } from './dashboard/services/chart.service';
 })
 export class NavComponent implements OnInit {
   // list with all the search-results
-  searchMatchList = [];
+  searchMatchList: any[] = [];
   // list with all selected 'songs'
   selectedList = [];
   isSearching = false;
@@ -208,8 +208,36 @@ export class NavComponent implements OnInit {
   removeSelectedSong(id) {
     // const song = this.selectedList[id];
 
-    console.log('SONGGGG: ', id);
-    console.log('MIMIMI: ', this.searchMatchList);
+    console.log('SONGGGG: ', id[0].data[0]['_key']);
+    console.log('MIMIMI: ', this.searchMatchList[0].versions[10]['_key']);
+    console.log('is it true? : ',  id[0].data[0]['_key'] === this.searchMatchList[0].versions[10]['_key']);
+
+    for (let i = 0; i < this.searchMatchList.length; i++) {
+      let found = false;
+      let addAgain: any;
+      for (let j = 0; j < this.searchMatchList[i].versions.length; j ++) {
+        if(this.searchMatchList[i].versions[j]['_key'] === id[0].data[0]['_key']) {
+          console.log('WE FOUND A MATCH ULULULUL');
+          addAgain = this.searchMatchList[i];
+          console.log('the element we need to add again: ', addAgain);
+          // this.searchMatchList[i] = [];
+          this.searchMatchList.splice(i, 1);
+          console.log('zwischenschritt');
+          // this.searchMatchList[i] = addAgain;
+          found = true;
+          break;
+        }
+      }
+      if (found) {
+        console.log('now adding again: ', this.searchMatchList);
+        // this.searchMatchList[i] =  addAgain;
+        this.searchMatchList.splice(i, 0, addAgain);
+        console.log('should be in there again: ', this.searchMatchList);
+        this.chartService.SetData(this.loadedItems, null);
+
+        break;
+      }
+    }
 
 
 
