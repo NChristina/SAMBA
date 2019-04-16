@@ -14,13 +14,37 @@ export class SearchService {
 
 
   searchFromDb(value: string): Promise<any> {
-    // console.log('entered searchFromDb() in search.service.ts');
+    console.log('entered searchFromDb() in search.service.ts: ', value);
     if (value.length < 1) {
       return;
     }
-    // console.log('???: ', this.dataService.search(value));
+    console.log('???: ', this.dataService.search(value));
     return this.dataService.search(value);
   }
+
+  quickSearchFromDb(value: string): Promise<any> {
+    console.log('entered quickSearchFromDb() in search.service.ts: ', value);
+    if (value.length < 1) {
+      return;
+    }
+    // console.log('???quickieeeee: ', this.dataService.quickSearch(value));
+    return this.dataService.quickSearch(value);
+  }
+
+  songDetailsFromDb(value: string[]): Promise<any> {
+    console.log('entered searchFromDb() in search.service.ts: ', value);
+    if (value === undefined) {
+      console.log('the value is undefined ?!');
+    // }
+    //  else if (value.length <= 1) {
+    //   console.log('!!!! in searchService');
+    //   return;
+    } else {
+    // console.log('??? searchService: ', this.dataService.songDetails(value));
+    return this.dataService.songDetails(value);
+
+  }
+}
 
   // splits the value and the song title by words and look for each word if it
   // matches any word. Results will be pushed to a list, after that the list will
