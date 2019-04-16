@@ -25,8 +25,11 @@ export class ChartService {
 
   // get and set of the data, the observable broadcasts the changed data to all its subscribers
   // the function sets also the crossfilter
-  SetData(value: any[]) {
+  SetData(value: any[], additionalInfo: any[]) {
+    console.log('from chart service value: ', value);
     const newData = this.dataStructure(value);
+
+    // const newData = this.dataStructureNew(value, additionalInfo);
 
     console.time('this.chartDataSource.next(newData)');
     this.chartDataSource.next(newData);
@@ -43,11 +46,11 @@ export class ChartService {
 
   // informs all crossfilter subscribers that the crossfilter variable has changed
   changeCrossfilter(filter: CrossFilter.CrossFilter<{}>) {
-    console.time('this.cfilterSource.next(filter)');
+    // console.time('this.cfilterSource.next(filter)');
     this.cfilterSource.next(filter);
-    console.log('%c SONST FIND ICHS NED', 'background-color: black; color: hotpink;');
-    console.log(filter);
-    console.timeEnd('this.cfilterSource.next(filter)');
+    // console.log('%c SONST FIND ICHS NED', 'background-color: black; color: hotpink;');
+    // console.log(filter);
+    // console.timeEnd('this.cfilterSource.next(filter)');
 
   }
 
@@ -66,8 +69,8 @@ export class ChartService {
     console.log('XXXXXXX: ', data);
     const comments = [];
     let repliesArray = [];
-    console.log('data in chartservice, where is replies?', data);
-    data.forEach(song => {
+    console.log('data in chartservice, where is replies?', data[0]);
+    data[0].forEach(song => {
       song.comment.forEach(comment => {
         repliesArray = [];
         song.reply.forEach(reply => {
@@ -101,6 +104,7 @@ export class ChartService {
     comments.sort((a, b) => {
       return new Date(a.publishedAt) > new Date(b.publishedAt) ? -1 : 1;
     });
+    console.log('ready structure for graphs: ', comments);
     return comments;
   }
 
@@ -111,5 +115,46 @@ export class ChartService {
 
   setChartRange(range) {
     this.chartRangeSource.next(range);
+  }
+
+  // for loop for the new data structure
+  private dataStructureNew(data, additionalInfo): any[] {
+    console.log('XXXXXXX: ', data);
+    const someInfo = additionalInfo;
+    const dataPoints = [];
+
+    data.forEach(date => {
+      date.aggregations.array.forEach(com => {
+        for(let i = 0; i < com.nbComments; i ++) {
+
+        }
+        dataPoints.push({
+          _key: null, // where the comment key was
+          authorDisplayName: null, // author display name of comment
+          likeCount: null, // like count of comment
+          replyCount: null, // reply count of comment
+          publishedAt: com.publishedAt,
+          text: null, // text of the comment
+          song: null, // song title of the commented song
+          song_key: null, // key of the commented song
+          song_id: null, // id of song of commented
+          artist: null, // artist of the song which was commented
+          analysis: null,
+          video_key: date.videoId,
+
+          videoLikes: null, // likes of the video commented
+          videoDislikes: null, // dislikes of the video commented
+          videoViews: null, // views of the video commented
+          replies: null // replies of the comment
+        });
+      });
+    });
+
+    // console.log(data);
+    // the comments have to be sorted for the charts
+    dataPoints.sort((a, b) => {
+      return new Date(a.publishedAt) > new Date(b.publishedAt) ? -1 : 1;
+    });
+    return dataPoints;
   }
 }
