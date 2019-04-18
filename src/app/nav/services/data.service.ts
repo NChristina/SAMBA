@@ -2,6 +2,8 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Database } from 'arangojs/lib/web';
 import { AppConstants } from '../../shared/app.constants';
+import { Observable } from 'rxjs';
+
 
 
 @Injectable()
@@ -44,9 +46,10 @@ export class DataService {
 
   songDetails(value: string[]): Promise<any> {
     return this.requestService.get('songDetails/' + JSON.stringify(value));
-
-
-
   }
 
+  songDetailsMock(): Observable<any[]> {
+    console.log('entered loadMockData');
+    return this.httpClient.get('../../../assets/newMockData.json') as any;
+  }
 }

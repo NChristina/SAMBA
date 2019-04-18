@@ -15,6 +15,7 @@ export class NavComponent implements OnInit {
   isSearching = false;
   chevronDown = true;
   loadedItems = [];
+  loadedMockData = [];
 
 
 
@@ -60,7 +61,7 @@ export class NavComponent implements OnInit {
       this.isSearching = true;
       this.searcher.quickSearchFromDb(value.trim()).then((results) => {
         document.getElementById('sFimg').style.display = 'none'; // Spinner OFF
-        console.log('I GOT A RESULT: ', results.body);
+        // console.log('I GOT A RESULT: ', results.body);
         if (results.body.length === 0) {
           document.getElementById('sFtext').style.display = 'block'; // Display alert
         }
@@ -75,8 +76,19 @@ export class NavComponent implements OnInit {
   // it also updates the data for all charts via the chartService
   selectSong(index: number, childIndex: number, checkbox) {
     let id = checkbox.target.id;
-    console.log('event: ', checkbox.target.checked);
-    console.log('checkbox: ', checkbox.target.id);
+    // console.log('event: ', checkbox.target.checked);
+    // console.log('checkbox: ', checkbox.target.id);
+    this.searcher.loadMockData().subscribe( results => {
+      this.loadedMockData = results;
+      console.log('data should be here now: ', this.loadedMockData);
+      this.chartService.setMockData(this.loadedMockData, this.searchMatchList[0]);
+      // console.log('do we have the results in the nav?: ',  results);
+
+      // this.chartService.setMockData(this.loadedMockData);
+    });
+
+
+
 
 
     if (id === 'checkbox_' + index) {
@@ -94,11 +106,11 @@ export class NavComponent implements OnInit {
           this.loadedItems.push(results.body);
           console.log('lölölöl: ', this.loadedItems);
 
-          this.chartService.SetData(this.loadedItems, results.body);
+          // this.chartService.SetData(this.loadedItems, results.body);
           this.upDateChips(false);
         });
       } else {
-        console.log('remove the whole group', versionIDs);
+        // console.log('remove the whole group', versionIDs);
         this.makeTheRemoval(versionIDs);
       }
     } else if (id === 'subcheckbox_' + childIndex) {
@@ -233,7 +245,7 @@ export class NavComponent implements OnInit {
         // this.searchMatchList[i] =  addAgain;
         this.searchMatchList.splice(i, 0, addAgain);
         console.log('should be in there again: ', this.searchMatchList);
-        this.chartService.SetData(this.loadedItems, null);
+        // this.chartService.SetData(this.loadedItems, null);
 
         break;
       }

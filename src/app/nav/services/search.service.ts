@@ -1,17 +1,26 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { DataService } from './data.service';
+import { HttpClient } from '@angular/common/http';
+
+
 
 @Injectable()
 export class SearchService {
   private data: any[];
-  private searchResultSource = new BehaviorSubject([]);
-  private currentSearchResult = this.searchResultSource.asObservable();
+  private mockData: any[];
 
-  constructor(private dataService: DataService) {
+  // private searchResultSource = new BehaviorSubject([]);
+  // private currentSearchResult = this.searchResultSource.asObservable();
+
+  constructor(private dataService: DataService, private httpClient: HttpClient) {
 
   }
-
+  loadMockData(): Observable<any[]> {
+    let d =  this.dataService.songDetailsMock();
+    console.log('xx: ', d);
+    return d;
+  }
 
   searchFromDb(value: string): Promise<any> {
     console.log('entered searchFromDb() in search.service.ts: ', value);
@@ -23,11 +32,10 @@ export class SearchService {
   }
 
   quickSearchFromDb(value: string): Promise<any> {
-    console.log('entered quickSearchFromDb() in search.service.ts: ', value);
+    // console.log('entered quickSearchFromDb() in search.service.ts: ', value);
     if (value.length < 1) {
       return;
     }
-    // console.log('???quickieeeee: ', this.dataService.quickSearch(value));
     return this.dataService.quickSearch(value);
   }
 
@@ -35,14 +43,8 @@ export class SearchService {
     console.log('entered searchFromDb() in search.service.ts: ', value);
     if (value === undefined) {
       console.log('the value is undefined ?!');
-    // }
-    //  else if (value.length <= 1) {
-    //   console.log('!!!! in searchService');
-    //   return;
     } else {
-    // console.log('??? searchService: ', this.dataService.songDetails(value));
     return this.dataService.songDetails(value);
-
   }
 }
 

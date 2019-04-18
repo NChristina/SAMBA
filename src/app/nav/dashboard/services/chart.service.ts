@@ -26,20 +26,20 @@ export class ChartService {
   // get and set of the data, the observable broadcasts the changed data to all its subscribers
   // the function sets also the crossfilter
   SetData(value: any[], additionalInfo: any[]) {
-    console.log('from chart service value: ', value);
     const newData = this.dataStructure(value);
-
     // const newData = this.dataStructureNew(value, additionalInfo);
-
-    console.time('this.chartDataSource.next(newData)');
     this.chartDataSource.next(newData);
-    console.timeEnd('this.chartDataSource.next(newData)');
-
-    console.time('this.changeCrossfilter(crossfilter(newData))');
     this.changeCrossfilter(crossfilter(newData));
-    console.timeEnd('this.changeCrossfilter(crossfilter(newData))');
 
   }
+  setMockData(value: any[], additionalInfo: any[]) {
+    console.log('entered setMockData() in chart.service with additionalInfo: ', additionalInfo);
+    const newData = this.mockDataStructure(value, additionalInfo);
+    console.log('why tho?: ', newData);
+    this.chartDataSource.next(newData);
+    this.changeCrossfilter(crossfilter(newData));
+  }
+
   GetData(): Observable<any[]> {
     return this.currentChartData;
   }
@@ -118,43 +118,65 @@ export class ChartService {
   }
 
   // for loop for the new data structure
-  private dataStructureNew(data, additionalInfo): any[] {
+  private mockDataStructure(data, additionalInfo): any[] {
     console.log('XXXXXXX: ', data);
-    const someInfo = additionalInfo;
+    console.log('YYYYYYY: ', additionalInfo);
     const dataPoints = [];
+    let totalViews: number;
+    let totalLikes: number;
+    let totalDislikes: number;
 
-    data.forEach(date => {
-      date.aggregations.array.forEach(com => {
-        for(let i = 0; i < com.nbComments; i ++) {
+    totalViews = 0;
+    totalLikes = 0;
+    totalDislikes = 0;
+
+    //building together total views, dislikes and likes of 1-? versions, whatever is given in addtionalInfo variable
+    additionalInfo.versions.forEach ((version, index) => {
+      totalViews += parseInt(version.statistics.viewCount);
+      totalLikes += parseInt(version.statistics.likeCount);
+      totalDislikes += parseInt(version.statistics.dislikeCount);
+    });
+
+
+    data.forEach(song => {
+      console.log('song: ', song);
+      let analysisObject = {
+        languageProbability: 1,
+        mainLanguage: 'de'
+      };
+      song.aggregations.forEach(date => {
+        for (let i = 0; i < date.nbComments; i ++) {
+          dataPoints.push({
+            _key: null, // where the comment key was
+            authorDisplayName: null, // author display name of comment
+            likeCount: null, // like count of comment
+            replyCount: null, // reply count of comment
+            publishedAt: date.retrievalDate,
+            text: null, // text of the comment
+            song: additionalInfo.title, // *** song title of the commented song
+            song_key: song.videoId, // key of the commented song
+            song_id: song.videoId, // id of song of commented
+            artist: additionalInfo.artist, // *** artist of the song which was commented
+            analysis: analysisObject,
+            video_key: song.videoId,
+
+            videoLikes: totalLikes, // *** likes of the video commented
+            videoDislikes: totalDislikes, // *** dislikes of the video commented
+            videoViews: totalViews, // *** views of the video commented
+            replies: null // *** replies of the comment
+          });
 
         }
-        dataPoints.push({
-          _key: null, // where the comment key was
-          authorDisplayName: null, // author display name of comment
-          likeCount: null, // like count of comment
-          replyCount: null, // reply count of comment
-          publishedAt: com.publishedAt,
-          text: null, // text of the comment
-          song: null, // song title of the commented song
-          song_key: null, // key of the commented song
-          song_id: null, // id of song of commented
-          artist: null, // artist of the song which was commented
-          analysis: null,
-          video_key: date.videoId,
-
-          videoLikes: null, // likes of the video commented
-          videoDislikes: null, // dislikes of the video commented
-          videoViews: null, // views of the video commented
-          replies: null // replies of the comment
-        });
       });
     });
 
-    // console.log(data);
+    console.log('the new data: ', dataPoints);
     // the comments have to be sorted for the charts
     dataPoints.sort((a, b) => {
       return new Date(a.publishedAt) > new Date(b.publishedAt) ? -1 : 1;
     });
     return dataPoints;
+
+    // return null;
   }
 }
