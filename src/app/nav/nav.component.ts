@@ -87,10 +87,6 @@ export class NavComponent implements OnInit {
     //   // this.chartService.setMockData(this.loadedMockData);
     // });
 
-
-
-
-
     if (id === 'checkbox_' + index) {
       let versionIDs: string[] = [];
       this.searchMatchList[index].versions.forEach(version => {
@@ -103,8 +99,10 @@ export class NavComponent implements OnInit {
           // this.selectedList.push(results.body);
           // console.log('selectedList: ', this.selectedList);
 
-          this.loadedItems.push(results.body);
+          this.loadedItems.push(results.body[0]);
           console.log('lölölöl: ', this.loadedItems);
+          // ???
+          this.chartService.setMockData(this.loadedItems, this.searchMatchList[index]);
 
           // this.chartService.SetData(this.loadedItems, results.body);
           this.upDateChips(false);
@@ -115,7 +113,7 @@ export class NavComponent implements OnInit {
       }
     } else if (id === 'subcheckbox_' + childIndex) {
       let versionID: string[] = [];
-      versionID.push(this.searchMatchList[index].versions[index].id);
+      versionID.push(this.searchMatchList[index].versions[childIndex].id);
 
 
       if (checkbox.target.checked) {
@@ -124,10 +122,13 @@ export class NavComponent implements OnInit {
           console.log('I GOT A RESULT FROM SONGDETAILS: ', results.body);
           this.loadedItems.push(results.body);
           console.log('lölölöl: ', this.loadedItems);
+          console.log('searchMatchList[index]: ', this.searchMatchList[index].versions[childIndex]);
           // this.selectedList.push(results.body[0]);
           // console.log('selectedList: ', this.selectedList);
+           // ???
+           this.chartService.setMockData(this.loadedItems, this.searchMatchList[index].versions[childIndex]);
 
-          this.chartService.SetData(this.loadedItems, results.body);
+         // this.chartService.SetData(this.loadedItems, results.body);
           this.upDateChips(true);
 
 

@@ -117,6 +117,7 @@ export class ChartService {
 
   // for loop for the new data structure
   private mockDataStructure(data, additionalInfo): any[] {
+    let isGroup = true;
     console.log('XXXXXXX: ', data);
     console.log('YYYYYYY: ', additionalInfo);
     const dataPoints = [];
@@ -124,37 +125,63 @@ export class ChartService {
     let totalLikes: number;
     let totalDislikes: number;
 
+    let artist = '';
+    let title = '';
+
     totalViews = 0;
     totalLikes = 0;
     totalDislikes = 0;
 
-    // building together total views, dislikes and likes of 1-? versions, whatever is given in addtionalInfo variable
-    additionalInfo.versions.forEach ((version, index) => {
-      totalViews += parseInt(version.statistics.viewCount);
-      totalLikes += parseInt(version.statistics.likeCount);
-      totalDislikes += parseInt(version.statistics.dislikeCount);
-    });
+    // unterscheidung zw 1 version oder 1. gruppe für additionalInfo!!!
+    if('etag' in additionalInfo) {
+      console.log('I AM ONLY ONE VERSION');
+      isGroup = false;
+      let words = additionalInfo.snippet.title.split('-');
+      console.log('words: ', words);
+      artist = words[0];
+      title = words[1];
+
+      totalViews = additionalInfo.statistics.viewCount;
+      totalLikes =  additionalInfo.statistics.likeCount;
+      totalDislikes =  additionalInfo.statistics.dislikeCount;
+    } else {
+      isGroup = true;
+      artist = additionalInfo.artist;
+      title = additionalInfo.title;
+      console.log('I AM THE WHOLE GROUP');
+      // building together total views, dislikes and likes of 1-? versions, whatever is given in addtionalInfo variable
+      additionalInfo.versions.forEach ((version, index) => {
+        totalViews += parseInt(version.statistics.viewCount);
+        totalLikes += parseInt(version.statistics.likeCount);
+        totalDislikes += parseInt(version.statistics.dislikeCount);
+      });
+    }
+
 
 
     data.forEach(song => {
       console.log('song: ', song);
+      // console.log('aggregations of song: ', song[0].aggregations);
+      let tmp_song = song;
+      isGroup ? tmp_song = tmp_song : tmp_song = song[0];
+
       let analysisObject = {
         languageProbability: 1,
         mainLanguage: 'de'
       };
-      song.aggregations.forEach(date => {
+      tmp_song.aggregations.forEach( date => {
         for (let i = 0; i < date.nbComments; i ++) {
           dataPoints.push({
             _key: null, // where the comment key was
             authorDisplayName: null, // author display name of comment
             likeCount: null, // like count of comment
             replyCount: null, // reply count of comment
-            publishedAt: date.retrievalDate,
+            publishedAt: date.publishedAt,
             text: null, // text of the comment
-            song: additionalInfo.title, // *** song title of the commented song
+            song: title, // *** song title of the commented song
             song_key: song.videoId, // key of the commented song
             song_id: song.videoId, // id of song of commented
-            artist: additionalInfo.artist, // *** artist of the song which was commented
+            artist: artist, // *** artist of the song which was commented
             analysis: analysisObject,
             video_key: song.videoId,
 

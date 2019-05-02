@@ -47,7 +47,6 @@ export class DataService {
   songDetails(value: string[]): Promise<any> {
     // return this.requestService.get('songDetails/' + JSON.stringify(value));
     return this.requestService.get('songAggregations/' + JSON.stringify(value));
-
   }
 
   songDetailsMock(): Observable<any[]> {
