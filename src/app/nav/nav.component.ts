@@ -78,14 +78,14 @@ export class NavComponent implements OnInit {
     let id = checkbox.target.id;
     // console.log('event: ', checkbox.target.checked);
     // console.log('checkbox: ', checkbox.target.id);
-    this.searcher.loadMockData().subscribe( results => {
-      this.loadedMockData = results;
-      console.log('data should be here now: ', this.loadedMockData);
-      this.chartService.setMockData(this.loadedMockData, this.searchMatchList[0]);
-      // console.log('do we have the results in the nav?: ',  results);
+    // this.searcher.loadMockData().subscribe( results => {
+    //   this.loadedMockData = results;
+    //   console.log('data should be here now: ', this.loadedMockData);
+    //   this.chartService.setMockData(this.loadedMockData, this.searchMatchList[0]);
+    //   // console.log('do we have the results in the nav?: ',  results);
 
-      // this.chartService.setMockData(this.loadedMockData);
-    });
+    //   // this.chartService.setMockData(this.loadedMockData);
+    // });
 
 
 

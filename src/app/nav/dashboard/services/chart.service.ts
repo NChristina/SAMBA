@@ -41,17 +41,13 @@ export class ChartService {
   }
 
   GetData(): Observable<any[]> {
+    console.log('am I even triggered? : ', this.currentChartData);
     return this.currentChartData;
   }
 
   // informs all crossfilter subscribers that the crossfilter variable has changed
   changeCrossfilter(filter: CrossFilter.CrossFilter<{}>) {
-    // console.time('this.cfilterSource.next(filter)');
     this.cfilterSource.next(filter);
-    // console.log('%c SONST FIND ICHS NED', 'background-color: black; color: hotpink;');
-    // console.log(filter);
-    // console.timeEnd('this.cfilterSource.next(filter)');
-
   }
 
 
@@ -110,10 +106,12 @@ export class ChartService {
 
   // is used to tell an subscriber if the size of view has changed
   getChartRange(): Observable<any> {
+    console.log('getChartRange() was triggered: ', this.currentChartRange);
     return this.currentChartRange;
   }
 
   setChartRange(range) {
+    console.log('setChartRange() was triggered');
     this.chartRangeSource.next(range);
   }
 
@@ -130,7 +128,7 @@ export class ChartService {
     totalLikes = 0;
     totalDislikes = 0;
 
-    //building together total views, dislikes and likes of 1-? versions, whatever is given in addtionalInfo variable
+    // building together total views, dislikes and likes of 1-? versions, whatever is given in addtionalInfo variable
     additionalInfo.versions.forEach ((version, index) => {
       totalViews += parseInt(version.statistics.viewCount);
       totalLikes += parseInt(version.statistics.likeCount);
