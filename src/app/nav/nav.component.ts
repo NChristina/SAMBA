@@ -10,12 +10,14 @@ import { ChartService } from './dashboard/services/chart.service';
 export class NavComponent implements OnInit {
   // list with all the search-results
   searchMatchList: any[] = [];
+  matchForAdditionalInfo = [];
   // list with all selected 'songs'
   selectedList = [];
   isSearching = false;
   chevronDown = true;
   loadedItems = [];
   loadedMockData = [];
+  labelsForChips = [];
 
 
 
@@ -27,29 +29,7 @@ export class NavComponent implements OnInit {
     document.getElementById('sFimg').style.display = 'none'; // Spinner OFF default
 
   }
-  // is called when the user hits enter (searchBar)
-  // submitSearch(value: string) {
-  //   if (value) {
-  //     // Entered submitSearch in nav comp
-  //     document.getElementById('sFtext').style.display = 'none'; // Remove any alert
-  //     document.getElementById('sFimg').style.display = 'block'; // Spinner ON
 
-  //     this.searchMatchList = [];
-  //     this.isSearching = true;
-  //     this.searcher.searchFromDb(value.trim()).then((results) => {
-  //       document.getElementById('sFimg').style.display = 'none'; // Spinner OFF
-  //       if (results.body.length === 0) {
-  //         document.getElementById('sFtext').style.display = 'block'; // Display alert
-  //       }
-  //       const list = [];
-  //       results.body.forEach(record => {
-  //         list.push({ displayName: record.data[0].snippet.title, data: record });
-  //       });
-  //       this.searchMatchList = list;
-  //       this.isSearching = false;
-  //     });
-  //   }
-  // }
 
   submitQuickSearch(value: string) {
     if (value) {
@@ -93,22 +73,20 @@ export class NavComponent implements OnInit {
         versionIDs.push(version.id);
       });
       if (checkbox.target.checked) {
-        console.log('add the whole group ', versionIDs);
+        // console.log('add the whole group ', versionIDs);
         this.searcher.songDetailsFromDb(versionIDs).then((results) => {
-          console.log('I GOT A RESULT FROM SONGDETAILS: ', results.body);
-          // this.selectedList.push(results.body);
-          // console.log('selectedList: ', this.selectedList);
-
+          // console.log('I GOT A RESULT FROM SONGDETAILS: ', results.body);
           this.loadedItems.push(results.body[0]);
-          console.log('lölölöl: ', this.loadedItems);
-          // ???
-          this.chartService.setMockData(this.loadedItems, this.searchMatchList[index]);
+          // console.log('lölölöl: ', this.loadedItems);
+          this.matchForAdditionalInfo.push(this.searchMatchList[index]);
+          this.labelsForChips.push({title: this.matchForAdditionalInfo[this.matchForAdditionalInfo.length - 1].title + ' - ' + this.matchForAdditionalInfo[this.matchForAdditionalInfo.length - 1].artist, isGroup: true});
+          console.log('labels: ', this.labelsForChips);
 
-          // this.chartService.SetData(this.loadedItems, results.body);
+          console.log('ULULULULULU: ', this.matchForAdditionalInfo);
+          this.chartService.SetData(this.loadedItems,  this.matchForAdditionalInfo);
           this.upDateChips(false);
         });
       } else {
-        // console.log('remove the whole group', versionIDs);
         this.makeTheRemoval(versionIDs);
       }
     } else if (id === 'subcheckbox_' + childIndex) {
@@ -119,19 +97,17 @@ export class NavComponent implements OnInit {
       if (checkbox.target.checked) {
         console.log('add only me: ', versionID);
         this.searcher.songDetailsFromDb(versionID).then((results) => {
-          console.log('I GOT A RESULT FROM SONGDETAILS: ', results.body);
+          // console.log('I GOT A RESULT FROM SONGDETAILS: ', results.body);
           this.loadedItems.push(results.body);
-          console.log('lölölöl: ', this.loadedItems);
-          console.log('searchMatchList[index]: ', this.searchMatchList[index].versions[childIndex]);
-          // this.selectedList.push(results.body[0]);
-          // console.log('selectedList: ', this.selectedList);
-           // ???
-           this.chartService.setMockData(this.loadedItems, this.searchMatchList[index].versions[childIndex]);
+          // console.log('lölölöl: ', this.loadedItems);
+          // console.log('searchMatchList[index]: ', this.searchMatchList[index].versions[childIndex]);
+          this.matchForAdditionalInfo.push(this.searchMatchList[index].versions[childIndex]);
+          console.log('ULULULULULU: ', this.matchForAdditionalInfo);
+          this.labelsForChips.push({title: this.matchForAdditionalInfo[this.matchForAdditionalInfo.length - 1].snippet.title, isGroup: false});
+          console.log('labels: ', this.labelsForChips);
 
-         // this.chartService.SetData(this.loadedItems, results.body);
+          this.chartService.SetData(this.loadedItems, this.matchForAdditionalInfo);
           this.upDateChips(true);
-
-
         });
 
       } else {
@@ -205,15 +181,15 @@ export class NavComponent implements OnInit {
     //       console.log('selectedList: ', this.selectedList);
     //     }
 
-        // this.selectedList.push(this.searchMatchList[index].data);
-      // } else {
-      //   this.selectedList.forEach((song, i) => {
-      //     if (song.data[0]._id === this.searchMatchList[index].data.data[0]._id) {
-      //       this.selectedList.splice(i, 1);
-      //       console.log('this.selectedList: ', this.selectedList);
-      //     }
-      //   });
-      // }
+    //     this.selectedList.push(this.searchMatchList[index].data);
+    //   // } else {
+    //   //   this.selectedList.forEach((song, i) => {
+    //   //     if (song.data[0]._id === this.searchMatchList[index].data.data[0]._id) {
+    //   //       this.selectedList.splice(i, 1);
+    //   //       console.log('this.selectedList: ', this.selectedList);
+    //   //     }
+    //   //   });
+    //   // }
 
   }
 

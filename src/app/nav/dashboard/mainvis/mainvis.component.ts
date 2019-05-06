@@ -73,7 +73,6 @@ export class MainvisComponent implements OnInit {
       if (this.showTotalComments) {
         this.songs.push({ key: '-------', values: [{ key: 'Total Comments', values: this.data }]});
       }
-      // console.log(this.songs);
     });
   }
 
@@ -95,7 +94,7 @@ export class MainvisComponent implements OnInit {
       .entries(this.data);
     nestedData.forEach(song => {
       const lineChart = dc.lineChart(this.compositeChart)
-      .ordinalColors(['red','green','blue'])
+      .ordinalColors(['red', 'green', 'blue'])
       .colorAccessor(function(d, i) {
         if (i % 2 === 0) {
           return 0;
