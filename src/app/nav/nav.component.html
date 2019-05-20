@@ -78,7 +78,7 @@
       <mdc-chip
       [ngStyle]="{'background-color': element.isGroup ? '#DCDCDC' : '#C0D9D9'}"
         *ngFor="let element of labelsForChips; let i = index"
-        (trailingIconInteraction)="removeSelectedSong(element)"
+        (trailingIconInteraction)="removeSelectedSong(element, i)"
         >
         {{element.title}}
         <mdc-chip-icon *ngIf="!element.isGroup" leading>person</mdc-chip-icon>

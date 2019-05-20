@@ -87,7 +87,7 @@ export class NavComponent implements OnInit {
           this.upDateChips(false);
         });
       } else {
-        this.makeTheRemoval(versionIDs);
+        this.makeTheRemoval(versionIDs, index, childIndex);
       }
     } else if (id === 'subcheckbox_' + childIndex) {
       let versionID: string[] = [];
@@ -112,7 +112,7 @@ export class NavComponent implements OnInit {
 
       } else {
         console.log('remove only me: ', versionID);
-        this.makeTheRemoval(versionID);
+        this.makeTheRemoval(versionID, index, childIndex);
         // hier element rauslöschen
 
       }
@@ -138,25 +138,40 @@ export class NavComponent implements OnInit {
     // console.timeEnd('this.chartService.SetData()');
   }
 
-  makeTheRemoval(versionIDs) {
-    versionIDs.forEach( (id) => {
-      console.log('items: ', id);
-      this.loadedItems.forEach( (li, index) => {
-        for (let i = 0; i < li.length; i ++) {
-          console.log('xxx1');
-          if (id === li[i].data[0]['_key']) {
-            console.log('loadedItems before removal: ', this.loadedItems);
-            this.loadedItems.splice(index, 1);
-            this.selectedList.splice(index, 1);
+  // für die SEARCH LIST
+  makeTheRemoval(versionIDs, index, childIndex) {
 
-            console.log('end: ', li[i].data[0]['_key']);
-            console.log('endx: ', li[i]);
-            console.log('loadedItems after removal: ', this.loadedItems);
-          }
-          break;
-        }
-      });
-    });
+    console.log('info: ', versionIDs, ' // index: ', index, '// childIndex: ', childIndex);
+
+    if (childIndex === null) { // is group
+      console.log('group');
+    } else {
+      console.log('single');
+        this.loadedItems.forEach(item => {
+          console.log('item: ', item, ' // is type of array: ', typeof item === 'object');
+          // if(typeof item === 'array')
+        });
+
+    }
+    // versionIDs.forEach( (id) => {
+    //   console.log('items: ', id);
+
+      // this.loadedItems.forEach( (li, index) => {
+      //   for (let i = 0; i < li.length; i ++) {
+      //     console.log('xxx1');
+      //     if (id === li[i].data[0]['_key']) {
+      //       console.log('loadedItems before removal: ', this.loadedItems);
+      //       this.loadedItems.splice(index, 1);
+      //       this.selectedList.splice(index, 1);
+
+      //       console.log('end: ', li[i].data[0]['_key']);
+      //       console.log('endx: ', li[i]);
+      //       console.log('loadedItems after removal: ', this.loadedItems);
+      //     }
+      //     break;
+      //   }
+      // });
+    // });
   }
 
   upDateChips(single) {
@@ -194,39 +209,40 @@ export class NavComponent implements OnInit {
   }
 
   // removes a song, which was already selected
-  removeSelectedSong(id) {
-    // const song = this.selectedList[id];
+  // für die chips!!!
+  removeSelectedSong(element, index) {
 
-    console.log('SONGGGG: ', id[0].data[0]['_key']);
-    console.log('MIMIMI: ', this.searchMatchList[0].versions[10]['_key']);
-    console.log('is it true? : ',  id[0].data[0]['_key'] === this.searchMatchList[0].versions[10]['_key']);
 
-    for (let i = 0; i < this.searchMatchList.length; i++) {
-      let found = false;
-      let addAgain: any;
-      for (let j = 0; j < this.searchMatchList[i].versions.length; j ++) {
-        if(this.searchMatchList[i].versions[j]['_key'] === id[0].data[0]['_key']) {
-          console.log('WE FOUND A MATCH ULULULUL');
-          addAgain = this.searchMatchList[i];
-          console.log('the element we need to add again: ', addAgain);
-          // this.searchMatchList[i] = [];
-          this.searchMatchList.splice(i, 1);
-          console.log('zwischenschritt');
-          // this.searchMatchList[i] = addAgain;
-          found = true;
-          break;
-        }
-      }
-      if (found) {
-        console.log('now adding again: ', this.searchMatchList);
-        // this.searchMatchList[i] =  addAgain;
-        this.searchMatchList.splice(i, 0, addAgain);
-        console.log('should be in there again: ', this.searchMatchList);
-        // this.chartService.SetData(this.loadedItems, null);
+    console.log('element: ', element);
+    this.loadedItems.splice(index, 1);
+    this.labelsForChips.splice(index, 1);
 
-        break;
-      }
-    }
+    // for (let i = 0; i < this.searchMatchList.length; i++) {
+    //   let found = false;
+    //   let addAgain: any;
+    //   for (let j = 0; j < this.searchMatchList[i].versions.length; j ++) {
+    //     if(this.searchMatchList[i].versions[j]['_key'] === id[0].data[0]['_key']) {
+    //       console.log('WE FOUND A MATCH ULULULUL');
+    //       addAgain = this.searchMatchList[i];
+    //       console.log('the element we need to add again: ', addAgain);
+    //       // this.searchMatchList[i] = [];
+    //       this.searchMatchList.splice(i, 1);
+    //       console.log('zwischenschritt');
+    //       // this.searchMatchList[i] = addAgain;
+    //       found = true;
+    //       break;
+    //     }
+    //   }
+    //   if (found) {
+    //     console.log('now adding again: ', this.searchMatchList);
+    //     // this.searchMatchList[i] =  addAgain;
+    //     this.searchMatchList.splice(i, 0, addAgain);
+    //     console.log('should be in there again: ', this.searchMatchList);
+    //     // this.chartService.SetData(this.loadedItems, null);
+
+    //     break;
+    //   }
+    // }
 
 
 

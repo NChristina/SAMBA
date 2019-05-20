@@ -172,7 +172,7 @@ export class ChartService {
 
 
         // building together total views, dislikes and likes of 1-? versions, whatever is given in addtionalInfo variable
-        additionalInfo[index].versions.forEach ((version, index) => {
+        additionalInfo[index].versions.forEach ((version) => {
           totalViews += parseInt(version.statistics.viewCount);
           totalLikes += parseInt(version.statistics.likeCount);
           totalDislikes += parseInt(version.statistics.dislikeCount);
@@ -185,12 +185,20 @@ export class ChartService {
       let tmp_song = song;
       isGroup ? tmp_song = tmp_song : tmp_song = song[0];
 
-      let analysisObject = {
-        languageProbability: 1,
-        mainLanguage: 'de'
-      };
+
       tmp_song.aggregations.forEach( date => {
+        // console.log('language obj: ', date.languageDistribution);
+        // console.log('date ', date);
+        let lidx = 0;
+        let currentNbCommentsLanguage = date.languageDistribution[lidx].nbComments;
         for (let i = 0; i < date.nbComments; i ++) {
+          let analysisObject = {
+            languageProbability: 1,
+            mainLanguage: date.languageDistribution[lidx].language
+          };
+          currentNbCommentsLanguage -= 1;
+          if (currentNbCommentsLanguage === 0) { lidx += 1; }
+
           dataPoints.push({
             _key: control, // where the comment key was
             authorDisplayName: null, // author display name of comment
