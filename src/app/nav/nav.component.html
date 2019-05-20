@@ -76,11 +76,15 @@
     </mdc-toolbar>
     <mdc-chip-set #inputchipset [input]="true">
       <mdc-chip
-        *ngFor="let element of loadedItems; let i = index"
-        (trailingIconInteraction)="removeSelectedSong(element)"
+      [ngStyle]="{'background-color': element.isGroup ? '#DCDCDC' : '#C0D9D9'}"
+        *ngFor="let element of labelsForChips; let i = index"
+        (trailingIconInteraction)="removeSelectedSong(element, i)"
         >
-        <!-- label="{{ (element.length > 1) ? element[0].song.artist + ' - ' + element[0].song.title :  element[0].data[0].snippet.title}}" -->
-        <mdc-chip-icon leading>music_note</mdc-chip-icon>
+        {{element.title}}
+        <mdc-chip-icon *ngIf="!element.isGroup" leading>person</mdc-chip-icon>
+        <mdc-chip-icon *ngIf="element.isGroup" leading>group</mdc-chip-icon>
+
+
         <mdc-chip-icon trailing>cancel</mdc-chip-icon>
       </mdc-chip>
     </mdc-chip-set>

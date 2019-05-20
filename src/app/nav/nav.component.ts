@@ -10,12 +10,14 @@ import { ChartService } from './dashboard/services/chart.service';
 export class NavComponent implements OnInit {
   // list with all the search-results
   searchMatchList: any[] = [];
+  matchForAdditionalInfo = [];
   // list with all selected 'songs'
   selectedList = [];
   isSearching = false;
   chevronDown = true;
   loadedItems = [];
   loadedMockData = [];
+  labelsForChips = [];
 
 
 
@@ -27,29 +29,7 @@ export class NavComponent implements OnInit {
     document.getElementById('sFimg').style.display = 'none'; // Spinner OFF default
 
   }
-  // is called when the user hits enter (searchBar)
-  // submitSearch(value: string) {
-  //   if (value) {
-  //     // Entered submitSearch in nav comp
-  //     document.getElementById('sFtext').style.display = 'none'; // Remove any alert
-  //     document.getElementById('sFimg').style.display = 'block'; // Spinner ON
 
-  //     this.searchMatchList = [];
-  //     this.isSearching = true;
-  //     this.searcher.searchFromDb(value.trim()).then((results) => {
-  //       document.getElementById('sFimg').style.display = 'none'; // Spinner OFF
-  //       if (results.body.length === 0) {
-  //         document.getElementById('sFtext').style.display = 'block'; // Display alert
-  //       }
-  //       const list = [];
-  //       results.body.forEach(record => {
-  //         list.push({ displayName: record.data[0].snippet.title, data: record });
-  //       });
-  //       this.searchMatchList = list;
-  //       this.isSearching = false;
-  //     });
-  //   }
-  // }
 
   submitQuickSearch(value: string) {
     if (value) {
@@ -93,23 +73,21 @@ export class NavComponent implements OnInit {
         versionIDs.push(version.id);
       });
       if (checkbox.target.checked) {
-        console.log('add the whole group ', versionIDs);
+        // console.log('add the whole group ', versionIDs);
         this.searcher.songDetailsFromDb(versionIDs).then((results) => {
-          console.log('I GOT A RESULT FROM SONGDETAILS: ', results.body);
-          // this.selectedList.push(results.body);
-          // console.log('selectedList: ', this.selectedList);
-
+          // console.log('I GOT A RESULT FROM SONGDETAILS: ', results.body);
           this.loadedItems.push(results.body[0]);
-          console.log('lölölöl: ', this.loadedItems);
-          // ???
-          this.chartService.setMockData(this.loadedItems, this.searchMatchList[index]);
+          // console.log('lölölöl: ', this.loadedItems);
+          this.matchForAdditionalInfo.push(this.searchMatchList[index]);
+          this.labelsForChips.push({title: this.matchForAdditionalInfo[this.matchForAdditionalInfo.length - 1].title + ' - ' + this.matchForAdditionalInfo[this.matchForAdditionalInfo.length - 1].artist, isGroup: true});
+          console.log('labels: ', this.labelsForChips);
 
-          // this.chartService.SetData(this.loadedItems, results.body);
+          console.log('ULULULULULU: ', this.matchForAdditionalInfo);
+          this.chartService.SetData(this.loadedItems,  this.matchForAdditionalInfo);
           this.upDateChips(false);
         });
       } else {
-        // console.log('remove the whole group', versionIDs);
-        this.makeTheRemoval(versionIDs);
+        this.makeTheRemoval(versionIDs, index, childIndex);
       }
     } else if (id === 'subcheckbox_' + childIndex) {
       let versionID: string[] = [];
@@ -119,24 +97,22 @@ export class NavComponent implements OnInit {
       if (checkbox.target.checked) {
         console.log('add only me: ', versionID);
         this.searcher.songDetailsFromDb(versionID).then((results) => {
-          console.log('I GOT A RESULT FROM SONGDETAILS: ', results.body);
+          // console.log('I GOT A RESULT FROM SONGDETAILS: ', results.body);
           this.loadedItems.push(results.body);
-          console.log('lölölöl: ', this.loadedItems);
-          console.log('searchMatchList[index]: ', this.searchMatchList[index].versions[childIndex]);
-          // this.selectedList.push(results.body[0]);
-          // console.log('selectedList: ', this.selectedList);
-           // ???
-           this.chartService.setMockData(this.loadedItems, this.searchMatchList[index].versions[childIndex]);
+          // console.log('lölölöl: ', this.loadedItems);
+          // console.log('searchMatchList[index]: ', this.searchMatchList[index].versions[childIndex]);
+          this.matchForAdditionalInfo.push(this.searchMatchList[index].versions[childIndex]);
+          console.log('ULULULULULU: ', this.matchForAdditionalInfo);
+          this.labelsForChips.push({title: this.matchForAdditionalInfo[this.matchForAdditionalInfo.length - 1].snippet.title, isGroup: false});
+          console.log('labels: ', this.labelsForChips);
 
-         // this.chartService.SetData(this.loadedItems, results.body);
+          this.chartService.SetData(this.loadedItems, this.matchForAdditionalInfo);
           this.upDateChips(true);
-
-
         });
 
       } else {
         console.log('remove only me: ', versionID);
-        this.makeTheRemoval(versionID);
+        this.makeTheRemoval(versionID, index, childIndex);
         // hier element rauslöschen
 
       }
@@ -162,25 +138,40 @@ export class NavComponent implements OnInit {
     // console.timeEnd('this.chartService.SetData()');
   }
 
-  makeTheRemoval(versionIDs) {
-    versionIDs.forEach( (id) => {
-      console.log('items: ', id);
-      this.loadedItems.forEach( (li, index) => {
-        for (let i = 0; i < li.length; i ++) {
-          console.log('xxx1');
-          if (id === li[i].data[0]['_key']) {
-            console.log('loadedItems before removal: ', this.loadedItems);
-            this.loadedItems.splice(index, 1);
-            this.selectedList.splice(index, 1);
+  // für die SEARCH LIST
+  makeTheRemoval(versionIDs, index, childIndex) {
 
-            console.log('end: ', li[i].data[0]['_key']);
-            console.log('endx: ', li[i]);
-            console.log('loadedItems after removal: ', this.loadedItems);
-          }
-          break;
-        }
-      });
-    });
+    console.log('info: ', versionIDs, ' // index: ', index, '// childIndex: ', childIndex);
+
+    if (childIndex === null) { // is group
+      console.log('group');
+    } else {
+      console.log('single');
+        this.loadedItems.forEach(item => {
+          console.log('item: ', item, ' // is type of array: ', typeof item === 'object');
+          // if(typeof item === 'array')
+        });
+
+    }
+    // versionIDs.forEach( (id) => {
+    //   console.log('items: ', id);
+
+      // this.loadedItems.forEach( (li, index) => {
+      //   for (let i = 0; i < li.length; i ++) {
+      //     console.log('xxx1');
+      //     if (id === li[i].data[0]['_key']) {
+      //       console.log('loadedItems before removal: ', this.loadedItems);
+      //       this.loadedItems.splice(index, 1);
+      //       this.selectedList.splice(index, 1);
+
+      //       console.log('end: ', li[i].data[0]['_key']);
+      //       console.log('endx: ', li[i]);
+      //       console.log('loadedItems after removal: ', this.loadedItems);
+      //     }
+      //     break;
+      //   }
+      // });
+    // });
   }
 
   upDateChips(single) {
@@ -205,52 +196,53 @@ export class NavComponent implements OnInit {
     //       console.log('selectedList: ', this.selectedList);
     //     }
 
-        // this.selectedList.push(this.searchMatchList[index].data);
-      // } else {
-      //   this.selectedList.forEach((song, i) => {
-      //     if (song.data[0]._id === this.searchMatchList[index].data.data[0]._id) {
-      //       this.selectedList.splice(i, 1);
-      //       console.log('this.selectedList: ', this.selectedList);
-      //     }
-      //   });
-      // }
+    //     this.selectedList.push(this.searchMatchList[index].data);
+    //   // } else {
+    //   //   this.selectedList.forEach((song, i) => {
+    //   //     if (song.data[0]._id === this.searchMatchList[index].data.data[0]._id) {
+    //   //       this.selectedList.splice(i, 1);
+    //   //       console.log('this.selectedList: ', this.selectedList);
+    //   //     }
+    //   //   });
+    //   // }
 
   }
 
   // removes a song, which was already selected
-  removeSelectedSong(id) {
-    // const song = this.selectedList[id];
+  // für die chips!!!
+  removeSelectedSong(element, index) {
 
-    console.log('SONGGGG: ', id[0].data[0]['_key']);
-    console.log('MIMIMI: ', this.searchMatchList[0].versions[10]['_key']);
-    console.log('is it true? : ',  id[0].data[0]['_key'] === this.searchMatchList[0].versions[10]['_key']);
 
-    for (let i = 0; i < this.searchMatchList.length; i++) {
-      let found = false;
-      let addAgain: any;
-      for (let j = 0; j < this.searchMatchList[i].versions.length; j ++) {
-        if(this.searchMatchList[i].versions[j]['_key'] === id[0].data[0]['_key']) {
-          console.log('WE FOUND A MATCH ULULULUL');
-          addAgain = this.searchMatchList[i];
-          console.log('the element we need to add again: ', addAgain);
-          // this.searchMatchList[i] = [];
-          this.searchMatchList.splice(i, 1);
-          console.log('zwischenschritt');
-          // this.searchMatchList[i] = addAgain;
-          found = true;
-          break;
-        }
-      }
-      if (found) {
-        console.log('now adding again: ', this.searchMatchList);
-        // this.searchMatchList[i] =  addAgain;
-        this.searchMatchList.splice(i, 0, addAgain);
-        console.log('should be in there again: ', this.searchMatchList);
-        // this.chartService.SetData(this.loadedItems, null);
+    console.log('element: ', element);
+    this.loadedItems.splice(index, 1);
+    this.labelsForChips.splice(index, 1);
 
-        break;
-      }
-    }
+    // for (let i = 0; i < this.searchMatchList.length; i++) {
+    //   let found = false;
+    //   let addAgain: any;
+    //   for (let j = 0; j < this.searchMatchList[i].versions.length; j ++) {
+    //     if(this.searchMatchList[i].versions[j]['_key'] === id[0].data[0]['_key']) {
+    //       console.log('WE FOUND A MATCH ULULULUL');
+    //       addAgain = this.searchMatchList[i];
+    //       console.log('the element we need to add again: ', addAgain);
+    //       // this.searchMatchList[i] = [];
+    //       this.searchMatchList.splice(i, 1);
+    //       console.log('zwischenschritt');
+    //       // this.searchMatchList[i] = addAgain;
+    //       found = true;
+    //       break;
+    //     }
+    //   }
+    //   if (found) {
+    //     console.log('now adding again: ', this.searchMatchList);
+    //     // this.searchMatchList[i] =  addAgain;
+    //     this.searchMatchList.splice(i, 0, addAgain);
+    //     console.log('should be in there again: ', this.searchMatchList);
+    //     // this.chartService.SetData(this.loadedItems, null);
+
+    //     break;
+    //   }
+    // }
 
 
 
