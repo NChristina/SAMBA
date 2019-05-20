@@ -15,12 +15,18 @@ export class ChartService {
 
   private chartRangeSource = new BehaviorSubject([]);
   private currentChartRange = this.chartRangeSource.asObservable();
+  private loggedIn = false;
 
   constructor() {
     this.GetData().subscribe((data) => {
       this.changeCrossfilter(crossfilter(data));
       // console.log('this is the actual data from crossfilter: ', data);
     });
+  }
+
+  loginProtection() {
+    console.log('logged in is now true -- dataservice');
+    this.loggedIn = true;
   }
 
   // get and set of the data, the observable broadcasts the changed data to all its subscribers
