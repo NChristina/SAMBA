@@ -43,6 +43,7 @@ import { TopicComponent } from './nav/dashboard/topic/topic.component';
 import { LoadingModalComponent } from './nav/loading-modal/loading-modal.component';
 import { LoadingSvgComponent } from './shared/loading-svg/loading-svg.component';
 import { LoginComponent } from './login/login.component';
+import { AuthGuardService } from './shared/auth-guard.service';
 
 @NgModule({
   declarations: [
@@ -99,7 +100,7 @@ import { LoginComponent } from './login/login.component';
     MatButtonToggleModule,
     MatFormFieldModule
   ],
-  providers: [SearchService, DataService, ChartService],
+  providers: [SearchService, DataService, ChartService, AuthGuardService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
