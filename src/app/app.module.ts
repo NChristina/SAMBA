@@ -13,7 +13,7 @@ import { AppRoutingModule } from './/app-routing.module';
 import { NavComponent } from './nav/nav.component';
 import { MatGridListModule, MatCardModule, MatMenuModule,
   MatIconModule, MatButtonModule, MatToolbarModule, MatSidenavModule,
-  MatListModule, MatCheckboxModule, MatProgressSpinnerModule } from '@angular/material';
+  MatListModule, MatCheckboxModule, MatProgressSpinnerModule, MatInputModule, MatButtonToggleModule, MatFormFieldModule } from '@angular/material';
 import { LayoutModule } from '@angular/cdk/layout';
 import { MdcDrawerModule,
     MdcListModule,
@@ -29,7 +29,8 @@ import { MdcDrawerModule,
     MdcElevationModule,
     MdcSnackbarModule,
     MdcTypographyModule,
-    MdcSelectModule} from '@angular-mdc/web';
+    MdcSelectModule
+    } from '@angular-mdc/web';
 import { TagCloudModule } from 'angular-tag-cloud-module';
 import { DashboardComponent } from './nav/dashboard/dashboard.component';
 import { HardfactsComponent } from './nav/dashboard/hardfacts/hardfacts.component';
@@ -41,6 +42,7 @@ import { Ng5SliderModule } from 'ng5-slider';
 import { TopicComponent } from './nav/dashboard/topic/topic.component';
 import { LoadingModalComponent } from './nav/loading-modal/loading-modal.component';
 import { LoadingSvgComponent } from './shared/loading-svg/loading-svg.component';
+import { LoginComponent } from './login/login.component';
 
 @NgModule({
   declarations: [
@@ -55,11 +57,13 @@ import { LoadingSvgComponent } from './shared/loading-svg/loading-svg.component'
     TopicComponent,
     LoadingModalComponent,
     LoadingSvgComponent,
+    LoginComponent,
   ],
   imports: [
+
+    AppRoutingModule,
     BrowserModule,
     BrowserAnimationsModule,
-    AppRoutingModule,
     FormsModule,
     ReactiveFormsModule,
     MatGridListModule,
@@ -73,6 +77,7 @@ import { LoadingSvgComponent } from './shared/loading-svg/loading-svg.component'
     MatListModule,
     MatCheckboxModule,
     MatProgressSpinnerModule,
+    MatInputModule,
     MdcDrawerModule,
     MdcListModule,
     MdcToolbarModule,
@@ -90,7 +95,9 @@ import { LoadingSvgComponent } from './shared/loading-svg/loading-svg.component'
     MdcSelectModule,
     Ng5SliderModule,
     TagCloudModule,
-    HttpClientModule
+    HttpClientModule,
+    MatButtonToggleModule,
+    MatFormFieldModule
   ],
   providers: [SearchService, DataService, ChartService],
   bootstrap: [AppComponent]
