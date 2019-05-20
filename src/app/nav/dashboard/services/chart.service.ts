@@ -29,6 +29,10 @@ export class ChartService {
     this.loggedIn = true;
   }
 
+  getLoggedIn(): boolean {
+    return this.loggedIn;
+  }
+
   // get and set of the data, the observable broadcasts the changed data to all its subscribers
   // the function sets also the crossfilter
   SetData(value: any[], additionalInfo: any[]) {
