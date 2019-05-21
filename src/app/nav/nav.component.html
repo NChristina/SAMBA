@@ -41,7 +41,7 @@
             *ngFor="let version of match.versions, let iy = index"
           >
           <div class="d-flex w-100 justify-content-between">
-            <b>{{ version.snippet.title }}  // {{version.id}}</b>
+            <b>{{ version.snippet.title }}</b>
             <div class="checkbox" (change)="selectSong(ix, iy, $event)">
               <label><input type="checkbox" id="{{ 'subcheckbox_' + iy }}" value=""/></label>
             </div>

@@ -380,6 +380,8 @@ export class LanguageComponent implements OnInit {
               }
           })
           .on('mouseout.samba', (d) => { tooltipBar.transition().duration(350).style('opacity', 0); });
+          chart.selectAll('g.x text')
+          .attr('transform', 'translate(-10,-10) rotate(315)');
       });
     }
 

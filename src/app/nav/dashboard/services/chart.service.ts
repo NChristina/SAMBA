@@ -136,13 +136,12 @@ export class ChartService {
 
         // building together total views, dislikes and likes of 1-? versions, whatever is given in addtionalInfo variable
         additionalInfo[index].versions.forEach ((version) => {
-          totalViews += parseInt(version.statistics.viewCount);
-          totalLikes += parseInt(version.statistics.likeCount);
-          totalDislikes += parseInt(version.statistics.dislikeCount);
+          console.log(version.statistics.likeCount);
+          if (version.statistics.viewCount !== undefined ) { totalViews += parseInt(version.statistics.viewCount); }
+          if (version.statistics.likeCount !== undefined ) { totalLikes += parseInt(version.statistics.likeCount); }
+          if (version.statistics.dislikeCount !== undefined ) { totalDislikes += parseInt(version.statistics.dislikeCount); }
         });
       }
-
-
 
       // console.log('aggregations of song: ', song[0].aggregations);
       let tmp_song = song;

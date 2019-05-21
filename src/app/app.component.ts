@@ -19,12 +19,12 @@ export class AppComponent implements OnInit {
   }
   uglyInterval() {
             setInterval(() => {
-              console.log('rrrrrr: ', this.chartS.getSpinner());
+              // console.log('rrrrrr: ', this.chartS.getSpinner());
               if (this.chartS.getSpinner()) {
-                console.log('block');
+                // console.log('block');
                 this.spinner = true;
               } else {
-                console.log('none');
+                // console.log('none');
                 this.spinner = false;
               }
             }, 1000);

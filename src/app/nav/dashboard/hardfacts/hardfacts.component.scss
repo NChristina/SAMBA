@@ -1,3 +1,9 @@
+// #likeChart .x.axis text{
+//   text-anchor: end !important;
+//   transform: rotate(-45deg);
+//   background-color: red !important;
+// }
+
 .maxSize {
   max-width: 350px;
   max-height: 250px;
@@ -96,7 +102,7 @@
 
 .wrapper{
   text-align: center;
-  margin-top: 15px; 
+  margin-top: 15px;
   font-size: 0.9em;
   font-weight: bold;
   color: #333;
@@ -104,7 +110,7 @@
 
 .tooltInfo:hover .tooltInfo_text {
   visibility: visible;
-  opacity: 1; 
+  opacity: 1;
 }
 
 .tooltInfo_text {

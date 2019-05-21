@@ -251,7 +251,7 @@ export class HardfactsComponent implements OnInit {
     this.likeBarChart.margins().right = 80;
     this.likeBarChart.margins().left = 50;
     this.likeBarChart.margins().bottom = 30;
-    this.likeBarChart.renderLabel(true).label(function (d) { barOrder.push({ label: d.data.key.toString() }); return d.data.key; });
+    this.likeBarChart.renderLabel(true).label(function (d) { barOrder.push({label: d.data.key.toString()}); return d.data.key; });
     this.likeBarChart.legend(dc.legend().gap(5).x(220).y(10));
     this.likeBarChart.render();
     this.renderedChart = true;
@@ -275,6 +275,8 @@ export class HardfactsComponent implements OnInit {
             }
         })
         .on('mouseout.samba', (d) => { tooltipBar.transition().duration(350).style('opacity', 0); });
+        chart.selectAll('g.x text')
+          .attr('transform', 'translate(-10,-10) rotate(315)');
     });
   }
 
@@ -371,4 +373,14 @@ export class HardfactsComponent implements OnInit {
       document.getElementById('likeChart').classList.remove('hide');
     }
   }
+
+  // cutTextForLabels(str: string, length: number, ending: string) {
+  //   if (str.length > length) {
+  //     let newString = str.substring(0, length - ending.length) + ending;
+  //     console.log('string: ', newString);
+  //     return {label: newString};
+  //   } else {
+  //     return {label: str};
+  //   }
+  // }
 }
