@@ -1,8 +1,6 @@
 import { Injectable } from '@angular/core';
-import * as d3 from 'd3';
 import * as crossfilter from 'crossfilter';
-import { Observable, BehaviorSubject, ReplaySubject } from '../../../../../node_modules/rxjs';
-import { keyframes } from '@angular/animations';
+import { BehaviorSubject, Observable } from 'rxjs';
 
 // The Chart Service allows to use one data for all the charts
 @Injectable()
@@ -17,17 +15,27 @@ export class ChartService {
   private chartRangeSource = new BehaviorSubject([]);
   private currentChartRange = this.chartRangeSource.asObservable();
   private loggedIn = false;
+  private spinner = false;
+  // private spinnerObservable: any;
+
 
   constructor() {
     this.GetData().subscribe((data) => {
       this.changeCrossfilter(crossfilter(data));
-      // console.log('this is the actual data from crossfilter: ', data);
     });
+
   }
 
   loginProtection() {
-    console.log('logged in is now true -- dataservice');
     this.loggedIn = true;
+  }
+
+  public getSpinner(): boolean {
+    return this.spinner;
+  }
+
+  public setSpinner(value) {
+    this.spinner = value;
   }
 
   getLoggedIn(): boolean {
@@ -37,22 +45,21 @@ export class ChartService {
   // get and set of the data, the observable broadcasts the changed data to all its subscribers
   // the function sets also the crossfilter
   SetData(value: any[], additionalInfo: any[]) {
+    // hier sagen dass der spinner angeschalten werden muss
+    this.spinner = true;
+    console.log('spinner on: ', this.spinner);
     const newData = this.miniDataStructure(value, additionalInfo);
     // const newData = this.dataStructureNew(value, additionalInfo);
     this.chartDataSource.next(newData);
     this.changeCrossfilter(crossfilter(newData));
+    this.spinner = false;
+    // this.spinnerObservable.next(this.spinner);
+    console.log('spinner on: ', this.spinner);
+    // hier sagen dass der spinner ausgeschalten werden kann
 
   }
-  // setMockData(value: any[], additionalInfo: any[]) {
-  //   console.log('entered setMockData() in chart.service with additionalInfo: ', additionalInfo);
-  //   const newData = this.miniDataStructure(value, additionalInfo);
-  //   console.log('why tho?: ', newData);
-  //   this.chartDataSource.next(newData);
-  //   this.changeCrossfilter(crossfilter(newData));
-  // }
 
   GetData(): Observable<any[]> {
-    console.log('am I even triggered? : ', this.currentChartData);
     return this.currentChartData;
   }
 
@@ -61,63 +68,13 @@ export class ChartService {
     this.cfilterSource.next(filter);
   }
 
-
-
   // function, which is used to subscribe to the crossfilter
   getCrossfilter(): Observable<CrossFilter.CrossFilter<{}>> {
     return this.currentCfilter;
   }
 
-  // the comments are bundled for the charts
-  // the function returns a new data structure, so its easier to
-  // work with crossfilter and display it as visualization
-  // if something is missing just add it
-  // private dataStructure(data): any[] {
-  //   console.log('XXXXXXX: ', data);
-  //   const comments = [];
-  //   let repliesArray = [];
-  //   console.log('data in chartservice, where is replies?', data[0]);
-  //   data[0].forEach(song => {
-  //     song.comment.forEach(comment => {
-  //       repliesArray = [];
-  //       song.reply.forEach(reply => {
-  //         if (reply.snippet.parentId === comment._key) {
-  //           repliesArray.push(reply);
-  //         }
-  //       });
-  //       comments.push({
-  //         _key: comment._key,
-  //         authorDisplayName: comment.snippet.topLevelComment.snippet.authorDisplayName,
-  //         likeCount: comment.snippet.topLevelComment.snippet.likeCount,
-  //         replyCount: comment.snippet.totalReplyCount,
-  //         publishedAt: comment.snippet.topLevelComment.snippet.publishedAt,
-  //         text: comment.snippet.topLevelComment.snippet.textOriginal,
-  //         song: song.song.title,
-  //         song_key: song.song._key,
-  //         song_id: song.song._id,
-  //         artist: song.artist[0].name,
-  //         analysis: comment.analysis,
-  //         video_key: song.data[0]._key,
-  //         videoLikes: song.data[0].statistics.likeCount,
-  //         videoDislikes: song.data[0].statistics.dislikeCount,
-  //         videoViews: song.data[0].statistics.viewCount,
-  //         replies: repliesArray
-  //       });
-  //     });
-  //   });
-
-  //   // console.log(data);
-  //   // the comments have to be sorted for the charts
-  //   comments.sort((a, b) => {
-  //     return new Date(a.publishedAt) > new Date(b.publishedAt) ? -1 : 1;
-  //   });
-  //   console.log('ready structure for graphs: ', comments);
-  //   return comments;
-  // }
-
   // is used to tell an subscriber if the size of view has changed
   getChartRange(): Observable<any> {
-    console.log('getChartRange() was triggered: ', this.currentChartRange);
     return this.currentChartRange;
   }
 
@@ -129,8 +86,8 @@ export class ChartService {
   // for loop for the new data structure
   private miniDataStructure(data, additionalInfo): any[] {
     let isGroup = true;
-    console.log('XXXXXXX: ', data);
-    console.log('YYYYYYY: ', additionalInfo);
+    // console.log('XXXXXXX: ', data);
+    // console.log('YYYYYYY: ', additionalInfo);
     const dataPoints = [];
     let totalViews: number;
     let totalLikes: number;
@@ -145,21 +102,17 @@ export class ChartService {
     totalLikes = 0;
     totalDislikes = 0;
 
-
-
-
-
     data.forEach((song, index) => {
       let control = 0;
-      console.log('song: ', song);
+      // console.log('song: ', song);
 
 
       // unterscheidung zw 1 version oder 1. gruppe für additionalInfo!!!
       if('etag' in additionalInfo[index]) {
-        console.log('I AM ONLY ONE VERSION');
+        // console.log('I AM ONLY ONE VERSION');
         isGroup = false;
         let words = additionalInfo[index].snippet.title.split('-');
-        console.log('words: ', words);
+        // console.log('words: ', words);
         artist = words[0];
         title = words[1];
 
@@ -177,7 +130,7 @@ export class ChartService {
         title = additionalInfo[index].title;
         songID = additionalInfo[index].versions[0].id;
         songKey = additionalInfo[index].versions[0]._key;
-        console.log('I AM THE WHOLE GROUP');
+        // console.log('I AM THE WHOLE GROUP');
 
 
 
@@ -236,7 +189,7 @@ export class ChartService {
     dataPoints.sort((a, b) => {
       return new Date(a.publishedAt) > new Date(b.publishedAt) ? -1 : 1;
     });
-    console.log('new data structure: ', dataPoints);
+    // console.log('new data structure: ', dataPoints);
     return dataPoints;
 
     // return null;

@@ -25,7 +25,6 @@ export class LoginComponent implements OnInit {
 
   auth() {
     if(this.u === this.username && this.p === this.password) {
-      console.log('login should work');
       this.wrongCreds = false;
       this.chartS.loginProtection();
       this.router.navigate(['/dashboard']);

@@ -1,3 +1,6 @@
 <!-- <app-nav></app-nav> -->
 <router-outlet></router-outlet>
 <div class= "tooltipBar"></div>
+<div id="appModal"  [ngStyle]="{'display': spinner ? 'block' : 'none'}">
+  <app-loading-modal></app-loading-modal>
+</div>

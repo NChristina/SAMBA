@@ -69,6 +69,7 @@ export class NavComponent implements OnInit {
               const snackBar = this.snackbar.show('You can only pick 8 items', 'OK', this.config);
               return;
         } else {
+          this.chartService.setSpinner(true);
           // console.log('add the whole group ', versionIDs);
           this.searcher.songDetailsFromDb(versionIDs).then((results) => {
             // console.log('I GOT A RESULT FROM SONGDETAILS: ', results.body);
@@ -77,9 +78,9 @@ export class NavComponent implements OnInit {
             this.matchForAdditionalInfo.push(this.searchMatchList[index]);
             this.labelsForChips.push({title: this.matchForAdditionalInfo[this.matchForAdditionalInfo.length - 1].title + ' - '
             + this.matchForAdditionalInfo[this.matchForAdditionalInfo.length - 1].artist, isGroup: true});
-            console.log('labels: ', this.labelsForChips);
+            // console.log('labels: ', this.labelsForChips);
 
-            console.log('ULULULULULU: ', this.matchForAdditionalInfo);
+            // console.log('ULULULULULU: ', this.matchForAdditionalInfo);
             this.chartService.SetData(this.loadedItems,  this.matchForAdditionalInfo);
             this.upDateChips(false);
           });
@@ -96,14 +97,16 @@ export class NavComponent implements OnInit {
               const snackBar = this.snackbar.show('You can only pick 8 items', 'OK', this.config);
               return;
         } else {
+          this.chartService.setSpinner(true);
+
           console.log('add only me: ', versionID);
           this.searcher.songDetailsFromDb(versionID).then((results) => {
             this.loadedItems.push(results.body);
             this.matchForAdditionalInfo.push(this.searchMatchList[index].versions[childIndex]);
-            console.log('ULULULULULU: ', this.matchForAdditionalInfo);
+            // console.log('ULULULULULU: ', this.matchForAdditionalInfo);
             this.labelsForChips.push({title: this.matchForAdditionalInfo[this.matchForAdditionalInfo.length - 1].snippet.title,
               isGroup: false});
-            console.log('labels: ', this.labelsForChips);
+            // console.log('labels: ', this.labelsForChips);
 
             this.chartService.SetData(this.loadedItems, this.matchForAdditionalInfo);
             this.upDateChips(true);
