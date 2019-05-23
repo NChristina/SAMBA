@@ -3,21 +3,17 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { DataService } from './data.service';
 import { HttpClient } from '@angular/common/http';
 
-
-
 @Injectable()
 export class SearchService {
   private data: any[];
   private mockData: any[];
-
   // private searchResultSource = new BehaviorSubject([]);
   // private currentSearchResult = this.searchResultSource.asObservable();
 
-  constructor(private dataService: DataService, private httpClient: HttpClient) {
+  constructor(private dataService: DataService, private httpClient: HttpClient) {}
 
-  }
   loadMockData(): Observable<any[]> {
-    let d =  this.dataService.songDetailsMock();
+    const d =  this.dataService.songDetailsMock();
     console.log('xx: ', d);
     return d;
   }
@@ -40,13 +36,13 @@ export class SearchService {
   }
 
   songDetailsFromDb(value: string[]): Promise<any> {
-    console.log('entered searchFromDb() in search.service.ts: ', value);
+    // console.log('entered searchFromDb() in search.service.ts: ', value);
     if (value === undefined) {
       console.log('the value is undefined ?!');
     } else {
-    return this.dataService.songDetails(value);
+      return this.dataService.songDetails(value);
+    }
   }
-}
 
   // splits the value and the song title by words and look for each word if it
   // matches any word. Results will be pushed to a list, after that the list will

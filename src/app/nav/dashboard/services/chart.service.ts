@@ -18,12 +18,10 @@ export class ChartService {
   private spinner = false;
   // private spinnerObservable: any;
 
-
   constructor() {
     this.GetData().subscribe((data) => {
       this.changeCrossfilter(crossfilter(data));
     });
-
   }
 
   loginProtection() {
@@ -47,16 +45,10 @@ export class ChartService {
   SetData(value: any[], additionalInfo: any[]) {
     // hier sagen dass der spinner angeschalten werden muss
     this.spinner = true;
-    console.log('spinner on: ', this.spinner);
     const newData = this.miniDataStructure(value, additionalInfo);
-    // const newData = this.dataStructureNew(value, additionalInfo);
     this.chartDataSource.next(newData);
     this.changeCrossfilter(crossfilter(newData));
     this.spinner = false;
-    // this.spinnerObservable.next(this.spinner);
-    console.log('spinner on: ', this.spinner);
-    // hier sagen dass der spinner ausgeschalten werden kann
-
   }
 
   GetData(): Observable<any[]> {
@@ -86,8 +78,6 @@ export class ChartService {
   // for loop for the new data structure
   private miniDataStructure(data, additionalInfo): any[] {
     let isGroup = true;
-    // console.log('XXXXXXX: ', data);
-    // console.log('YYYYYYY: ', additionalInfo);
     const dataPoints = [];
     let totalViews: number;
     let totalLikes: number;
@@ -104,22 +94,16 @@ export class ChartService {
 
     data.forEach((song, index) => {
       let control = 0;
-      // console.log('song: ', song);
-
-
       // unterscheidung zw 1 version oder 1. gruppe für additionalInfo!!!
-      if('etag' in additionalInfo[index]) {
+      if ('etag' in additionalInfo[index]) {
         // console.log('I AM ONLY ONE VERSION');
         isGroup = false;
-        let words = additionalInfo[index].snippet.title.split('-');
+        const words = additionalInfo[index].snippet.title.split('-');
         // console.log('words: ', words);
         artist = words[0];
         title = words[1];
-
         songID = additionalInfo[index].id;
         songKey = additionalInfo[index]._key;
-
-
 
         totalViews = additionalInfo[index].statistics.viewCount;
         totalLikes =  additionalInfo[index].statistics.likeCount;
@@ -130,16 +114,13 @@ export class ChartService {
         title = additionalInfo[index].title;
         songID = additionalInfo[index].versions[0].id;
         songKey = additionalInfo[index].versions[0]._key;
-        // console.log('I AM THE WHOLE GROUP');
-
-
 
         // building together total views, dislikes and likes of 1-? versions, whatever is given in addtionalInfo variable
         additionalInfo[index].versions.forEach ((version) => {
-          console.log(version.statistics.likeCount);
-          if (version.statistics.viewCount !== undefined ) { totalViews += parseInt(version.statistics.viewCount); }
-          if (version.statistics.likeCount !== undefined ) { totalLikes += parseInt(version.statistics.likeCount); }
-          if (version.statistics.dislikeCount !== undefined ) { totalDislikes += parseInt(version.statistics.dislikeCount); }
+          // console.log(version.statistics.likeCount);
+          if (version.statistics.viewCount !== undefined ) { totalViews += parseInt(version.statistics.viewCount, 10); }
+          if (version.statistics.likeCount !== undefined ) { totalLikes += parseInt(version.statistics.likeCount, 10); }
+          if (version.statistics.dislikeCount !== undefined ) { totalDislikes += parseInt(version.statistics.dislikeCount, 10); }
         });
       }
 
@@ -147,38 +128,47 @@ export class ChartService {
       let tmp_song = song;
       isGroup ? tmp_song = tmp_song : tmp_song = song[0];
 
-
       tmp_song.aggregations.forEach( date => {
         // console.log('language obj: ', date.languageDistribution);
-        // console.log('date ', date);
+        // console.log('date ', date.sentimentDistribution[0]);
+        const mSentiment = this.fixSentimentData(date.sentimentDistribution[0]);
+
         let lidx = 0;
+        let sentx = 0;
         let currentNbCommentsLanguage = date.languageDistribution[lidx].nbComments;
+        let currentNbCommentsSent = mSentiment[sentx].nbComments;
+
         for (let i = 0; i < date.nbComments; i ++) {
-          let analysisObject = {
+          const analysisObject = {
             languageProbability: 1,
-            mainLanguage: date.languageDistribution[lidx].language
+            mainLanguage: date.languageDistribution[lidx].language,
+            mainSentiment: mSentiment[sentx].sentiment
           };
+
           currentNbCommentsLanguage -= 1;
+          currentNbCommentsSent -= 1;
           if (currentNbCommentsLanguage === 0) { lidx += 1; }
+          if (currentNbCommentsSent === 0) { sentx += 1; }
 
           dataPoints.push({
-            _key: control, // where the comment key was
-            authorDisplayName: null, // author display name of comment
-            likeCount: null, // like count of comment
-            replyCount: null, // reply count of comment
+            _key: control,              // where the comment key was
+            authorDisplayName: null,    // author display name of comment
+            likeCount: null,            // like count of comment
+            replyCount: null,           // reply count of comment
             publishedAt: date.publishedAt,
-            text: null, // text of the comment
-            song: title, // *** song title of the commented song
-            song_key: songID, // key of the commented song
-            song_id: songKey, // id of song of commented
-            artist: artist, // *** artist of the song which was commented
+            text: null,                 // text of the comment
+            song: title,                // *** song title of the commented song
+            song_key: songID,           // key of the commented song
+            song_id: songKey,           // id of song of commented
+            artist: artist,             // *** artist of the song which was commented
             analysis: analysisObject,
             video_key: song.videoId,
-            videoLikes: totalLikes, // *** likes of the video commented
+            videoLikes: totalLikes,     // *** likes of the video commented
             videoDislikes: totalDislikes, // *** dislikes of the video commented
-            videoViews: totalViews, // *** views of the video commented
-            replies: null // *** replies of the comment
+            videoViews: totalViews,     // *** views of the video commented
+            replies: null               // *** replies of the comment
           });
+
           control++;
         }
       });
@@ -188,9 +178,18 @@ export class ChartService {
     dataPoints.sort((a, b) => {
       return new Date(a.publishedAt) > new Date(b.publishedAt) ? -1 : 1;
     });
-    // console.log('new data structure: ', dataPoints);
-    return dataPoints;
 
-    // return null;
+    return dataPoints;
+  }
+
+  fixSentimentData(data: any) {
+    const mSentiment = [];
+    if (data.positive !== 0) { mSentiment.push({sentiment: 'positive', nbComments: data.positive}); }
+    if (data.neutral !== 0) { mSentiment.push({sentiment: 'neutral', nbComments: data.neutral}); }
+    if (data.negative !== 0) { mSentiment.push({sentiment: 'negative', nbComments: data.negative}); }
+    if (data.mixed !== 0) { mSentiment.push({sentiment: 'mixed', nbComments: data.mixed}); }
+    if (data.NAs !== 0) { mSentiment.push({sentiment: 'na', nbComments: data.NAs }); }
+
+    return mSentiment;
   }
 }
