@@ -24,6 +24,7 @@ export class SentimentComponent implements OnInit {
   renderedChart = false;
   notDataWarn = false;
   enableNA = true;
+  nbSongs = 0;
 
   constructor(private chartService: ChartService, private _element: ElementRef) { }
 
@@ -133,6 +134,7 @@ export class SentimentComponent implements OnInit {
       }
     });
 
+    this.nbSongs = sentSummAux.length;
     this.sentSumm = sentSummAux;
   }
 
@@ -436,7 +438,6 @@ export class SentimentComponent implements OnInit {
         .on('mouseover.samba', (d, e) => {
           tooltipBar.transition().duration(150).style('opacity', .9);
           if (barOrder[e]) {
-            console.log();
             // this.getGroupedSentiment(d.song, 'Mixed');
             const tlPs = 'Pos: ' + this.getGroupedSentiment(barOrder[e].label, 'Positive').toFixed(1);
             const tlNu = 'Neu: ' + this.getGroupedSentiment(barOrder[e].label, 'Neutral').toFixed(1);
@@ -449,6 +450,11 @@ export class SentimentComponent implements OnInit {
             }
         })
         .on('mouseout.samba', (d) => { tooltipBar.transition().duration(350).style('opacity', 0); });
+
+        const test = chart.selectAll('g.x text');
+        if (this.nbSongs > 2) {
+          test.attr('transform', 'translate(-10,-10) rotate(315)');
+        }
     });
   }
 

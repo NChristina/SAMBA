@@ -150,6 +150,9 @@ export class ChartService {
           if (currentNbCommentsLanguage === 0) { lidx += 1; }
           if (currentNbCommentsSent === 0) { sentx += 1; }
 
+          let songShort = '';
+          (title.length > 15) ? songShort = title.substr(0, 12) + '...' : songShort = title;
+
           dataPoints.push({
             _key: control,              // where the comment key was
             authorDisplayName: null,    // author display name of comment
@@ -157,7 +160,8 @@ export class ChartService {
             replyCount: null,           // reply count of comment
             publishedAt: date.publishedAt,
             text: null,                 // text of the comment
-            song: title,                // *** song title of the commented song
+            song: songShort,            // *** song title of the commented song (max 15 char)
+            songFull: title,            // *** song title of the commented song (original)
             song_key: songID,           // key of the commented song
             song_id: songKey,           // id of song of commented
             artist: artist,             // *** artist of the song which was commented

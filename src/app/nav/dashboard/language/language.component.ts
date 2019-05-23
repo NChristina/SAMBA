@@ -22,6 +22,7 @@ export class LanguageComponent implements OnInit {
   private maxGroupValue;
   renderedChart = false;
   notDataWarn = false;
+  nbSongs = 0;
 
   constructor(private chartService: ChartService) { }
 
@@ -40,6 +41,7 @@ export class LanguageComponent implements OnInit {
         // If there is at least one language group:
         if (this.langGroups[0]) {
           this.notDataWarn = false;
+          this.countSongs();
           this.renderChart();
           this.renderBarChart();
         } else {
@@ -86,6 +88,17 @@ export class LanguageComponent implements OnInit {
     this.dimensionBar = this.cfilter.dimension(function (d: any) {
       return d.song;
     });
+  }
+
+  countSongs() {
+    const sentSummAux = [];
+    this.data.forEach((d) => {
+      let inList = false;
+      let countedSongidx = 0;
+      sentSummAux.forEach((sent) => { if (inList === false) { (sent.song === d.song) ? inList = true : countedSongidx++; } });
+      if (!inList) { sentSummAux.push({ song: d.song }); }
+    });
+    this.nbSongs = sentSummAux.length;
   }
 
   // returns a crossfilter-group for each language x
@@ -380,8 +393,10 @@ export class LanguageComponent implements OnInit {
               }
           })
           .on('mouseout.samba', (d) => { tooltipBar.transition().duration(350).style('opacity', 0); });
-          chart.selectAll('g.x text')
-          .attr('transform', 'translate(-10,-10) rotate(315)');
+          const test = chart.selectAll('g.x text');
+          if (this.nbSongs > 2) {
+            test.attr('transform', 'translate(-10,-10) rotate(315)');
+          }
       });
     }
 
