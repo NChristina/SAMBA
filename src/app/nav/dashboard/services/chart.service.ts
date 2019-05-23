@@ -71,7 +71,7 @@ export class ChartService {
   }
 
   setChartRange(range) {
-    console.log('setChartRange() was triggered');
+    // console.log('setChartRange() was triggered');
     this.chartRangeSource.next(range);
   }
 

@@ -23,6 +23,7 @@ export class SentimentComponent implements OnInit {
   sentSumm = [];
   renderedChart = false;
   notDataWarn = false;
+  enableNA = true;
 
   constructor(private chartService: ChartService, private _element: ElementRef) { }
 
@@ -74,6 +75,17 @@ export class SentimentComponent implements OnInit {
 
     this.renderedChart = false;
     this.setVisibilityofViews();
+  }
+
+  toggleNA() {
+    const element = <HTMLInputElement> document.getElementById('slider');
+    const isChecked = element.checked;
+
+    if (this.enableNA !== isChecked) {
+      (this.enableNA) ? this.enableNA = false : this.enableNA = true;
+      this.renderBarChart();
+      document.getElementsByClassName('sentEnableNA')[0].classList.toggle('active');
+    }
   }
 
   // summarizes the sentiment for positive, neutral, and negative scores
@@ -168,7 +180,11 @@ export class SentimentComponent implements OnInit {
       const sentSummNeg = this.sentSumm[countedSongidx].countNegative;
       const sentSummMix = this.sentSumm[countedSongidx].countMixed;
       const sentSummNA = this.sentSumm[countedSongidx].countNA;
-      sumAll = sentSummPos + sentSummNeu + sentSummNeg + sentSummMix + sentSummNA;
+      if (this.enableNA) {
+        sumAll = sentSummPos + sentSummNeu + sentSummNeg + sentSummMix + sentSummNA;
+      } else {
+        sumAll = sentSummPos + sentSummNeu + sentSummNeg + sentSummMix;
+      }
 
       if (sentiment === 'Positive') {
         groupedValue = (sentSummPos * 100) / sumAll;
@@ -179,7 +195,11 @@ export class SentimentComponent implements OnInit {
       } else if (sentiment === 'Mixed') {
         groupedValue = (sentSummMix * 100) / sumAll;
       } else if (sentiment === 'NA') {
-        groupedValue = (sentSummNA * 100) / sumAll;
+        if (this.enableNA) {
+          groupedValue = (sentSummNA * 100) / sumAll;
+        } else {
+          return 100;
+        }
       } else { console.log('Sentiment' + sentiment + ' does not exist'); }
     } /* else {
       if (sentiment === 'NA') { return 100; }
