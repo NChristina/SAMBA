@@ -7,45 +7,19 @@
               <p><img height="15px" src="../../assets/000-barchart.svg"> For the comparison view, each bar of the chart shows the number of likes and dislikes on the videos selected for each song. If you select different videos for the same song, the numbers are summarized and are represented as one bar in the chart. By hovering over the bar you see the absolute value of likes and dislikes. At the bottom you see the total amount of comments and total amount of views for the whole selected set.</p>
             </span>
         </div>
+
+        <!--<button (click)="switchView('compButton');" class="hardComp compButton" style="float:right"><img height="24px" title="Comparison View" src="../../assets/000-barchart.svg"> </button>
+        <button (click)="switchView('aggrButton');" class="hardAggr aggrButton active" style="float:right"><img height="24px" title="Aggregated View" src="../../assets/000-chart.svg"> </button>-->
+
         <button (click)="switchView('compButton');" class="hardComp compButton" style="float:right"><img height="24px" title="Comparison View" src="../../assets/000-barchart.svg"> </button>
         <button (click)="switchView('aggrButton');" class="hardAggr aggrButton active" style="float:right"><img height="24px" title="Aggregated View" src="../../assets/000-chart.svg"> </button>
   
-        <h2>Hardfacts</h2>        
+        <h2>Engagements</h2>        
     </mat-grid-list>
   </div>
   <hr />
   
-  <div id="likeChartLine" class="maxSize aggregationView"></div>
-  <div id="likeChart" class="maxSize comparisonView"></div>
-  <p *ngIf="this.notDataWarn">Not enough data to render chart.</p>
-  
-  <div class="wrapper" *ngIf="this.data.length && this.compView">
-    <div (mouseover)="setTooltip($event, tooltip1);" class="fab_button"> 
-      Total Comments: {{ this.data.length }} 
-      <span #tooltip1 class="tooltip_text">
-        <table>
-          <tr class="view_tr" *ngFor="let song of this.getSongsAndComments();">
-            <td>{{ song.name }}</td>
-            <td>{{ song.comments }}</td>
-            <td><mdc-icon class="thumb_icon">visibility</mdc-icon></td>
-          </tr>
-        </table>
-      </span>
-    </div>
-    <div (mouseover)="setTooltip($event, tooltip2);" class="fab_button">
-      Total Views: {{ this.getTotalViews() }}
-      <span #tooltip2 class="tooltip_text">
-        <table>
-          <tr class="view_tr" *ngFor="let song of this.getSongsAndViews();">
-            <td>{{ song.name }}</td>
-            <td>{{ song.views }}</td>
-            <td><mdc-icon class="thumb_icon">visibility</mdc-icon></td>
-          </tr>
-        </table>
-      </span>
-    </div>
-  </div>
-  
-  
-  
+  <div id="engChartLine" class="maxSize aggregationView"></div>
+  <div id="engChart" class="maxSize comparisonView"></div>
+  <p class="notDataWarn" *ngIf="this.notDataWarn">Not enough data to render chart.</p>
   

@@ -24,7 +24,7 @@
 
 <div id="sentimentChartLine" class="maxSize aggregationView"></div>
 <div id="sentimentChart" class="maxSize comparisonView"></div>
-<p *ngIf="this.notDataWarn">Not enough data to render chart.</p>
+<p class="notDataWarn" *ngIf="this.notDataWarn">Not enough data to render chart.</p>
 
 <div class="sentEnableNA" *ngIf="this.data.length && this.compView">
     <p>Show N/A</p>

@@ -56,6 +56,7 @@ export class LanguageComponent implements OnInit {
     // gets the range through the chart service from the mainVis Component
     this.chartService.getChartRange().subscribe((range) => {
       if (this.data !== undefined && range.range !== null && range.range !== undefined) {
+        (this.diff_months(range.range[0], range.range[1]) < 2) ? this.notDataWarn = true : this.notDataWarn = false;
         this.languageChart
           .x(d3.scaleTime().domain([range.range[0], range.range[1]]))
           .y(d3.scaleLinear().domain([0, this.getMaxGroupValue()]))
@@ -63,6 +64,7 @@ export class LanguageComponent implements OnInit {
         this.languageChart.redraw();
       } else {
         if (!dc.chartRegistry.list().some((c) => c.hasFilter())) {
+          this.notDataWarn = false;
           this.languageChart
             .x(d3.scaleTime().domain([d3.min(this.data, (d: any) => new Date(d.publishedAt)),
               d3.max(this.data, (d: any) => new Date(d.publishedAt))]))
@@ -73,6 +75,12 @@ export class LanguageComponent implements OnInit {
 
     this.renderedChart = false;
     this.setVisibilityofViews();
+  }
+
+  diff_months(dt2, dt1) {
+    let diff = (dt2.getTime() - dt1.getTime()) / 1000;
+    diff /= (60 * 60 * 24 * 7 * 4);
+    return Math.abs(Math.round(diff));
   }
 
   // sets the crossfilter dimension

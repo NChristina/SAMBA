@@ -38,7 +38,7 @@
 </div>
 
 <div id="likeChart" class="maxSize comparisonView"></div>
-<p *ngIf="this.notDataWarn">Not enough data to render chart.</p>
+<p class="notDataWarn" *ngIf="this.notDataWarn">Not enough data to render chart.</p>
 
 <div class="wrapper" *ngIf="this.data.length && this.compView">
   <div (mouseover)="setTooltip($event, tooltip1);" class="fab_button"> 
