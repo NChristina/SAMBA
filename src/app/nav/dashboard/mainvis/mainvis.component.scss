@@ -47,9 +47,9 @@ $color-change-list: /*#a6cee3*/ #1f78b4 #b2df8a #33a02c #fb9a99 #e31a1c #ff0084 
   width: fit-content;
   height: fit-content;
   padding: 5px;
-  float: right;
-  margin-top: 10px;
-  margin-right: 10px;
+  position: absolute;
+  top: 60px;
+  right: 20px;
 }
 .legendElement {
   @include coloring();
@@ -64,7 +64,7 @@ $color-change-list: /*#a6cee3*/ #1f78b4 #b2df8a #33a02c #fb9a99 #e31a1c #ff0084 
 }
 .legend .rectText {
   float: left;
-  margin: 0;
+  margin: 0 10px;
 }
 
 .tooltInfo:hover .tooltInfo_text {
