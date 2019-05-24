@@ -23,6 +23,8 @@ export class SentimentComponent implements OnInit {
   sentSumm = [];
   renderedChart = false;
   notDataWarn = false;
+  enableNA = true;
+  nbSongs = 0;
 
   constructor(private chartService: ChartService, private _element: ElementRef) { }
 
@@ -32,6 +34,7 @@ export class SentimentComponent implements OnInit {
     this.sentimentBarChart = dc.barChart('#sentimentChart');
     this.chartService.GetData().subscribe((data) => {
       this.data = data;
+      // console.log(data);
     });
 
     this.chartService.getCrossfilter().subscribe((filter) => {
@@ -75,11 +78,22 @@ export class SentimentComponent implements OnInit {
     this.setVisibilityofViews();
   }
 
+  toggleNA() {
+    const element = <HTMLInputElement> document.getElementById('slider');
+    const isChecked = element.checked;
+
+    if (this.enableNA !== isChecked) {
+      (this.enableNA) ? this.enableNA = false : this.enableNA = true;
+      this.renderBarChart();
+      document.getElementsByClassName('sentEnableNA')[0].classList.toggle('active');
+    }
+  }
+
   // summarizes the sentiment for positive, neutral, and negative scores
   countSentiment() {
     const sentSummAux = [];
     this.data.forEach((d) => {
-      if (d.analysis && d.analysis.sentiment) {
+      if (d.analysis) {
         let inList = false;
         let countedSongidx = 0;
 
@@ -90,45 +104,37 @@ export class SentimentComponent implements OnInit {
           }
         });
 
-        // Get values for sentiment
-        const thisnltk = d.analysis.sentiment.nltk.compound;
-        const thisblob = d.analysis.sentiment.textBlob.polarity;
-        const thisafinn = d.analysis.sentiment.afinn.normalized;
-
-        if (this.isIconsistent([thisnltk, thisblob, thisafinn])) {
-          // If it is mixed...
-          if (inList) {
+        if (inList) {
+          if (d.analysis.mainSentiment === 'positive') {
+            sentSummAux[countedSongidx].countPositive++;
+          } else if (d.analysis.mainSentiment === 'neutral') {
+            sentSummAux[countedSongidx].countNeutral++;
+          } else if (d.analysis.mainSentiment === 'negative') {
+            sentSummAux[countedSongidx].countNegative++;
+          } else if (d.analysis.mainSentiment === 'mixed') {
             sentSummAux[countedSongidx].countMixed++;
-          } else {
-            sentSummAux.push({ song: d.song, countPositive: 0, countNeutral: 0, countNegative: 0, countMixed: 1 });
+          } else if (d.analysis.mainSentiment === 'na') {
+            sentSummAux[countedSongidx].countNA++;
           }
         } else {
-          // If it is not mixed...
-          const sentPolarity = ((thisnltk + thisafinn + thisblob) / 3);
-
-          if (inList) {
-            if (sentPolarity > 0) {
-              sentSummAux[countedSongidx].countPositive++;
-            } else if (sentPolarity === 0) {
-              sentSummAux[countedSongidx].countNeutral++;
-            } else if (sentPolarity < 0) {
-              sentSummAux[countedSongidx].countNegative++;
-            }
-          } else {
-            if (sentPolarity > 0) {
-              sentSummAux.push({ song: d.song, countPositive: 1, countNeutral: 0, countNegative: 0, countMixed: 0 });
-            } else if (sentPolarity === 0) {
-              sentSummAux.push({ song: d.song, countPositive: 0, countNeutral: 1, countNegative: 0, countMixed: 0 });
-            } else if (sentPolarity < 0) {
-              sentSummAux.push({ song: d.song, countPositive: 0, countNeutral: 0, countNegative: 1, countMixed: 0 });
-            }
+          if (d.analysis.mainSentiment === 'positive') {
+            sentSummAux.push({ song: d.song, countPositive: 1, countNeutral: 0, countNegative: 0, countMixed: 0, countNA: 0 });
+          } else if (d.analysis.mainSentiment === 'neutral') {
+            sentSummAux.push({ song: d.song, countPositive: 0, countNeutral: 1, countNegative: 0, countMixed: 0, countNA: 0 });
+          } else if (d.analysis.mainSentiment === 'negative') {
+            sentSummAux.push({ song: d.song, countPositive: 0, countNeutral: 0, countNegative: 1, countMixed: 0, countNA: 0 });
+          } else if (d.analysis.mainSentiment === 'mixed') {
+            sentSummAux.push({ song: d.song, countPositive: 0, countNeutral: 0, countNegative: 0, countMixed: 1, countNA: 0 });
+          } else if (d.analysis.mainSentiment === 'na') {
+            sentSummAux.push({ song: d.song, countPositive: 0, countNeutral: 0, countNegative: 0, countMixed: 0, countNA: 1 });
           }
         }
       } else {
-        // console.log("No sentiment");
+        // console.log("No analysis");
       }
     });
 
+    this.nbSongs = sentSummAux.length;
     this.sentSumm = sentSummAux;
   }
 
@@ -175,7 +181,12 @@ export class SentimentComponent implements OnInit {
       const sentSummNeu = this.sentSumm[countedSongidx].countNeutral;
       const sentSummNeg = this.sentSumm[countedSongidx].countNegative;
       const sentSummMix = this.sentSumm[countedSongidx].countMixed;
-      sumAll = sentSummPos + sentSummNeu + sentSummNeg + sentSummMix;
+      const sentSummNA = this.sentSumm[countedSongidx].countNA;
+      if (this.enableNA) {
+        sumAll = sentSummPos + sentSummNeu + sentSummNeg + sentSummMix + sentSummNA;
+      } else {
+        sumAll = sentSummPos + sentSummNeu + sentSummNeg + sentSummMix;
+      }
 
       if (sentiment === 'Positive') {
         groupedValue = (sentSummPos * 100) / sumAll;
@@ -185,10 +196,16 @@ export class SentimentComponent implements OnInit {
         groupedValue = (sentSummNeg * 100) / sumAll;
       } else if (sentiment === 'Mixed') {
         groupedValue = (sentSummMix * 100) / sumAll;
-      } else if (sentiment !== 'NA') { console.log('Sentiment' + sentiment + ' does not exist'); }
-    } else {
+      } else if (sentiment === 'NA') {
+        if (this.enableNA) {
+          groupedValue = (sentSummNA * 100) / sumAll;
+        } else {
+          return 100;
+        }
+      } else { console.log('Sentiment' + sentiment + ' does not exist'); }
+    } /* else {
       if (sentiment === 'NA') { return 100; }
-    }
+    }*/
 
     return groupedValue;
   }
@@ -210,51 +227,38 @@ export class SentimentComponent implements OnInit {
     // group by sentiment
     const nested = d3.nest()
       .key((d: any) => {
-        if (d.analysis && d.analysis.sentiment) {
-          const thisnltk = d.analysis.sentiment.nltk.compound;
-          const thisblob = d.analysis.sentiment.textBlob.polarity;
-          const thisafinn = d.analysis.sentiment.afinn.normalized;
-          if (this.isIconsistent([thisnltk, thisblob, thisafinn])) {
+        if (d.analysis) {
+          if (d.analysis.mainSentiment === 'mixed') {
             return 'Mix';
-          } else {
-            const sentPolarity = ((thisnltk + thisafinn + thisblob) / 3);
-            if (sentPolarity > 0) {
-              return 'Pos';
-            } else if (sentPolarity === 0) {
-              return 'Neu';
-            } else if (sentPolarity < 0) {
-              return 'Neg';
-            }
+          } else if (d.analysis.mainSentiment === 'positive') {
+            return 'Pos';
+          } else if (d.analysis.mainSentiment === 'neutral') {
+            return 'Neu';
+          } else if (d.analysis.mainSentiment === 'negative') {
+            return 'Neg';
+          } else if (d.analysis.mainSentiment === 'na') {
+            return 'N/A';
           }
-        } else {
-          return 'N/A';
         }
       })
       .entries(this.data);
 
     nested.forEach((sentiment) => {
       const g = this.dimension.group().reduceSum((d: any) => {
-        if (d.analysis && d.analysis.sentiment) {
+        if (d.analysis) {
           let mainsentiment = '';
-          const thisnltk = d.analysis.sentiment.nltk.compound;
-          const thisblob = d.analysis.sentiment.textBlob.polarity;
-          const thisafinn = d.analysis.sentiment.afinn.normalized;
-          if (this.isIconsistent([thisnltk, thisblob, thisafinn])) {
+          if (d.analysis.mainSentiment === 'mixed') {
             mainsentiment = 'Mix';
-          } else {
-            const sentPolarity = ((thisnltk + thisafinn + thisblob) / 3);
-            if (sentPolarity > 0) {
-              mainsentiment = 'Pos';
-            } else if (sentPolarity === 0) {
-              mainsentiment = 'Neu';
-            } else if (sentPolarity < 0) {
-              mainsentiment = 'Neg';
-            }
+          } else if (d.analysis.mainSentiment === 'positive') {
+            mainsentiment = 'Pos';
+          } else if (d.analysis.mainSentiment === 'neutral') {
+            mainsentiment = 'Neu';
+          } else if (d.analysis.mainSentiment === 'negative') {
+            mainsentiment = 'Neg';
+          } else if (d.analysis.mainSentiment === 'na') {
+            mainsentiment = 'N/A';
           }
           return mainsentiment === sentiment.key;
-        } else {
-          return 'N/A' === sentiment.key;
-          // return false;
         }
       });
 
@@ -417,7 +421,7 @@ export class SentimentComponent implements OnInit {
       if (returning) { return 0; }
       checklist.push({ song: d.song, value: value });
       return this.getGroupedSentiment(d.song, 'NA');
-    }), 'NA hidden');
+    }), 'N/A');
 
     this.sentimentBarChart.margins().right = 80;
     this.sentimentBarChart.margins().left = 50;
@@ -434,7 +438,6 @@ export class SentimentComponent implements OnInit {
         .on('mouseover.samba', (d, e) => {
           tooltipBar.transition().duration(150).style('opacity', .9);
           if (barOrder[e]) {
-            console.log();
             // this.getGroupedSentiment(d.song, 'Mixed');
             const tlPs = 'Pos: ' + this.getGroupedSentiment(barOrder[e].label, 'Positive').toFixed(1);
             const tlNu = 'Neu: ' + this.getGroupedSentiment(barOrder[e].label, 'Neutral').toFixed(1);
@@ -447,6 +450,11 @@ export class SentimentComponent implements OnInit {
             }
         })
         .on('mouseout.samba', (d) => { tooltipBar.transition().duration(350).style('opacity', 0); });
+
+        const test = chart.selectAll('g.x text');
+        if (this.nbSongs > 2) {
+          test.attr('transform', 'translate(-10,-10) rotate(315)');
+        }
     });
   }
 

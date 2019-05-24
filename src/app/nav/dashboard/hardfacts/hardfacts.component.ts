@@ -21,6 +21,7 @@ export class HardfactsComponent implements OnInit {
   private maxGroupValue;
   renderedChart = false;
   notDataWarn = false;
+  nbSongs = 0;
 
   constructor(private chartService: ChartService, private _element: ElementRef) { }
 
@@ -41,6 +42,7 @@ export class HardfactsComponent implements OnInit {
         // If there is at least one like group:
         if (this.likeGroups[0]) {
           this.notDataWarn = false;
+          this.countSongs();
           this.renderChart();
           this.renderBarChart();
         } else {
@@ -69,6 +71,17 @@ export class HardfactsComponent implements OnInit {
 
     this.renderedChart = false;
     this.setVisibilityofViews();
+  }
+
+  countSongs() {
+    const sentSummAux = [];
+    this.data.forEach((d) => {
+      let inList = false;
+      let countedSongidx = 0;
+      sentSummAux.forEach((sent) => { if (inList === false) { (sent.song === d.song) ? inList = true : countedSongidx++; } });
+      if (!inList) { sentSummAux.push({ song: d.song }); }
+    });
+    this.nbSongs = sentSummAux.length;
   }
 
   // sets the crossfilter dimension
@@ -275,8 +288,10 @@ export class HardfactsComponent implements OnInit {
             }
         })
         .on('mouseout.samba', (d) => { tooltipBar.transition().duration(350).style('opacity', 0); });
-        chart.selectAll('g.x text')
-          .attr('transform', 'translate(-10,-10) rotate(315)');
+        const test = chart.selectAll('g.x text');
+        if (this.nbSongs > 2) {
+          test.attr('transform', 'translate(-10,-10) rotate(315)');
+        }
     });
   }
 
