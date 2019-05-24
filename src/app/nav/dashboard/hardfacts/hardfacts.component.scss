@@ -131,3 +131,55 @@
   top: -30%;
   left: -20px;
 }
+
+.videoCard{
+  height: 20px;
+  background: red;
+  margin: 5px 0px;
+}
+
+.videoCard p{
+  margin: 0px;
+}
+
+#summary{
+  max-width: none;
+}
+
+#videoTable {
+  font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+  font-size: 0.9em;
+}
+
+#videoTable a{
+  display: table;
+  width: 100%;
+}
+
+#videoTable a img{
+  display: inherit;
+  margin: 0 auto;
+}
+
+#videoTable td, #videoTable th {
+  border: 1px solid #ddd;
+  padding: 2px;
+}
+
+#videoTable tr:nth-child(even){background-color: #f2f2f2;}
+
+#videoTable tr:hover {background-color: #ddd;}
+
+#videoTable th {
+  padding-top: 5px;
+  padding-bottom: 5px;
+  text-align: left;
+  background-color: #ddd;
+  color: #000;
+}
+
+#videoTable th.center {
+  text-align: center;
+}

@@ -4,7 +4,7 @@
       <mat-card class="dashboard-card">
         <mat-card-content>
           <div>
-              <app-language></app-language>
+              <app-hardfacts></app-hardfacts>
             </div>
         </mat-card-content>
       </mat-card>
@@ -18,16 +18,17 @@
         </mat-card-content>
       </mat-card>
     </mat-grid-tile>
-    <mat-grid-tile class="grid_title_overflow" [colspan]="1" [rowspan]="2">
-      <mat-card class="dashboard-card">
-        <mat-card-content>
-          <div>
-            <app-hardfacts></app-hardfacts>
-          </div>
-        </mat-card-content>
-      </mat-card>
-    </mat-grid-tile>
-    <mat-grid-tile [colspan]="2" [rowspan]="5">
+    <mat-grid-tile [colspan]="1" [rowspan]="2">
+        <mat-card class="dashboard-card">
+          <mat-card-content>
+            <div>
+                <app-language></app-language>
+              </div>
+          </mat-card-content>
+        </mat-card>
+      </mat-grid-tile>
+    
+    <mat-grid-tile [colspan]="2" [rowspan]="7">
       <mat-card class="dashboard-card" style="overflow-y: scroll;">
         <mat-card-content>
           <div>
@@ -36,6 +37,15 @@
         </mat-card-content>
       </mat-card>
     </mat-grid-tile>
+    <mat-grid-tile class="grid_title_overflow" [colspan]="1" [rowspan]="2">
+        <mat-card class="dashboard-card">
+          <mat-card-content>
+            <div>
+              <app-engagement-comments></app-engagement-comments>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </mat-grid-tile>
     <mat-grid-tile class="grid_title_overflow" [colspan]="1" [rowspan]="2">
       <mat-card class="dashboard-card">
         <mat-card-content>
@@ -50,7 +60,7 @@
       <mat-card class="dashboard-card">
         <mat-card-content>
           <div>
-              <!-- <app-topic></app-topic> -->
+              <app-topic></app-topic>
           </div>
         </mat-card-content>
       </mat-card>

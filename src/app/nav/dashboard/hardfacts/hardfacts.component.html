@@ -3,19 +3,40 @@
       <div class="wrapper" (mouseover)="setTooltipInfo($event, tooltipinfo);" style="float:right" class="tooltInfo"> 
           <img height="24px" style="float:right" src="../../assets/000-info.svg"> 
           <span #tooltipinfo class="tooltInfo_text">
-            <p><img height="15px" src="../../assets/000-chart.svg"> The aggregated view shows the amount of comments on the videos selected for each song through time and how many of them received a like.</p>
+            <p><img height="15px" src="../../assets/000-list.svg"> The summary view shows general information about the selected videos.</p> 
             <p><img height="15px" src="../../assets/000-barchart.svg"> For the comparison view, each bar of the chart shows the number of likes and dislikes on the videos selected for each song. If you select different videos for the same song, the numbers are summarized and are represented as one bar in the chart. By hovering over the bar you see the absolute value of likes and dislikes. At the bottom you see the total amount of comments and total amount of views for the whole selected set.</p>
           </span>
       </div>
       <button (click)="switchView('compButton');" class="hardComp compButton" style="float:right"><img height="24px" title="Comparison View" src="../../assets/000-barchart.svg"> </button>
-      <button (click)="switchView('aggrButton');" class="hardAggr aggrButton active" style="float:right"><img height="24px" title="Aggregated View" src="../../assets/000-chart.svg"> </button>
+      <button (click)="switchView('aggrButton');" class="hardAggr aggrButton active" style="float:right"><img height="24px" title="Summary View" src="../../assets/000-list.svg"> </button>
 
-      <h2>Hardfacts</h2>        
+      <h2>Video Details</h2>        
   </mat-grid-list>
 </div>
 <hr />
 
-<div id="likeChartLine" class="maxSize aggregationView"></div>
+<div id="summary" class="maxSize aggregationView">
+    
+  <table id="videoTable">
+    <tr *ngIf="this.data.length">
+      <th>Music - Singer</th>
+      <th>Publish date</th>
+      <th class="center">Video</th>
+    </tr>
+    <ng-container  *ngFor="let video of videoSummary" >
+      <tr>
+        <td>{{video.song}} - {{video.artist}}</td>
+        <td>{{video.publishedAt}}</td>
+        <td>
+          <a target="_blank" href="https://www.youtube.com/watch?v={{video.video_key}}">
+            <img height="20px" title="Open '{{video.song}}' on YouTube" src="https://img.youtube.com/vi/{{video.video_key}}/default.jpg" />
+          </a>
+        </td>
+      </tr>
+    </ng-container>
+  </table>
+</div>
+
 <div id="likeChart" class="maxSize comparisonView"></div>
 <p *ngIf="this.notDataWarn">Not enough data to render chart.</p>
 

@@ -4,11 +4,11 @@ import * as d3 from 'd3';
 import * as dc from 'dc';
 
 @Component({
-  selector: 'app-hardfacts',
-  templateUrl: './hardfacts.component.html',
-  styleUrls: ['./hardfacts.component.scss']
+  selector: 'app-engagement-comments',
+  templateUrl: './engagement-comments.component.html',
+  styleUrls: ['./engagement-comments.component.scss']
 })
-export class HardfactsComponent implements OnInit {
+export class EngagementCommentsComponent implements OnInit {
   aggrView = true;
   compView = false;
   data: any[];
@@ -16,17 +16,18 @@ export class HardfactsComponent implements OnInit {
   dimension: CrossFilter.Dimension<{}, Date>;
   dimensionBar: CrossFilter.Dimension<{}, number>;
   likeGroups: { group: CrossFilter.Group<{}, Date, any>, likes: string}[];
+  likeLineChart: dc.LineChart;
   likeBarChart: dc.BarChart;
   private maxGroupValue;
   renderedChart = false;
   notDataWarn = false;
   nbSongs = 0;
-  videoSummary: any[];
 
   constructor(private chartService: ChartService, private _element: ElementRef) { }
 
   ngOnInit() {
     // initialization of the chart
+    this.likeLineChart = dc.lineChart('#likeChartLine');
     this.likeBarChart = dc.barChart('#likeChart');
     this.chartService.GetData().subscribe((data) => {
       this.data = data;
@@ -42,9 +43,28 @@ export class HardfactsComponent implements OnInit {
         if (this.likeGroups[0]) {
           this.notDataWarn = false;
           this.countSongs();
+          this.renderChart();
           this.renderBarChart();
         } else {
           this.notDataWarn = true;
+        }
+      }
+    });
+
+    // gets the range through the chart service from the mainVis Component
+    this.chartService.getChartRange().subscribe((range) => {
+      if (this.data !== undefined && range.range !== null && range.range !== undefined) {
+        this.likeLineChart
+          .x(d3.scaleTime().domain([range.range[0], range.range[1]]))
+          .y(d3.scaleLinear().domain([0, this.getMaxGroupValue()]))
+          .round(d3.timeMonth);
+        this.likeLineChart.redraw();
+      } else {
+        if (!dc.chartRegistry.list().some((c) => c.hasFilter())) {
+          this.likeLineChart
+            .x(d3.scaleTime().domain([d3.min(this.data, (d: any) => new Date(d.publishedAt)),
+              d3.max(this.data, (d: any) => new Date(d.publishedAt))]))
+            .y(d3.scaleLinear().domain([0, this.maxGroupValue]));
         }
       }
     });
@@ -54,17 +74,14 @@ export class HardfactsComponent implements OnInit {
   }
 
   countSongs() {
-    const videoSummAux = [];
-
+    const sentSummAux = [];
     this.data.forEach((d) => {
       let inList = false;
       let countedSongidx = 0;
-      videoSummAux.forEach((sent) => { if (inList === false) { (sent.song === d.song) ? inList = true : countedSongidx++; } });
-      if (!inList) { videoSummAux.push({ song: d.song, artist: d.artist, publishedAt: d.publishedAt, video_key: d.song_id }); }
+      sentSummAux.forEach((sent) => { if (inList === false) { (sent.song === d.song) ? inList = true : countedSongidx++; } });
+      if (!inList) { sentSummAux.push({ song: d.song }); }
     });
-
-    this.videoSummary = videoSummAux;
-    this.nbSongs = videoSummAux.length;
+    this.nbSongs = sentSummAux.length;
   }
 
   // sets the crossfilter dimension
@@ -157,6 +174,47 @@ export class HardfactsComponent implements OnInit {
       case 3:
           return ['#377eb8', '#a8a8a8', '#ff0000'];
     }
+  }
+
+  // Renders line chart (aggregation)
+  renderChart () {
+    this.maxGroupValue = this.getMaxGroupValue();
+    const sentGroupsOrdered = this.reorderGroups();
+    const chartColors = this.defineChartColors();
+    const group1 = sentGroupsOrdered[0];
+    this.likeLineChart
+        .renderArea(true)
+        .width(300)
+        .height(200)
+        .ordinalColors(chartColors)
+        .useViewBoxResizing(true)
+        .dimension(this.dimension)
+        .x(d3.scaleTime().domain([d3.min(this.data, (d: any) => new Date(d.publishedAt)),
+          d3.max(this.data, (d: any) => new Date(d. publishedAt))]))
+        .xAxisLabel('Date')
+        .y(d3.scaleLinear().domain([0, this.maxGroupValue]))
+        .yAxisLabel('Comment Amount')
+        .interpolate('monotone')
+        .legend(dc.legend().x(250).y(10).itemHeight(13).gap(5))
+        .brushOn(true)
+        .group(group1.group, group1.likes)
+        .valueAccessor(function (d) {
+            return d.value;
+        })
+        .xAxis().ticks(4);
+      let maxSent = 0;
+      sentGroupsOrdered.forEach((group) => {
+        if (group.group === group1.group || maxSent === 1) {
+          return;
+        }
+        // stacks the groups
+        this.likeLineChart
+          .stack(group.group, group.likes, function (d) {
+          return d.value;
+        });
+        maxSent++;
+      });
+    this.likeLineChart.render();
   }
 
   // renders the chart
@@ -323,10 +381,10 @@ export class HardfactsComponent implements OnInit {
 
   setVisibilityofViews() {
     if (this.aggrView) {
-      document.getElementById('summary').classList.remove('hide');
+      document.getElementById('likeChartLine').classList.remove('hide');
       document.getElementById('likeChart').classList.add('hide');
     } else if (this.compView) {
-      document.getElementById('summary').classList.add('hide');
+      document.getElementById('likeChartLine').classList.add('hide');
       document.getElementById('likeChart').classList.remove('hide');
     }
   }

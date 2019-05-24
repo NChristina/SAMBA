@@ -11,26 +11,36 @@ import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppRoutingModule } from './/app-routing.module';
 import { NavComponent } from './nav/nav.component';
-import { MatGridListModule, MatCardModule, MatMenuModule,
-  MatIconModule, MatButtonModule, MatToolbarModule, MatSidenavModule,
-  MatListModule, MatCheckboxModule, MatProgressSpinnerModule, MatInputModule, MatButtonToggleModule, MatFormFieldModule } from '@angular/material';
+import { MatGridListModule,
+        MatCardModule,
+        MatMenuModule,
+        MatIconModule,
+        MatButtonModule,
+        MatToolbarModule,
+        MatSidenavModule,
+        MatListModule,
+        MatCheckboxModule,
+        MatProgressSpinnerModule,
+        MatInputModule,
+        MatButtonToggleModule,
+        MatFormFieldModule } from '@angular/material';
 import { LayoutModule } from '@angular/cdk/layout';
 import { MdcDrawerModule,
-    MdcListModule,
-    MdcToolbarModule,
-    MdcIconModule,
-    MdcCardModule,
-    MdcTextFieldModule,
-    MdcFormFieldModule,
-    MdcCheckboxModule,
-    MdcButtonModule,
-    MdcChipsModule,
-    MdcFabModule,
-    MdcElevationModule,
-    MdcSnackbarModule,
-    MdcTypographyModule,
-    MdcSelectModule
-    } from '@angular-mdc/web';
+        MdcListModule,
+        MdcToolbarModule,
+        MdcIconModule,
+        MdcCardModule,
+        MdcTextFieldModule,
+        MdcFormFieldModule,
+        MdcCheckboxModule,
+        MdcButtonModule,
+        MdcChipsModule,
+        MdcFabModule,
+        MdcElevationModule,
+        MdcSnackbarModule,
+        MdcTypographyModule,
+        MdcSelectModule
+        } from '@angular-mdc/web';
 import { TagCloudModule } from 'angular-tag-cloud-module';
 import { DashboardComponent } from './nav/dashboard/dashboard.component';
 import { HardfactsComponent } from './nav/dashboard/hardfacts/hardfacts.component';
@@ -44,6 +54,7 @@ import { LoadingModalComponent } from './nav/loading-modal/loading-modal.compone
 import { LoadingSvgComponent } from './shared/loading-svg/loading-svg.component';
 import { LoginComponent } from './login/login.component';
 import { AuthGuardService } from './shared/auth-guard.service';
+import { EngagementCommentsComponent } from './nav/dashboard/engagement-comments/engagement-comments.component';
 
 @NgModule({
   declarations: [
@@ -59,6 +70,7 @@ import { AuthGuardService } from './shared/auth-guard.service';
     LoadingModalComponent,
     LoadingSvgComponent,
     LoginComponent,
+    EngagementCommentsComponent,
   ],
   imports: [
 

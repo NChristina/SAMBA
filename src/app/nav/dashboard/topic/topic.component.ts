@@ -46,8 +46,8 @@ export class TopicComponent implements OnInit {
       this.listSongs = [];
       this.wordCounted = [];
 
-      this.createWordCloud();
-      this.createLists();
+      // this.createWordCloud();
+      // this.createLists();
     });
 
     this.setVisibilityofViews();
@@ -172,7 +172,7 @@ export class TopicComponent implements OnInit {
   }
 
   reDraw() {
-    this.tagCloudComponent.reDraw();
+    // this.tagCloudComponent.reDraw();
   }
 
   private getColor(sent: number) {
