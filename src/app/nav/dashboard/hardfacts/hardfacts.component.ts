@@ -60,7 +60,11 @@ export class HardfactsComponent implements OnInit {
       let inList = false;
       let countedSongidx = 0;
       videoSummAux.forEach((sent) => { if (inList === false) { (sent.song === d.song) ? inList = true : countedSongidx++; } });
-      if (!inList) { videoSummAux.push({ song: d.song, artist: d.artist, publishedAt: d.publishedAt, video_key: d.song_id }); }
+      if (!inList) {
+        let publishedAtAux = d.publishedAt.split('-');
+        publishedAtAux = publishedAtAux[2] + '.' + publishedAtAux[1] + '.' + publishedAtAux[0];
+        videoSummAux.push({ song: d.song, songFull: d.songFull, artist: d.artist, publishedAt: publishedAtAux, video_key: d.song_id });
+      }
     });
 
     this.videoSummary = videoSummAux;

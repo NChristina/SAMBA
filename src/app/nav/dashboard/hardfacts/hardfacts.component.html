@@ -20,7 +20,7 @@
   <table id="videoTable">
     <tr *ngIf="this.data.length">
       <th>Music - Singer</th>
-      <th>Publish date</th>
+      <th>Published on</th>
       <th class="center">Video</th>
     </tr>
     <ng-container  *ngFor="let video of videoSummary" >
@@ -29,7 +29,7 @@
         <td>{{video.publishedAt}}</td>
         <td>
           <a target="_blank" href="https://www.youtube.com/watch?v={{video.video_key}}">
-            <img height="20px" title="Open '{{video.song}}' on YouTube" src="https://img.youtube.com/vi/{{video.video_key}}/default.jpg" />
+            <img height="20px" title="Open '{{video.songFull}}' on YouTube" src="https://img.youtube.com/vi/{{video.video_key}}/default.jpg" />
           </a>
         </td>
       </tr>
@@ -48,7 +48,7 @@
         <tr class="view_tr" *ngFor="let song of this.getSongsAndComments();">
           <td>{{ song.name }}</td>
           <td>{{ song.comments }}</td>
-          <td><mdc-icon class="thumb_icon">visibility</mdc-icon></td>
+          <td><mdc-icon class="thumb_icon">comment</mdc-icon></td>
         </tr>
       </table>
     </span>
