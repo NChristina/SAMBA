@@ -159,7 +159,9 @@ export class ChartService {
           if (currentNbCommentsSent === 0) { sentx += 1; }
 
           let songShort = '';
-          (title.length > 15) ? songShort = title.substr(0, 12) + '...' : songShort = title;
+          if(title !== undefined) {
+            (title.length > 15) ? songShort = title.substr(0, 12) + '...' : songShort = title;
+          }
 
           dataPoints.push({
             _key: control,              // where the comment key was

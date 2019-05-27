@@ -109,7 +109,7 @@ export class NavComponent implements OnInit {
             this.matchForAdditionalInfo.push(this.searchMatchList[index].versions[childIndex]);
             // console.log('ULULULULULU: ', this.matchForAdditionalInfo);
             this.labelsForChips.push({title: this.matchForAdditionalInfo[this.matchForAdditionalInfo.length - 1].snippet.title,
-              isGroup: false});
+              isGroup: false, id: versionID[0]});
             // console.log('labels: ', this.labelsForChips);
 
             this.chartService.SetData(this.loadedItems, this.matchForAdditionalInfo);
@@ -158,13 +158,39 @@ export class NavComponent implements OnInit {
 
   // removes a song, which was already selected
   // für die chips!!!
+  // das hakal von der checkbox in der suchleiste muss auch entfernt werden!!!
   removeSelectedSong(element, index) {
     console.log('element: ', element);
+    console.log('index: ', index);
     this.loadedItems.splice(index, 1);
     this.labelsForChips.splice(index, 1);
     this.matchForAdditionalInfo.splice(index, 1);
     this.chartService.SetData(this.loadedItems, this.matchForAdditionalInfo);
 
+    if (element.isGroup) {
+      // console.log(this.searchMatchList[index]);
+      let tmp_element = this.searchMatchList[index];
+      this.searchMatchList.splice(index, 1);
+      setTimeout(() => {
+        this.searchMatchList.splice(index, 0, tmp_element);
+      }, 100);
+
+    } else {
+      this.searchMatchList.forEach((e, idx) => {
+        e.versions.forEach((v, i) => {
+          // console.log('at index ', i , ': ', v.id);
+          // console.log(element.id);
+          if (v.id === element.id) {
+            console.log('xxxx: ',  this.searchMatchList[idx].versions[i]);
+            let tmp_element = this.searchMatchList[idx].versions[i];
+            this.searchMatchList[idx].versions.splice(i, 1);
+            setTimeout(() => {
+              this.searchMatchList[idx].versions.splice(i, 0, tmp_element);
+            }, 100);
+          }
+        });
+      });
+    }
   }
   toggleAccordion(index, event) {
     console.log('XXXXX event: ', event);
