@@ -87,7 +87,6 @@ export class NavComponent implements OnInit {
 
             // console.log('ULULULULULU: ', this.matchForAdditionalInfo);
             this.chartService.SetData(this.loadedItems,  this.matchForAdditionalInfo);
-            this.upDateChips(false);
           });
         }
       } else {
@@ -114,7 +113,6 @@ export class NavComponent implements OnInit {
             // console.log('labels: ', this.labelsForChips);
 
             this.chartService.SetData(this.loadedItems, this.matchForAdditionalInfo);
-            this.upDateChips(true);
           });
         }
 
