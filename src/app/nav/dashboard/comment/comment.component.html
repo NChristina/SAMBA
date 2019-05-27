@@ -7,26 +7,20 @@
             <label>&nbsp;of {{ cfilter.size() }} comments</label>
           </form>
 
-          <div class="wrapper" (mouseover)="setTooltipInfo($event, tooltipinfo);" style="float:right;margin:15px 0 0 25px;" class="tooltInfo"> 
-              <img height="30px" style="float:right" src="../../assets/000-info.svg"> 
+          <div class="wrapper" (mouseover)="setTooltipInfo($event, tooltipinfo);" style="float:right;margin:15px 0 0 25px;" class="tooltInfo">
+              <img height="30px" style="float:right" src="../../assets/000-info.svg">
               <span #tooltipinfo class="tooltInfo_text">
                 <p>Based on your selected videos and the time span you selected, you see the comments. You can order the comments by replies, likes and date - ascending or descending. You can also chose the ammount of comments to be rendered.</p>
                 <p>On top of each comment there is the user who wrote it and the date. At the bottom you also see the number of likes, number of replies and the information about the sentiment. You can click on the replies icon to open all replies to a specific comment. The sentiment shows if the comment is positive, neutral, negative or mixed when the same comment is rated as both positive and negative. In general, the sentiment is assessed only for English comments.</p>
                 <p><img height="15px" src="../../assets/010-warning.svg">  The more comments you fetch, the longer it will take to load them.</p>
               </span>
           </div>
-
           <mdc-select #select placeholder="replies desc" ngModel #demoSelectModel="ngModel" name="filter" style="float:right;" (selectionChange)="onSelectionChange($event)">
             <option *ngFor="let fi of filter" [value]="fi.value"> {{ fi.description }} </option>
           </mdc-select>
-
         </div>
-
       <h2>Comments</h2>
-   
   </mat-grid-list>
 </div>
-
 <hr />
-
 <div id="commentSection"></div>

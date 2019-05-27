@@ -16,6 +16,7 @@ export class ChartService {
   private currentChartRange = this.chartRangeSource.asObservable();
   private loggedIn = false;
   private spinner = false;
+  private dataForReset: any;
   // private spinnerObservable: any;
 
   constructor() {
@@ -46,6 +47,7 @@ export class ChartService {
     // hier sagen dass der spinner angeschalten werden muss
     this.spinner = true;
     const newData = this.miniDataStructure(value, additionalInfo);
+    this.dataForReset = newData;
     this.chartDataSource.next(newData);
     this.changeCrossfilter(crossfilter(newData));
     this.spinner = false;
@@ -53,6 +55,12 @@ export class ChartService {
 
   GetData(): Observable<any[]> {
     return this.currentChartData;
+  }
+
+  reloadForResetFilters() {
+    // this.chartDataSource.next(this.dataForReset);
+    this.changeCrossfilter(crossfilter(this.dataForReset));
+
   }
 
   // informs all crossfilter subscribers that the crossfilter variable has changed
