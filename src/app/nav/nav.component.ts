@@ -32,6 +32,11 @@ export class NavComponent implements OnInit {
 
   }
 
+  resetFilters(){
+    console.log('call chart service and reset all filters');
+    this.chartService.reloadForResetFilters();
+  }
+
 
   submitQuickSearch(value: string) {
     if (value) {
@@ -82,7 +87,6 @@ export class NavComponent implements OnInit {
 
             // console.log('ULULULULULU: ', this.matchForAdditionalInfo);
             this.chartService.SetData(this.loadedItems,  this.matchForAdditionalInfo);
-            this.upDateChips(false);
           });
         }
       } else {
@@ -105,11 +109,10 @@ export class NavComponent implements OnInit {
             this.matchForAdditionalInfo.push(this.searchMatchList[index].versions[childIndex]);
             // console.log('ULULULULULU: ', this.matchForAdditionalInfo);
             this.labelsForChips.push({title: this.matchForAdditionalInfo[this.matchForAdditionalInfo.length - 1].snippet.title,
-              isGroup: false});
+              isGroup: false, id: versionID[0]});
             // console.log('labels: ', this.labelsForChips);
 
             this.chartService.SetData(this.loadedItems, this.matchForAdditionalInfo);
-            this.upDateChips(true);
           });
         }
 
@@ -153,49 +156,41 @@ export class NavComponent implements OnInit {
     }
   }
 
-  upDateChips(single) {
-    // console.log('items to show in chips: ', this.loadedItems);
-    // console.log('is single: ', single);
-    // console.log('OLOLOLOL: ', this.loadedItems[0][0].data[0].snippet.title);
-    // // if (checkbox.target.checked) {
-    //     if (this.selectedList.length === 8) {
-    //       const snackBar = this.snackbar.show('You can only pick 8 songs', 'OK', {});
-    //       return;
-    //     }
-
-    //     if(single) {
-    //       this.selectedList.push(this.loadedItems[this.loadedItems.length - 1][0]);
-    //       console.log('loadedItems: ', this.loadedItems);
-
-    //       console.log('loadedItems[this.loadedItems.length - 1]: ', this.loadedItems[this.loadedItems.length - 1]);
-    //       console.log('selectedList: ', this.selectedList);
-
-    //     } else {
-    //       this.selectedList.push(this.loadedItems[this.loadedItems.length - 1][0]);
-    //       console.log('selectedList: ', this.selectedList);
-    //     }
-
-    //     this.selectedList.push(this.searchMatchList[index].data);
-    //   // } else {
-    //   //   this.selectedList.forEach((song, i) => {
-    //   //     if (song.data[0]._id === this.searchMatchList[index].data.data[0]._id) {
-    //   //       this.selectedList.splice(i, 1);
-    //   //       console.log('this.selectedList: ', this.selectedList);
-    //   //     }
-    //   //   });
-    //   // }
-
-  }
-
   // removes a song, which was already selected
   // für die chips!!!
+  // das hakal von der checkbox in der suchleiste muss auch entfernt werden!!!
   removeSelectedSong(element, index) {
     console.log('element: ', element);
+    console.log('index: ', index);
     this.loadedItems.splice(index, 1);
     this.labelsForChips.splice(index, 1);
     this.matchForAdditionalInfo.splice(index, 1);
     this.chartService.SetData(this.loadedItems, this.matchForAdditionalInfo);
 
+    if (element.isGroup) {
+      // console.log(this.searchMatchList[index]);
+      let tmp_element = this.searchMatchList[index];
+      this.searchMatchList.splice(index, 1);
+      setTimeout(() => {
+        this.searchMatchList.splice(index, 0, tmp_element);
+      }, 100);
+
+    } else {
+      this.searchMatchList.forEach((e, idx) => {
+        e.versions.forEach((v, i) => {
+          // console.log('at index ', i , ': ', v.id);
+          // console.log(element.id);
+          if (v.id === element.id) {
+            console.log('xxxx: ',  this.searchMatchList[idx].versions[i]);
+            let tmp_element = this.searchMatchList[idx].versions[i];
+            this.searchMatchList[idx].versions.splice(i, 1);
+            setTimeout(() => {
+              this.searchMatchList[idx].versions.splice(i, 0, tmp_element);
+            }, 100);
+          }
+        });
+      });
+    }
   }
   toggleAccordion(index, event) {
     console.log('XXXXX event: ', event);

@@ -83,11 +83,13 @@
         {{element.title}}
         <mdc-chip-icon *ngIf="!element.isGroup" leading>person</mdc-chip-icon>
         <mdc-chip-icon *ngIf="element.isGroup" leading>group</mdc-chip-icon>
-
-
         <mdc-chip-icon trailing>cancel</mdc-chip-icon>
       </mdc-chip>
     </mdc-chip-set>
+    <div class="flexBtnContainer">
+      <span flex></span>
+      <button class="correctResetBtn" mat-raised-button trailing color="primary" (click)="resetFilters()">RESET FILTERS<mat-icon>refresh</mat-icon></button>
+    </div>
     <div class="contentmargin">
       <app-dashboard></app-dashboard>
     </div>

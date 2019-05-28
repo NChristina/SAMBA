@@ -16,6 +16,7 @@ export class ChartService {
   private currentChartRange = this.chartRangeSource.asObservable();
   private loggedIn = false;
   private spinner = false;
+  private dataForReset: any;
   // private spinnerObservable: any;
 
   constructor() {
@@ -46,6 +47,7 @@ export class ChartService {
     // hier sagen dass der spinner angeschalten werden muss
     this.spinner = true;
     const newData = this.miniDataStructure(value, additionalInfo);
+    this.dataForReset = newData;
     this.chartDataSource.next(newData);
     this.changeCrossfilter(crossfilter(newData));
     this.spinner = false;
@@ -53,6 +55,12 @@ export class ChartService {
 
   GetData(): Observable<any[]> {
     return this.currentChartData;
+  }
+
+  reloadForResetFilters() {
+    // this.chartDataSource.next(this.dataForReset);
+    this.changeCrossfilter(crossfilter(this.dataForReset));
+
   }
 
   // informs all crossfilter subscribers that the crossfilter variable has changed
@@ -151,13 +159,15 @@ export class ChartService {
           if (currentNbCommentsSent === 0) { sentx += 1; }
 
           let songShort = '';
-          (title.length > 15) ? songShort = title.substr(0, 12) + '...' : songShort = title;
+          if (title !== undefined) {
+              (title.length > 15) ? songShort = title.substr(0, 12) + '...' : songShort = title;
+          }
 
           dataPoints.push({
             _key: control,              // where the comment key was
             authorDisplayName: null,    // author display name of comment
-            likeCount: null,            // like count of comment
-            replyCount: null,           // reply count of comment
+            likeCount: 0,            // like count of comment
+            replyCount: 0,           // reply count of comment
             publishedAt: date.publishedAt,
             text: null,                 // text of the comment
             song: songShort,            // *** song title of the commented song (max 15 char)
@@ -182,6 +192,8 @@ export class ChartService {
     dataPoints.sort((a, b) => {
       return new Date(a.publishedAt) > new Date(b.publishedAt) ? -1 : 1;
     });
+    console.log('old data structure: ', data);
+    console.log('new data structure: ', dataPoints);
 
     return dataPoints;
   }

@@ -3,7 +3,6 @@ import * as crossfilter from 'crossfilter';
 import * as dc from 'dc';
 import { ChartService } from '../services/chart.service';
 import { FormControl } from '@angular/forms';
-import { MdcCheckbox, MdcSnackbar, MdcTextField } from '@angular-mdc/web';
 
 @Component({
   selector: 'app-comment',
@@ -39,6 +38,7 @@ export class CommentComponent implements OnInit {
     // crossfilter is needed to view the comments which are selected in any chart
     this.chartService.getCrossfilter().subscribe((filter) => {
       this.cfilter = filter;
+      console.log('Filter data: ', filter);
       this.setDimension();
       this.renderCommentTable();
     });
@@ -71,6 +71,7 @@ export class CommentComponent implements OnInit {
     this.commentTable
       .dimension(this.dimension)
       .group(function (d) {
+        console.log('Group: ', d);
         return d.value;
       })
       .html((d) => {
@@ -92,8 +93,7 @@ export class CommentComponent implements OnInit {
           <div class="bottom-comment" style="float: left; margin-left: 15px"> ` +
             d.likeCount + `
             <img src="../../../../assets/002-like.svg" height="15px" "class="iconStyle" style="margin: 0px 5px 0px 5px"> |
-            <a style="text-decoration: none; cursor: pointer;" class="accordion" id="replyCount_` + d._key + `"> ` +
-              d.replies.length + `
+            <a style="text-decoration: none; cursor: pointer;" class="accordion" id="replyCount_` + d._key + `">
               <img src="../../../../assets/001-reply.svg" height="15px" class="iconStyle" style="margin: 0px 5px 0px 5px">
               <img src="../../../../assets/010-down.svg" height="15px" id="iDown_` + d._key + `" style="display:inline;margin: 0px 3px">
               <img src="../../../../assets/010-up.svg" height="15px" id="iUp_` + d._key + `" style="display:none;margin: 0px 3px">
@@ -110,23 +110,23 @@ export class CommentComponent implements OnInit {
           <div class="panelAc" id="replyPanel_` + d._key + `" style="display: none; margin-top: 40px;">
         `;
 
-        d.replies.forEach( reply => {
-          html += `
-              <hr>
-              <div style="padding: 10px 10px 30px 50px">
-                <div class="post-heading">
-                  <div class="comment-author">
-                    <img src="../../../../assets/user.svg" style ="height: 20px; margin: 0px 5px -5px 0px">` +
-                    reply.snippet.authorDisplayName + ` | ` + this.dateTimeParser(reply.snippet.publishedAt) + `
-                  </div>
-                </div>
-                <p class="comment-text" style="color: black"> ` + reply.snippet.textDisplay + ` </p>
-                <div class="bottom-comment" style="float: left; margin-left: 15px"> ` +
-                  reply.snippet.likeCount + `
-                  <img src="../../../../assets/002-like.svg" height="15px" "class="iconStyle" style="margin: 0px 5px 0px 5px">
-                </div>
-              </div>`;
-        });
+        // d.replies.forEach( reply => {
+        //   html += `
+        //       <hr>
+        //       <div style="padding: 10px 10px 30px 50px">
+        //         <div class="post-heading">
+        //           <div class="comment-author">
+        //             <img src="../../../../assets/user.svg" style ="height: 20px; margin: 0px 5px -5px 0px">` +
+        //             reply.snippet.authorDisplayName + ` | ` + this.dateTimeParser(reply.snippet.publishedAt) + `
+        //           </div>
+        //         </div>
+        //         <p class="comment-text" style="color: black"> ` + reply.snippet.textDisplay + ` </p>
+        //         <div class="bottom-comment" style="float: left; margin-left: 15px"> ` +
+        //           reply.snippet.likeCount + `
+        //           <img src="../../../../assets/002-like.svg" height="15px" "class="iconStyle" style="margin: 0px 5px 0px 5px">
+        //         </div>
+        //       </div>`;
+        // });
         html += `
             </div>
             </div>
@@ -264,9 +264,11 @@ export class CommentComponent implements OnInit {
 
   // converts the published date into a viewable format (looks better :))
   private dateTimeParser (publishedDate: string) {
-    const date = publishedDate.split('T')[0];
-    const time = publishedDate.split('T')[1].split('.')[0];
-    return date + ' ' + time;
+    console.log('yyyy: ', publishedDate);
+    // const date = publishedDate.split('T')[0];
+    // const time = publishedDate.split('T')[1].split('.')[0];
+    // return date + ' ' + time;
+    return publishedDate;
   }
 
   buildSentimentBox() {
