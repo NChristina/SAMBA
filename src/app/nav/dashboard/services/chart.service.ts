@@ -138,7 +138,7 @@ export class ChartService {
 
       tmp_song.aggregations.forEach( date => {
         // console.log('language obj: ', date.languageDistribution);
-        // console.log('date ', date.sentimentDistribution[0]);
+        // console.log('date ', tmp_song.aggregations);
         const mSentiment = this.fixSentimentData(date.sentimentDistribution[0]);
 
         let lidx = 0;
