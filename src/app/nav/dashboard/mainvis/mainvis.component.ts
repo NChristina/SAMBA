@@ -148,22 +148,7 @@ export class MainvisComponent implements OnInit {
       .yAxisLabel('Comment Amount')
       .shareTitle(true)
       .compose(this.lineCharts);
-      // .on('pretransition', function(chart) {
-      //   chart.selectAll('g.row')
-      //     .call(this.rowtip)
-      //     .on('mouseover', this.rowtip.show)
-      //     .on('mouseout', this.rowtip.hide);
 
-      // });
-
-
-
-    //   chart.on('pretransition', function(chart) {
-    //     chart.selectAll('g.row')
-    //         .call(rowtip)
-    //         .on('mouseover', rowtip.show)
-    //         .on('mouseout', rowtip.hide);
-    // });
 
     // sends data to the language chart component on brush-filtering //
     this.compositeChart.on('filtered', (chart, filter) => {
@@ -174,6 +159,8 @@ export class MainvisComponent implements OnInit {
       }
       // console.log('value of maxGroupValue: ', this.maxGroupValue);
       this.compositeChart.y(d3.scaleLinear().domain([0, this.maxGroupValue]));
+      console.log('filter: ', filter);
+      console.log('chart: ', chart);
       this.chartService.setChartRange({range: filter, chart: chart});
     });
     this.compositeChart.render();
@@ -278,6 +265,10 @@ export class MainvisComponent implements OnInit {
     this.compositeChart.x(
       d3.scaleTime().domain([this.chartRange1, this.chartRange2])
     );
+     this.chartService.setChartRange({range: [this.chartRange1, this.chartRange2], chart: this.compositeChart});
+
+    // this.chartService.setChartRange({range: filter, chart: chart});
+
     this.compositeChart.redraw();
   }
   // sets the last displayed date of the x-axis

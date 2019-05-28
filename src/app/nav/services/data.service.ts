@@ -53,4 +53,9 @@ export class DataService {
     console.log('entered loadMockData');
     return this.httpClient.get('../../../assets/newMockData.json') as any;
   }
+
+  getComments(): Observable<any[]> {
+    console.log('send me the new comments pls');
+    return this.httpClient.get('../../../assets/newMockData.json') as any;
+  }
 }
