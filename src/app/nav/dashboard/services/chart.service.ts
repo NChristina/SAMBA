@@ -44,7 +44,6 @@ export class ChartService {
   // get and set of the data, the observable broadcasts the changed data to all its subscribers
   // the function sets also the crossfilter
   SetData(value: any[], additionalInfo: any[]) {
-    console.log('setData was triggered...');
     this.spinner = true;
     const newData = this.miniDataStructure(value, additionalInfo);
     this.dataForReset = newData;
@@ -54,7 +53,6 @@ export class ChartService {
   }
 
   GetData(): Observable<any[]> {
-    console.log('getData was triggered...');
     return this.currentChartData;
   }
 
@@ -66,24 +64,20 @@ export class ChartService {
 
   // informs all crossfilter subscribers that the crossfilter variable has changed
   changeCrossfilter(filter: CrossFilter.CrossFilter<{}>) {
-    console.log('the crossfilter has changed...');
     this.cfilterSource.next(filter);
   }
 
   // function, which is used to subscribe to the crossfilter
   getCrossfilter(): Observable<CrossFilter.CrossFilter<{}>> {
-    console.log('getCrossfilter was triggered...');
     return this.currentCfilter;
   }
 
   // is used to tell an subscriber if the size of view has changed
   getChartRange(): Observable<any> {
-    console.log('mimi');
     return this.currentChartRange;
   }
 
   setChartRange(range) {
-    console.log('setChartRange() was triggered');
     this.chartRangeSource.next(range);
   }
 

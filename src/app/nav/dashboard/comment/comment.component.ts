@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import * as crossfilter from 'crossfilter';
 import * as dc from 'dc';
 import { ChartService } from '../services/chart.service';
@@ -11,6 +11,22 @@ import { DataService } from '../../services/data.service';
   styleUrls: ['./comment.component.scss'],
 })
 export class CommentComponent implements OnInit {
+  @Input() ids: any;
+  @Input() startDate: any;
+  @Input() endDate: any;
+
+  // @Input() idsForChild: any;
+  // @Input() startDateForChild: any;
+  // @Input() endDateForChild: any;
+  nbComments = 25; // default
+  order = 'repliesDesc'; // default
+
+  // what i need in this component:
+  // start date & end date & ids of all elements at the beginning
+  // all the rest i get from get chartrange
+
+
+
   whatOrder = 0;
 
   filter = [
@@ -28,11 +44,26 @@ export class CommentComponent implements OnInit {
   }
 
   ngOnInit() {
+    console.log(this.ids);
     this.chartService.getChartRange().subscribe( data => {
       console.log('COMMENT -- I RECEIVED RANGE CHANGE: ', data);
-      this.dataService.getComments().subscribe( result => {
-        // console.log('COMMENT: ', result);
-      });
+      console.log('miep: ', this.ids);
+      // if(this.startDate !== null && this.endDate !== null && this.ids.length > 0) {
+      //   this.dataService.getComments(this.nbComments, this.order, this.ids, this.startDate, this.endDate).subscribe( result => {
+      //     console.log('COMMENT: ', result);
+
+      //   });
+      // }
+    });
+
+    this.chartService.getCrossfilter().subscribe( d => {
+      console.log('crossfilter: ', d.dimension.length);
+      console.log('troll: ', this.ids);
+    });
+
+    this.chartService.GetData().subscribe((data) => {
+      console.log('subscription of getData.... ', data);
+      console.log('are the ids already there? ', this.ids);
     });
   }
 

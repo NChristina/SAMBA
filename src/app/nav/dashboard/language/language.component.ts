@@ -31,7 +31,6 @@ export class LanguageComponent implements OnInit {
     this.languageChart = dc.lineChart('#languageGraph');
     this.barChart = dc.barChart('#languageBarGraph');
     this.chartService.getCrossfilter().subscribe((filter) => {
-      console.log('LANGUAGE 1');
       this.cfilter = filter;
       this.setDimension();
       this.setBarDimension();
@@ -56,14 +55,12 @@ export class LanguageComponent implements OnInit {
 
     // gets the range through the chart service from the mainVis Component
     this.chartService.getChartRange().subscribe((range) => {
-      console.log('LANGUAGE 2');
       if (this.data !== undefined && range.range !== null && range.range !== undefined) {
         (this.diff_months(range.range[0], range.range[1]) < 2) ? this.notDataWarn = true : this.notDataWarn = false;
         this.languageChart
           .x(d3.scaleTime().domain([range.range[0], range.range[1]]))
           .y(d3.scaleLinear().domain([0, this.getMaxGroupValue()]))
           .round(d3.timeMonth);
-          console.log('LANGUAGE 3');
         this.languageChart.redraw();
 
       } else {

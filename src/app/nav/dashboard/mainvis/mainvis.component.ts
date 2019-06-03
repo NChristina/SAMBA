@@ -265,10 +265,8 @@ export class MainvisComponent implements OnInit {
     this.compositeChart.x(
       d3.scaleTime().domain([this.chartRange1, this.chartRange2])
     );
-     this.chartService.setChartRange({range: [this.chartRange1, this.chartRange2], chart: this.compositeChart});
-
-    // this.chartService.setChartRange({range: filter, chart: chart});
-
+    // this to set the new range for the other graphs
+    this.chartService.setChartRange({range: [this.chartRange1, this.chartRange2], chart: this.compositeChart});
     this.compositeChart.redraw();
   }
   // sets the last displayed date of the x-axis

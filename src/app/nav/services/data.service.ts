@@ -16,6 +16,7 @@ export class DataService {
   private p_db_name = AppConstants.DB_NAME;
   private p_auth_name = AppConstants.AUTH_NAME;
   private p_auth_password = AppConstants.AUTH_PASSWORD;
+  private videoIds = [];
 
 // put this on another file and put it in gitignore
 // when rebase, ask alexis to change the credentials
@@ -29,10 +30,17 @@ export class DataService {
     this.requestService = this.db.route('quickSearch', {  });
   }
 
-  // implement the new endpoints right in here
-  // search
-  // song details
-  // comments
+  setVideoIds(ids) {
+    // this.videoIds = ids;
+    console.log('ids in data service: ', ids);
+    // ids.forEach(element => {
+    //   element.videoIds.forEach(version => {
+    //     this.videoIds.push(version);
+
+    //   });
+    // });
+    // console.log('???: ', this.videoIds);
+  }
 
   search(value: string): Promise<any> {
     const search = value.replace(' ', '%20');
@@ -54,7 +62,8 @@ export class DataService {
     return this.httpClient.get('../../../assets/newMockData.json') as any;
   }
 
-  getComments(): Observable<any[]> {
+  getComments(nbComments: number, order: String, ids: String[], startDate: any, endDate: any): Observable<any[]> {
+
     console.log('send me the new comments pls');
     return this.httpClient.get('../../../assets/newMockData.json') as any;
   }
