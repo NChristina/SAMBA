@@ -27,10 +27,11 @@
   <div *ngFor="let comment of receivedComments" class="commentPanel">
       <div class="post-heading">
           <div class="comment-author">
+            <a href="{{'https://www.youtube.com/watch?v=' + comment.versionID + '&lc=' + comment.commentID}}" class="dateTime" target="_blank">
             <img src="../../../../assets/user.svg" class="userIcon">
-            {{comment.commentAuthor}}
-            <a href="#" style="text-decoration:none; color:#acb4c2" target="_blank"> {{comment.dateTime}} </a>
-            <a href="#" style="float:right; margin-right:30px; font-weight:bold; text-decoration:none; color:#acb4c2" target="_blank">
+            {{comment.commentAuthor}} |
+            {{comment.dateTime}} </a>
+            <a href="{{'https://www.youtube.com/watch?v=' + comment.versionID}}" class="songInterpret" target="_blank">
               {{comment.interpret}} - {{comment.songName}}
             </a>
           </div>
@@ -46,37 +47,5 @@
   </div>
 </div>
 
-<!-- <div style="box-shadow: rgba(0, 0, 0, 0.3) 7px 7px 7px; padding: 20px 5px 30px 5px">
-    <div class="post-heading">
-      <div class="comment-author">
-        <img src="../../../../assets/user.svg" style ="height: 20px; margin: 0px 5px -5px 0px"> ` + d.authorDisplayName +
-        ` | <a href="https://www.youtube.com/watch?v=` + d.video_key + `&lc=` + d._key +
-        `" style="text-decoration:none; color:#acb4c2" target="_blank">
-        ` + this.dateTimeParser(d.publishedAt) + `
-        <a href="https://www.youtube.com/watch?v=` + d.video_key +
-        `" style="float:right; margin-right:30px; font-weight:bold; text-decoration:none; color:#acb4c2" target="_blank">
-          ` + d.artist + ` - ` + d.song + `
-        </a>
-      </div>
-    </div>
-    <p class="comment-text">` + d.text + ` </p>
-    <div class="bottom-comment" style="float: left; margin-left: 15px"> ` +
-      d.likeCount + `
-      <img src="../../../../assets/002-like.svg" height="15px" "class="iconStyle" style="margin: 0px 5px 0px 5px"> |
-      <a style="text-decoration: none; cursor: pointer;" class="accordion" id="replyCount_` + d._key + `">
-        <img src="../../../../assets/001-reply.svg" height="15px" class="iconStyle" style="margin: 0px 5px 0px 5px">
-        <img src="../../../../assets/010-down.svg" height="15px" id="iDown_` + d._key + `" style="display:inline;margin: 0px 3px">
-        <img src="../../../../assets/010-up.svg" height="15px" id="iUp_` + d._key + `" style="display:none;margin: 0px 3px">
-      </a> |
-      <a style="text-decoration: none; cursor: pointer;" class="sentBttn" id="sentBttn_` + d._key + `">
-        ` + this.getSentiment(d.analysis, 'mean') + `
-      </a>
-      <div class="pSt" id="pSt_` + d._key + `" style="display:none; background:#aaa; color:#fff; font-size:0.8em; padding:1px 5px;">
-        NLTK: ` + this.getSentiment(d.analysis, 'nltk') +
-        ` | TextBlob: ` + this.getSentiment(d.analysis, 'blob') +
-        ` | AFINN: ` + this.getSentiment(d.analysis, 'afinn') + `
-      </div>
-    </div>
-    <div class="panelAc" id="replyPanel_` + d._key + `" style="display: none; margin-top: 40px;">
-   -->
+
 
