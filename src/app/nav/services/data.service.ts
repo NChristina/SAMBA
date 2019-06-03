@@ -24,15 +24,16 @@ export class DataService {
     this.db = new Database({
       url: this.p_url
     });
+    console.log('am i called from the beginning?');
     this.db.useDatabase(this.p_db_name);
     this.db.useBasicAuth(this.p_auth_name, this.p_auth_password);
     this.service = this.db.route('search', {  });
     this.requestService = this.db.route('quickSearch', {  });
   }
 
-  setVideoIds(ids) {
+  // setVideoIds(ids) {
     // this.videoIds = ids;
-    console.log('ids in data service: ', ids);
+    // console.log('ids in data service: ', ids);
     // ids.forEach(element => {
     //   element.videoIds.forEach(version => {
     //     this.videoIds.push(version);
@@ -40,7 +41,7 @@ export class DataService {
     //   });
     // });
     // console.log('???: ', this.videoIds);
-  }
+  // }
 
   search(value: string): Promise<any> {
     const search = value.replace(' ', '%20');
@@ -62,9 +63,15 @@ export class DataService {
     return this.httpClient.get('../../../assets/newMockData.json') as any;
   }
 
-  getComments(nbComments: number, order: String, ids: String[], startDate: any, endDate: any): Observable<any[]> {
+  getComments(nbComments: number, order: String, ids: String[], startDate: any, endDate: any): Promise<any>{
 
     console.log('send me the new comments pls');
-    return this.httpClient.get('../../../assets/newMockData.json') as any;
+    console.log(nbComments);
+    console.log(order);
+    console.log(ids);
+    console.log(startDate);
+    console.log(endDate);
+    return this.requestService.get('comments/' + JSON.stringify(ids));
+    // return this.httpClient.get('../../../assets/newMockData.json') as any;
   }
 }

@@ -12,42 +12,41 @@ import { DataService } from '../../services/data.service';
 })
 export class CommentComponent implements OnInit {
   @Input() ids: any;
-  @Input() startDate: any;
-  @Input() endDate: any;
+  @Input() totalComments: any;
+  testStart: any;
+  testEnd: any;
+  doNotUseDefaultOnDate = false;
 
-  // @Input() idsForChild: any;
-  // @Input() startDateForChild: any;
-  // @Input() endDateForChild: any;
   nbComments = 25; // default
   order = 'repliesDesc'; // default
 
-  // what i need in this component:
-  // start date & end date & ids of all elements at the beginning
-  // all the rest i get from get chartrange
-
-
-
-  whatOrder = 0;
+  receivedComments: any;
 
   filter = [
-    { value: 'replies desc', description: 'replies desc'},
-    { value: 'replies asc', description: 'replies asc'},
-    { value: 'likes desc', description: 'likes desc'},
-    { value: 'likes asc', description: 'likes asc'},
-    { value: 'date desc', description: 'date desc'},
-    { value: 'date asc', description: 'date asc' },
+    { value: 'replies desc', description: 'repliesDesc'},
+    { value: 'replies asc', description: 'repliesAsc'},
+    { value: 'likes desc', description: 'likesDesc'},
+    { value: 'likes asc', description: 'likesAsc'},
+    { value: 'date desc', description: 'dateDesc'},
+    { value: 'date asc', description: 'dateAsc' },
   ];
   foodControl = new FormControl();
 
   constructor(private chartService: ChartService, private dataService: DataService) {
-
   }
 
   ngOnInit() {
     console.log(this.ids);
+    console.log('LULULULUL: ', this.totalComments);
     this.chartService.getChartRange().subscribe( data => {
       console.log('COMMENT -- I RECEIVED RANGE CHANGE: ', data);
-      console.log('miep: ', this.ids);
+      if (data.range !== undefined) {
+        this.testStart = data.range[0];
+        this.testEnd = data.range[1];
+        console.log('we have the filtered range: ', this.testStart, ' to ', this.testEnd);
+
+
+      }
       // if(this.startDate !== null && this.endDate !== null && this.ids.length > 0) {
       //   this.dataService.getComments(this.nbComments, this.order, this.ids, this.startDate, this.endDate).subscribe( result => {
       //     console.log('COMMENT: ', result);
@@ -56,14 +55,37 @@ export class CommentComponent implements OnInit {
       // }
     });
 
-    this.chartService.getCrossfilter().subscribe( d => {
-      console.log('crossfilter: ', d.dimension.length);
-      console.log('troll: ', this.ids);
-    });
+    // this.chartService.getCrossfilter().subscribe( d => {
+    //   console.log('crossfilter: ', d.dimension.length);
+    //   console.log('troll: ', this.ids);
+
+    // });
 
     this.chartService.GetData().subscribe((data) => {
       console.log('subscription of getData.... ', data);
       console.log('are the ids already there? ', this.ids);
+
+      if (data[0] !== undefined) {
+        this.testStart = new Date(data[0].publishedAt);
+        this.testEnd = new Date(data[data.length - 1].publishedAt);
+
+        console.log('first date: ', this.testStart);
+        console.log('last date: ', this.testEnd);
+      }
+    });
+  }
+
+  fetchComments() {
+    console.log('fetchhhhh');
+    console.log('current ids: ', this.ids);
+    console.log('currentfilter: ', this.order);
+    // this.dataService.getComments(this.nbComments, this.order, this.ids, this.testStart, this.testEnd).subscribe( result => {
+    //   console.log('COMMENT: ', result);
+    // });
+    this.dataService.getComments(this.nbComments, this.order, this.ids, this.testStart, this.testEnd).then((results) => {
+      this.receivedComments = results.body[0].comments;
+      console.log('COMMENTS: ', results);
+
     });
   }
 
@@ -192,39 +214,28 @@ export class CommentComponent implements OnInit {
 
     switch (event.value) {
       case 'replies desc':
-      this.whatOrder = 0;
-      // this.orderDataAfterCurrentCriteria();
-      // this.renderCommentTable();
+      this.order = this.filter[0].description;
       break;
 
       case 'replies asc':
-      this.whatOrder = 1;
-      // this.orderDataAfterCurrentCriteria();
-      // this.renderCommentTable();
+      this.order = this.filter[1].description;
       break;
 
       case 'likes desc':
-      this.whatOrder = 2;
-      // this.orderDataAfterCurrentCriteria();
-      // this.renderCommentTable();
+      this.order = this.filter[2].description;
+
       break;
 
       case 'likes asc':
-      this.whatOrder = 3;
-      // this.orderDataAfterCurrentCriteria();
-      // this.renderCommentTable();
+      this.order = this.filter[3].description;
       break;
 
       case 'date desc':
-      this.whatOrder = 4;
-      // this.orderDataAfterCurrentCriteria();
-      // this.renderCommentTable();
+      this.order = this.filter[4].description;
       break;
 
       case 'date asc':
-      this.whatOrder = 5;
-      // this.orderDataAfterCurrentCriteria();
-      // this.renderCommentTable();
+      this.order = this.filter[5].description;
       break;
 
     }

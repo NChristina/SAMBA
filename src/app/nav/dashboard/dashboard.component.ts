@@ -9,8 +9,7 @@ import { ChartService } from './services/chart.service';
 })
 export class DashboardComponent implements OnInit {
   @Input() idsForChild: any;
-  @Input() startDateForChild: any;
-  @Input() endDateForChild: any;
+  @Input() totalCommentsForChild: any;
 
   aaa: any;
   bbb: any;

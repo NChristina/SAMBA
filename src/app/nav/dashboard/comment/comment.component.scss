@@ -204,6 +204,8 @@ margin-left: 50px;
 
 .filterComp {
   margin-top:-5px;
+  float:right;
+  top:0;
 }
 // .iconStyle {
 //   height: 15px;
@@ -227,7 +229,7 @@ input {
 
 .tooltInfo:hover .tooltInfo_text {
   visibility: visible;
-  opacity: 1; 
+  opacity: 1;
 }
 
 .tooltInfo_text {
@@ -247,4 +249,13 @@ input {
   transition: opacity 0.3s;
   top: -30%;
   left: -20px;
+}
+
+.commentPanel {
+  box-shadow: rgba(0, 0, 0, 0.3) 7px 7px 7px;
+  padding: 20px 5px 30px 5px;
+}
+.userIcon {
+  height: 20px;
+  margin: 0px 5px -5px 0px;
 }

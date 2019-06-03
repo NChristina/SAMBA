@@ -26,8 +26,7 @@ export class NavComponent implements OnInit {
   // endDateForchild: any;
 
   idsForChild = [];
-  startDateForChild = 'lul';
-  endDateForchild = 'lul';
+  totalCommentsForChild = 0;
 
 
 
@@ -89,7 +88,9 @@ export class NavComponent implements OnInit {
             this.labelsForChips.push({title: this.matchForAdditionalInfo[this.matchForAdditionalInfo.length - 1].title + ' - '
             + this.matchForAdditionalInfo[this.matchForAdditionalInfo.length - 1].artist, isGroup: true});
             this.chartService.SetData(this.loadedItems,  this.matchForAdditionalInfo);
-            this.dataService.setVideoIds(this.loadedItems);
+            console.log('äääh: ', this.matchForAdditionalInfo);
+            this.createTotalComments();
+            // this.dataService.setVideoIds(this.loadedItems);
           });
         }
       } else {
@@ -115,7 +116,7 @@ export class NavComponent implements OnInit {
             this.labelsForChips.push({title: this.matchForAdditionalInfo[this.matchForAdditionalInfo.length - 1].snippet.title,
               isGroup: false, id: versionID[0]});
             this.chartService.SetData(this.loadedItems, this.matchForAdditionalInfo);
-            this.dataService.setVideoIds(this.loadedItems);
+            // this.dataService.setVideoIds(this.loadedItems);
           });
         }
 
@@ -199,8 +200,8 @@ export class NavComponent implements OnInit {
 
   }
   toggleAccordion(index, event) {
-    console.log('XXXXX event: ', event);
-    console.log('accordion.....was toggled with index ', index, ' and the event is: ', event);
+    // console.log('XXXXX event: ', event);
+    // console.log('accordion.....was toggled with index ', index, ' and the event is: ', event);
     let element = document.getElementById('accordion_' + index);
     let panel = document.getElementById('panel_' + index);
     let img = document.getElementById('img_' + index);
@@ -232,5 +233,15 @@ export class NavComponent implements OnInit {
       });
     }
     // console.log('xxxx: ', this.idsForChild);
+  }
+  createTotalComments() {
+    this.searchMatchList.forEach( e => {
+      // console.log('1_1: ', +e.versions[0].statistics.commentCount);
+      e.versions.forEach( v => {
+        let num = +v.statistics.commentCount;
+        this.totalCommentsForChild = this.totalCommentsForChild + num;
+      });
+    });
+    console.log('totalComments: ', this.totalCommentsForChild);
   }
 }
