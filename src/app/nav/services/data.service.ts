@@ -17,6 +17,9 @@ export class DataService {
   private p_auth_name = AppConstants.AUTH_NAME;
   private p_auth_password = AppConstants.AUTH_PASSWORD;
   private videoIds = [];
+  private baseURL = 'https://jukebox.fhstp.ac.at/';
+  private serviceName = 'quickSearch/';
+  private dbName = 'ForTunesV0_1/';
 
 // put this on another file and put it in gitignore
 // when rebase, ask alexis to change the credentials
@@ -51,11 +54,17 @@ export class DataService {
   quickSearch(value: string): Promise<any> {
     const search = value.replace(' ', '%20');
     return this.requestService.get('quickSearch/' + search);
+    // return this.httpClient.get( this.baseURL + this.dbName + this.serviceName + 'quickSearch/' + search);
+
+    // return this.httpClient.get( 'https://jukebox.fhstp.ac.at:8531/_db/ForTunesV0_1/quickSearch/quickSearch/'  + search);
+
   }
 
   songDetails(value: string[]): Promise<any> {
     // return this.requestService.get('songDetails/' + JSON.stringify(value));
     return this.requestService.get('songAggregations/' + JSON.stringify(value));
+    // return this.httpClient.get('https://jukebox.fhstp.ac.at/quickSearch' + search);
+
   }
 
   songDetailsMock(): Observable<any[]> {

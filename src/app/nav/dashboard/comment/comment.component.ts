@@ -71,6 +71,7 @@ export class CommentComponent implements OnInit {
 
         console.log('first date: ', this.testStart);
         console.log('last date: ', this.testEnd);
+        this.fetchComments();
       }
     });
   }
