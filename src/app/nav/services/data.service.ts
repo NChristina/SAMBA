@@ -16,6 +16,10 @@ export class DataService {
   private p_db_name = AppConstants.DB_NAME;
   private p_auth_name = AppConstants.AUTH_NAME;
   private p_auth_password = AppConstants.AUTH_PASSWORD;
+  private videoIds = [];
+  private baseURL = 'https://jukebox.fhstp.ac.at/';
+  private serviceName = 'quickSearch/';
+  private dbName = 'ForTunesV0_1/';
 
 // put this on another file and put it in gitignore
 // when rebase, ask alexis to change the credentials
@@ -23,16 +27,24 @@ export class DataService {
     this.db = new Database({
       url: this.p_url
     });
+    console.log('am i called from the beginning?');
     this.db.useDatabase(this.p_db_name);
     this.db.useBasicAuth(this.p_auth_name, this.p_auth_password);
     this.service = this.db.route('search', {  });
     this.requestService = this.db.route('quickSearch', {  });
   }
 
-  // implement the new endpoints right in here
-  // search
-  // song details
-  // comments
+  // setVideoIds(ids) {
+    // this.videoIds = ids;
+    // console.log('ids in data service: ', ids);
+    // ids.forEach(element => {
+    //   element.videoIds.forEach(version => {
+    //     this.videoIds.push(version);
+
+    //   });
+    // });
+    // console.log('???: ', this.videoIds);
+  // }
 
   search(value: string): Promise<any> {
     const search = value.replace(' ', '%20');
@@ -42,15 +54,33 @@ export class DataService {
   quickSearch(value: string): Promise<any> {
     const search = value.replace(' ', '%20');
     return this.requestService.get('quickSearch/' + search);
+    // return this.httpClient.get( this.baseURL + this.dbName + this.serviceName + 'quickSearch/' + search);
+
+    // return this.httpClient.get( 'https://jukebox.fhstp.ac.at:8531/_db/ForTunesV0_1/quickSearch/quickSearch/'  + search);
+
   }
 
   songDetails(value: string[]): Promise<any> {
     // return this.requestService.get('songDetails/' + JSON.stringify(value));
     return this.requestService.get('songAggregations/' + JSON.stringify(value));
+    // return this.httpClient.get('https://jukebox.fhstp.ac.at/quickSearch' + search);
+
   }
 
   songDetailsMock(): Observable<any[]> {
     console.log('entered loadMockData');
     return this.httpClient.get('../../../assets/newMockData.json') as any;
+  }
+
+  getComments(nbComments: number, order: String, ids: String[], startDate: any, endDate: any): Promise<any>{
+
+    console.log('send me the new comments pls');
+    console.log(nbComments);
+    console.log(order);
+    console.log(ids);
+    console.log(startDate);
+    console.log(endDate);
+    return this.requestService.get('comments/' + JSON.stringify(ids));
+    // return this.httpClient.get('../../../assets/newMockData.json') as any;
   }
 }

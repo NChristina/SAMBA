@@ -33,11 +33,13 @@ export class SentimentComponent implements OnInit {
     this.sentimentLineChart = dc.lineChart('#sentimentChartLine');
     this.sentimentBarChart = dc.barChart('#sentimentChart');
     this.chartService.GetData().subscribe((data) => {
+
       this.data = data;
       // console.log(data);
     });
 
     this.chartService.getCrossfilter().subscribe((filter) => {
+
       this.cfilter = filter;
       this.setDimension();
       this.setBarDimension();
@@ -58,6 +60,7 @@ export class SentimentComponent implements OnInit {
 
     // gets the range through the chart service from the mainVis Component
     this.chartService.getChartRange().subscribe((range) => {
+
       if (this.data !== undefined && range.range !== null && range.range !== undefined) {
         (this.diff_months(range.range[0], range.range[1]) < 2) ? this.notDataWarn = true : this.notDataWarn = false;
         this.sentimentLineChart

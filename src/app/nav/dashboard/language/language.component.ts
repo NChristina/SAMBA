@@ -62,6 +62,7 @@ export class LanguageComponent implements OnInit {
           .y(d3.scaleLinear().domain([0, this.getMaxGroupValue()]))
           .round(d3.timeMonth);
         this.languageChart.redraw();
+
       } else {
         if (!dc.chartRegistry.list().some((c) => c.hasFilter())) {
           this.notDataWarn = false;

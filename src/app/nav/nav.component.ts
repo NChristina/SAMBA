@@ -2,6 +2,7 @@ import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
 import { SearchService } from './services/search.service';
 import { MdcSnackbar, MdcSnackbarConfig } from '@angular-mdc/web';
 import { ChartService } from './dashboard/services/chart.service';
+import { DataService } from './services/data.service';
 @Component({
   selector: 'app-nav',
   templateUrl: './nav.component.html',
@@ -20,11 +21,17 @@ export class NavComponent implements OnInit {
   labelsForChips = [];
   config: MdcSnackbarConfig = { align: 'top'};
 
+  // idsForChild: string[] = [];
+  // startDateForChild: any;
+  // endDateForchild: any;
+
+  idsForChild = [];
+  totalCommentsForChild = 0;
 
 
-  constructor(private searcher: SearchService, private chartService: ChartService, private snackbar: MdcSnackbar) {
 
-
+  constructor(private searcher: SearchService, private chartService: ChartService,
+    private snackbar: MdcSnackbar, private dataService: DataService) {
   }
 
   ngOnInit() {
@@ -33,7 +40,6 @@ export class NavComponent implements OnInit {
   }
 
   resetFilters(){
-    console.log('call chart service and reset all filters');
     this.chartService.reloadForResetFilters();
   }
 
@@ -75,22 +81,21 @@ export class NavComponent implements OnInit {
               return;
         } else {
           this.chartService.setSpinner(true);
-          // console.log('add the whole group ', versionIDs);
           this.searcher.songDetailsFromDb(versionIDs).then((results) => {
-            // console.log('I GOT A RESULT FROM SONGDETAILS: ', results.body);
             this.loadedItems.push(results.body[0]);
-            // console.log('lölölöl: ', this.loadedItems);
+            this.createIDarray();
             this.matchForAdditionalInfo.push(this.searchMatchList[index]);
             this.labelsForChips.push({title: this.matchForAdditionalInfo[this.matchForAdditionalInfo.length - 1].title + ' - '
             + this.matchForAdditionalInfo[this.matchForAdditionalInfo.length - 1].artist, isGroup: true});
-            // console.log('labels: ', this.labelsForChips);
-
-            // console.log('ULULULULULU: ', this.matchForAdditionalInfo);
             this.chartService.SetData(this.loadedItems,  this.matchForAdditionalInfo);
+            console.log('äääh: ', this.matchForAdditionalInfo);
+            this.createTotalComments();
+            // this.dataService.setVideoIds(this.loadedItems);
           });
         }
       } else {
         this.makeTheRemoval(versionIDs, index, childIndex);
+        this.createIDarray();
       }
     } else if (id === 'subcheckbox_' + childIndex) {
       let versionID: string[] = [];
@@ -106,18 +111,18 @@ export class NavComponent implements OnInit {
           console.log('add only me: ', versionID);
           this.searcher.songDetailsFromDb(versionID).then((results) => {
             this.loadedItems.push(results.body);
+            this.createIDarray();
             this.matchForAdditionalInfo.push(this.searchMatchList[index].versions[childIndex]);
-            // console.log('ULULULULULU: ', this.matchForAdditionalInfo);
             this.labelsForChips.push({title: this.matchForAdditionalInfo[this.matchForAdditionalInfo.length - 1].snippet.title,
               isGroup: false, id: versionID[0]});
-            // console.log('labels: ', this.labelsForChips);
-
             this.chartService.SetData(this.loadedItems, this.matchForAdditionalInfo);
+            // this.dataService.setVideoIds(this.loadedItems);
           });
         }
 
       } else {
         this.makeTheRemoval(versionID, index, childIndex);
+        this.createIDarray();
       }
     }
   }
@@ -191,10 +196,12 @@ export class NavComponent implements OnInit {
         });
       });
     }
+    this.createIDarray();
+
   }
   toggleAccordion(index, event) {
-    console.log('XXXXX event: ', event);
-    console.log('accordion.....was toggled with index ', index, ' and the event is: ', event);
+    // console.log('XXXXX event: ', event);
+    // console.log('accordion.....was toggled with index ', index, ' and the event is: ', event);
     let element = document.getElementById('accordion_' + index);
     let panel = document.getElementById('panel_' + index);
     let img = document.getElementById('img_' + index);
@@ -206,5 +213,35 @@ export class NavComponent implements OnInit {
       panel.style.maxHeight = panel.scrollHeight + 'px';
       (img as HTMLImageElement).src = '../../assets/chevron_up.svg'; // set attribute
     }
+  }
+  createIDarray() {
+    this.idsForChild = [];
+    console.log('createIDarray out of this.loadedItems: ', this.loadedItems);
+    if (this.loadedItems !== undefined) {
+      this.loadedItems.forEach(l => {
+        if (l.videoIds !== undefined) {
+          // console.log('i am group');
+          l.videoIds.forEach(i => {
+            this.idsForChild.push(i);
+          });
+        } else {
+          // console.log('i am single: ', l);
+          l[0].videoIds.forEach(i => {
+            this.idsForChild.push(i);
+          });
+        }
+      });
+    }
+    // console.log('xxxx: ', this.idsForChild);
+  }
+  createTotalComments() {
+    this.searchMatchList.forEach( e => {
+      // console.log('1_1: ', +e.versions[0].statistics.commentCount);
+      e.versions.forEach( v => {
+        let num = +v.statistics.commentCount;
+        this.totalCommentsForChild = this.totalCommentsForChild + num;
+      });
+    });
+    console.log('totalComments: ', this.totalCommentsForChild);
   }
 }

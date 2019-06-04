@@ -91,7 +91,7 @@
       <button class="correctResetBtn" mat-raised-button trailing color="primary" (click)="resetFilters()">RESET FILTERS<mat-icon>refresh</mat-icon></button>
     </div>
     <div class="contentmargin">
-      <app-dashboard></app-dashboard>
+      <app-dashboard [idsForChild]="idsForChild" [totalCommentsForChild]="totalCommentsForChild"></app-dashboard>
     </div>
   </div>
 </div>
