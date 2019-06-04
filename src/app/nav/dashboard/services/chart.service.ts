@@ -20,7 +20,7 @@ export class ChartService {
 
   constructor() {
     this.GetData().subscribe((data) => {
-      console.log('subscription of getData.... ');
+      // console.log('subscription of getData.... ');
       this.changeCrossfilter(crossfilter(data));
     });
   }
@@ -190,8 +190,8 @@ export class ChartService {
     dataPoints.sort((a, b) => {
       return new Date(a.publishedAt) > new Date(b.publishedAt) ? -1 : 1;
     });
-    console.log('old data structure: ', data);
-    console.log('new data structure: ', dataPoints);
+    // console.log('old data structure: ', data);
+    // console.log('new data structure: ', dataPoints);
 
     return dataPoints;
   }

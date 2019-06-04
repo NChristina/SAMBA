@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, OnChanges, SimpleChanges } from '@angular/core';
 import * as crossfilter from 'crossfilter';
 import * as dc from 'dc';
 import { ChartService } from '../services/chart.service';
@@ -10,7 +10,7 @@ import { DataService } from '../../services/data.service';
   templateUrl: './comment.component.html',
   styleUrls: ['./comment.component.scss'],
 })
-export class CommentComponent implements OnInit {
+export class CommentComponent implements OnInit, OnChanges {
   @Input() ids: any;
   @Input() totalComments: any;
   testStart: any;
@@ -37,55 +37,49 @@ export class CommentComponent implements OnInit {
 
   ngOnInit() {
     console.log(this.ids);
-    console.log('LULULULUL: ', this.totalComments);
     this.chartService.getChartRange().subscribe( data => {
-      console.log('COMMENT -- I RECEIVED RANGE CHANGE: ', data);
+      this.fetchComments(this.ids);
       if (data.range !== undefined) {
         this.testStart = data.range[0];
         this.testEnd = data.range[1];
-        console.log('we have the filtered range: ', this.testStart, ' to ', this.testEnd);
-
-
+        // console.log('we have the filtered range: ', this.testStart, ' to ', this.testEnd);
       }
-      // if(this.startDate !== null && this.endDate !== null && this.ids.length > 0) {
-      //   this.dataService.getComments(this.nbComments, this.order, this.ids, this.startDate, this.endDate).subscribe( result => {
-      //     console.log('COMMENT: ', result);
 
-      //   });
-      // }
     });
 
-    // this.chartService.getCrossfilter().subscribe( d => {
-    //   console.log('crossfilter: ', d.dimension.length);
-    //   console.log('troll: ', this.ids);
-
-    // });
-
     this.chartService.GetData().subscribe((data) => {
-      console.log('subscription of getData.... ', data);
-      console.log('are the ids already there? ', this.ids);
+      // console.log('subscription of getData.... ', data);
+      // console.log('are the ids already there? ', this.ids);
+      this.fetchComments(this.ids);
 
       if (data[0] !== undefined) {
         this.testStart = new Date(data[0].publishedAt);
         this.testEnd = new Date(data[data.length - 1].publishedAt);
 
-        console.log('first date: ', this.testStart);
-        console.log('last date: ', this.testEnd);
-        this.fetchComments();
+        // console.log('first date: ', this.testStart);
+        // console.log('last date: ', this.testEnd);
       }
     });
   }
+  ngOnChanges(changes: SimpleChanges): void {
+   for (let propName in changes) {
+     if(propName === 'ids') {
+      // console.log('YYYYYYYYYYYYYYYYYYYYYYYYY: ', propName);
+      this.fetchComments(this.ids);
+     }
+   }
+  }
 
-  fetchComments() {
-    console.log('fetchhhhh');
-    console.log('current ids: ', this.ids);
-    console.log('currentfilter: ', this.order);
+  fetchComments(x) {
+    // console.log('fetchhhhh');
+    // console.log('current ids: ', this.ids);
+    // console.log('currentfilter: ', this.order);
     // this.dataService.getComments(this.nbComments, this.order, this.ids, this.testStart, this.testEnd).subscribe( result => {
     //   console.log('COMMENT: ', result);
     // });
-    this.dataService.getComments(this.nbComments, this.order, this.ids, this.testStart, this.testEnd).then((results) => {
+    this.dataService.getComments(this.nbComments, this.order, x, this.testStart, this.testEnd).then((results) => {
       this.receivedComments = results.body[0].comments;
-      console.log('COMMENTS: ', results);
+      // console.log('COMMENTS: ', results);
 
     });
   }

@@ -83,12 +83,12 @@ export class NavComponent implements OnInit {
           this.chartService.setSpinner(true);
           this.searcher.songDetailsFromDb(versionIDs).then((results) => {
             this.loadedItems.push(results.body[0]);
-            this.createIDarray();
             this.matchForAdditionalInfo.push(this.searchMatchList[index]);
             this.labelsForChips.push({title: this.matchForAdditionalInfo[this.matchForAdditionalInfo.length - 1].title + ' - '
             + this.matchForAdditionalInfo[this.matchForAdditionalInfo.length - 1].artist, isGroup: true});
             this.chartService.SetData(this.loadedItems,  this.matchForAdditionalInfo);
             console.log('äääh: ', this.matchForAdditionalInfo);
+            this.createIDarray();
             this.createTotalComments();
             // this.dataService.setVideoIds(this.loadedItems);
           });
@@ -111,11 +111,11 @@ export class NavComponent implements OnInit {
           console.log('add only me: ', versionID);
           this.searcher.songDetailsFromDb(versionID).then((results) => {
             this.loadedItems.push(results.body);
-            this.createIDarray();
             this.matchForAdditionalInfo.push(this.searchMatchList[index].versions[childIndex]);
             this.labelsForChips.push({title: this.matchForAdditionalInfo[this.matchForAdditionalInfo.length - 1].snippet.title,
               isGroup: false, id: versionID[0]});
-            this.chartService.SetData(this.loadedItems, this.matchForAdditionalInfo);
+              this.chartService.SetData(this.loadedItems, this.matchForAdditionalInfo);
+              this.createIDarray();
             // this.dataService.setVideoIds(this.loadedItems);
           });
         }
@@ -232,7 +232,7 @@ export class NavComponent implements OnInit {
         }
       });
     }
-    // console.log('xxxx: ', this.idsForChild);
+    console.log('xxxx: ', this.idsForChild);
   }
   createTotalComments() {
     this.searchMatchList.forEach( e => {

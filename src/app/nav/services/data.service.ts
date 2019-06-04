@@ -74,12 +74,12 @@ export class DataService {
 
   getComments(nbComments: number, order: String, ids: String[], startDate: any, endDate: any): Promise<any>{
 
-    console.log('send me the new comments pls');
-    console.log(nbComments);
-    console.log(order);
-    console.log(ids);
-    console.log(startDate);
-    console.log(endDate);
+    // console.log('send me the new comments pls');
+    // console.log(nbComments);
+    // console.log(order);
+    // console.log(ids);
+    // console.log(startDate);
+    // console.log(endDate);
     return this.requestService.get('comments/' + JSON.stringify(ids));
     // return this.httpClient.get('../../../assets/newMockData.json') as any;
   }
