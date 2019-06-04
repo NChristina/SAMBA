@@ -52,15 +52,18 @@ export class NavComponent implements OnInit {
 
       this.searchMatchList = [];
       this.isSearching = true;
-      this.searcher.quickSearchFromDb(value.trim()).then((results) => {
+      this.searcher.quickSearchFromDb(value.trim()).subscribe((results) => {
+        console.log('value i am passing: ', value.trim());
+
         document.getElementById('sFimg').style.display = 'none'; // Spinner OFF
-        // console.log('I GOT A RESULT: ', results.body);
-        if (results.body.length === 0) {
+        console.log('I GOT A RESULT: ', results);
+        if (results.length === 0) {
           document.getElementById('sFtext').style.display = 'block'; // Display alert
         }
-        this.searchMatchList = results.body;
+        this.searchMatchList = results;
         this.isSearching = false;
       });
+
     }
   }
 
@@ -81,8 +84,8 @@ export class NavComponent implements OnInit {
               return;
         } else {
           this.chartService.setSpinner(true);
-          this.searcher.songDetailsFromDb(versionIDs).then((results) => {
-            this.loadedItems.push(results.body[0]);
+          this.searcher.songDetailsFromDb(versionIDs).subscribe((results) => {
+            this.loadedItems.push(results[0]);
             this.createIDarray();
             this.matchForAdditionalInfo.push(this.searchMatchList[index]);
             this.labelsForChips.push({title: this.matchForAdditionalInfo[this.matchForAdditionalInfo.length - 1].title + ' - '
@@ -109,8 +112,8 @@ export class NavComponent implements OnInit {
           this.chartService.setSpinner(true);
 
           console.log('add only me: ', versionID);
-          this.searcher.songDetailsFromDb(versionID).then((results) => {
-            this.loadedItems.push(results.body);
+          this.searcher.songDetailsFromDb(versionID).subscribe((results) => {
+            this.loadedItems.push(results);
             this.createIDarray();
             this.matchForAdditionalInfo.push(this.searchMatchList[index].versions[childIndex]);
             this.labelsForChips.push({title: this.matchForAdditionalInfo[this.matchForAdditionalInfo.length - 1].snippet.title,

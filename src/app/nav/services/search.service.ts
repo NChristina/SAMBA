@@ -27,7 +27,7 @@ export class SearchService {
     return this.dataService.search(value);
   }
 
-  quickSearchFromDb(value: string): Promise<any> {
+  quickSearchFromDb(value: string): Observable<any> {
     // console.log('entered quickSearchFromDb() in search.service.ts: ', value);
     if (value.length < 1) {
       return;
@@ -35,7 +35,7 @@ export class SearchService {
     return this.dataService.quickSearch(value);
   }
 
-  songDetailsFromDb(value: string[]): Promise<any> {
+  songDetailsFromDb(value: string[]): Observable<any> {
     // console.log('entered searchFromDb() in search.service.ts: ', value);
     if (value === undefined) {
       console.log('the value is undefined ?!');
