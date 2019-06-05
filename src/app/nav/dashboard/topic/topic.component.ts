@@ -18,112 +18,25 @@ export class TopicComponent implements OnInit {
   listSongs = [];
   wordCounted = [];
   data: any[];
-  NLTKstopwords = ['i', 'me', 'my', 'myself', 'we', 'our', 'ours', 'ourselves', 'you',
-    're', 've', 'll', 'd', 'your', 'yours', 'yourself', 'yourselves',
-    'he', 'him', 'his', 'himself', 'she', 's', 'her', 'hers', 'herself', 'it',
-    'its', 'itself', 'they', 'them', 'their', 'theirs', 'themselves', 'what',
-    'which', 'who', 'whom', 'this', 'that', 'these', 'those', 'am', 'is',
-    'are', 'was', 'were', 'be', 'been', 'being', 'have', 'has', 'had', 'having', 'do',
-    'does', 'did', 'doing', 'a', 'an', 'the', 'and', 'but', 'if', 'or', 'because', 'as', 'until',
-    'while', 'of', 'at', 'by', 'for', 'with', 'about', 'against', 'between', 'into', 'through',
-    'during', 'before', 'after', 'above', 'below', 'to', 'from', 'up', 'down', 'in', 'out', 'on',
-    'off', 'over', 'under', 'again', 'further', 'then', 'once', 'here', 'there', 'when', 'where',
-    'why', 'how', 'all', 'any', 'both', 'each', 'few', 'more', 'most', 'other', 'some', 'such', 'no',
-    'nor', 'not', 'only', 'own', 'same', 'so', 'than', 'too', 'very', 's', 't', 'can', 'will',
-    'just', 'don',  'should',  'now', 'd', 'll', 'm', 'o', 're', 've', 'y',
-    'ain', 'aren',  'couldn', 'didn', 'doesn', 'hadn', 'hasn',  'haven', 'isn', 'ma', 'mightn',
-    'mustn', 'needn', 't', 'shan', 'shouldn', 'wasn', 'weren', 'won', 'wouldn'];
+  totalComments = 0;
+
 
   constructor(private chartService: ChartService, private _element: ElementRef) { }
 
   ngOnInit() {
-    this.chartService.GetData().subscribe((data) => {
-      this.data = data;
+    this.chartService.GetDataTopics().subscribe((data) => {
+      this.totalComments = Math.round((data.commentsUsed * 100) / data.commentsAll);
+      this.dataCloud = data.dataCloud;
+      this.listSongs = data.listSongs;
+      this.wordCounted = data.wordCounted;
+      if (this.listSongs) {this.createLists(); }
     });
 
     this.chartService.getCrossfilter().subscribe((filter) => {
       this.cfilter = filter;
-      this.listSongs = [];
-      this.wordCounted = [];
-
-      // this.createWordCloud();
-      // this.createLists();
     });
 
     this.setVisibilityofViews();
-  }
-
-  // Tokenize, clean, and count
-  createWordCloud() {
-    // const sw = require('stopword');
-    const words = [];
-
-    // Tokenize and clean each [english] comment
-    this.data.forEach((d) => {
-      if (d.analysis && d.analysis.mainLanguage === 'en') {
-        const topicSent = this.getSentiment(d);
-        let word_tokens = d.text.split(/[^a-zA-Z0-9_#@]|\b\w\b ?/);
-        while (word_tokens.indexOf('') !== -1) { word_tokens.splice( word_tokens.indexOf(''), 1); }
-
-        word_tokens = sw.removeStopwords(word_tokens, this.NLTKstopwords);
-        word_tokens.forEach((word) => {
-          words.push({ topic: word, sentiment: topicSent, song: d.song });
-        });
-
-        if (this.listSongs.indexOf(d.song.toString()) === -1) {
-          this.listSongs.push(d.song.toString());
-        }
-      }
-    });
-
-    // Count words
-    this.counter(words);
-  }
-
-  // Receive a list with words and the sentiment and song name from the comment the wors came from
-  private counter(words: any) {
-    const cWds = [];
-
-    words.forEach((w) => {
-      let inList = false;
-      let idxcw = 0;
-      // searches the position of the element if it is in the list
-      cWds.forEach((cw) => {
-        if (inList === false) {
-          if (cw.text.trim().toLowerCase() === w.topic.trim().toLowerCase()) { inList = true; } else { idxcw++; }
-        }
-      });
-
-      if (inList) {
-        cWds[idxcw].count++;
-        cWds[idxcw].sentiment += w.sentiment;
-        if (cWds[idxcw].songs.indexOf(w.song.toString()) === -1) {
-          cWds[idxcw].songs.push(w.song.toString());
-        }
-      } else {
-        cWds.push({ text: w.topic.toString(), count: 1, sentiment: w.sentiment, songs: [w.song.toString()] });
-      }
-    });
-
-    const dataForCloud = [];
-    if (cWds.length > 0) {
-      cWds.sort(function(a, b) { return b.count - a.count; });
-      this.wordCounted = cWds;
-
-      // Get 10 topics. If the list of counted words has less then 10 words we display only the existing topics
-      let size = 10;
-      let maxTopics = 10;
-      if (cWds.length < 10) { size = cWds.length; maxTopics = cWds.length; }
-      let i = 0;
-      while (i < maxTopics) {
-        const sentcolor = this.getColor(cWds[i].sentiment / cWds[i].count);
-        dataForCloud.push({ text: cWds[i].text.toString(), weight: size, color: sentcolor.toString()}); // tooltip: cWds[i].songs.join(', ')
-        i++;
-        size -= 1;
-      }
-    }
-
-    this.dataCloud = dataForCloud;
   }
 
   // Topics by song
@@ -155,7 +68,7 @@ export class TopicComponent implements OnInit {
       while (i < 10 && j < this.wordCounted.length) {
         if (this.wordCounted[j].songs.indexOf(song) !== -1) {
           const p = document.createElement('p');
-          const topic = document.createTextNode('- ' + this.wordCounted[j].text.toString());
+          const topic = document.createTextNode('- ' + this.wordCounted[j].text + ' (' + this.wordCounted[j].count + ')');
           p.appendChild(topic);
           const sentcolor = this.getColor(this.wordCounted[j].sentiment / this.wordCounted[j].count);
           p.style.color = sentcolor;
@@ -172,44 +85,12 @@ export class TopicComponent implements OnInit {
   }
 
   reDraw() {
-    // this.tagCloudComponent.reDraw();
+    if (this.tagCloudComponent) { this.tagCloudComponent.reDraw(); }
   }
 
   private getColor(sent: number) {
     if (sent > 0) { return '#4daf4a'; } else if (sent < 0) { return '#ff7f00'; }
     return '#cccccc';
-  }
-
-  private getSentiment(d: any) {
-    if (d.analysis.sentiment) {
-      const thisnltk = d.analysis.sentiment.nltk.compound;
-      const thisblob = d.analysis.sentiment.textBlob.polarity;
-      const thisafinn = d.analysis.sentiment.afinn.normalized;
-
-      if (this.isIconsistent([thisnltk, thisblob, thisafinn])) {
-        return 0;
-      } else {
-        const sentPolarity = ((thisnltk + thisafinn + thisblob) / 3);
-        if (sentPolarity > 0) {
-          return 1;
-        } else if (sentPolarity === 0) {
-          return 0;
-        } else if (sentPolarity < 0) {
-          return -1;
-        }
-      }
-    } else { return 0; }
-  }
-
-  private isIconsistent (sentValues: any) {
-    let countPos = 0;
-    let countNeg = 0;
-
-    sentValues.forEach((value) => {
-      if (value > 0) { countPos++; } else if (value < 0) { countNeg++; }
-    });
-
-    if (countPos > 0 && countNeg > 0) { return true; } else { return false; }
   }
 
   // sets the tooltip on mouseover

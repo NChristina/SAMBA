@@ -319,28 +319,31 @@ export class SentimentComponent implements OnInit {
     this.maxGroupValue = this.getMaxGroupValue();
     const sentGroupsOrdered = this.reorderGroups();
     const chartColors = this.defineChartColors();
-    const group1 = sentGroupsOrdered[0];
+    let firstItem = 0;
+    while (!sentGroupsOrdered[firstItem] && firstItem < 5) {firstItem++; }
+    const group1 = sentGroupsOrdered[firstItem];
     this.sentimentLineChart
-        .renderArea(true)
-        .width(300)
-        .height(200)
-        .ordinalColors(chartColors)
-        .useViewBoxResizing(true)
-        .dimension(this.dimension)
-        .x(d3.scaleTime().domain([d3.min(this.data, (d: any) => new Date(d.publishedAt)),
-          d3.max(this.data, (d: any) => new Date(d. publishedAt))]))
-        .xAxisLabel('Date')
-        .y(d3.scaleLinear().domain([0, this.maxGroupValue]))
-        .yAxisLabel('Comment Amount')
-        .interpolate('monotone')
-        .legend(dc.legend().x(250).y(10).itemHeight(13).gap(5))
-        .brushOn(true)
-        .group(group1.group, group1.sent)
-        .valueAccessor(function (d) {
-            return d.value;
-        })
-        .xAxis().ticks(4);
-      let maxSent = 0;
+      .renderArea(true)
+      .width(300)
+      .height(200)
+      .ordinalColors(chartColors)
+      .useViewBoxResizing(true)
+      .dimension(this.dimension)
+      .x(d3.scaleTime().domain([d3.min(this.data, (d: any) => new Date(d.publishedAt)),
+        d3.max(this.data, (d: any) => new Date(d. publishedAt))]))
+      .xAxisLabel('Date')
+      .y(d3.scaleLinear().domain([0, this.maxGroupValue]))
+      .yAxisLabel('Comment Amount')
+      .interpolate('monotone')
+      .legend(dc.legend().x(250).y(10).itemHeight(13).gap(5))
+      .brushOn(true)
+      .group(group1.group, group1.sent)
+      .valueAccessor(function (d) {
+          return d.value;
+      })
+      .xAxis().ticks(4);
+    let maxSent = 0;
+    if (sentGroupsOrdered.length > 1) {
       sentGroupsOrdered.forEach((group) => {
         if (group.group === group1.group || maxSent === 4) {
           return;
@@ -352,6 +355,7 @@ export class SentimentComponent implements OnInit {
         });
         maxSent++;
       });
+    }
     this.sentimentLineChart.render();
   }
 

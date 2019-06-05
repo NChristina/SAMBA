@@ -16,18 +16,27 @@
 </div>
 <hr />
 
-<div class="aggregationView" id="topiccloudTag"></div>
-
-<!--<div (window:resize)="reDraw()" class="aggregationView" id="topiccloudTag">
-  <angular-tag-cloud
+<div (window:resize)="reDraw()" class="aggregationView" id="topiccloudTag">
+  <angular-tag-cloud *ngIf="dataCloud"
     [data]="dataCloud"
     [width]="options.width"
     [height]="options.height"
     [overflow]="options.overflow"
     [strict]="true">
   </angular-tag-cloud>
-</div>-->
+</div>
 
 <div id="topicList" class="maxSize comparisonView">
 
 </div>
+
+<div class="wrapperdataCloud" >
+  <div *ngIf="dataCloud" class="wrapper dataCloud" (mouseover)="setTooltipInfo($event, tooltipinfo);" class="tooltInfo"> 
+    <p  class="footerTopics"> *Most frequent words on {{totalComments}}% of comments </p>
+    <span #tooltipinfo class="tooltInfo_text">
+        <p><img height="13px" src="../../assets/000-info.svg"> Only comments written in German and English are processed.</p>
+    </span>
+  </div>
+</div>
+
+

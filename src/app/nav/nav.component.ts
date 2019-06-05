@@ -28,8 +28,6 @@ export class NavComponent implements OnInit {
   idsForChild = [];
   totalCommentsForChild = 0;
 
-
-
   constructor(private searcher: SearchService, private chartService: ChartService,
     private snackbar: MdcSnackbar, private dataService: DataService) {
   }
@@ -39,7 +37,7 @@ export class NavComponent implements OnInit {
 
   }
 
-  resetFilters(){
+  resetFilters() {
     this.chartService.reloadForResetFilters();
   }
 
@@ -68,10 +66,10 @@ export class NavComponent implements OnInit {
   // it checks if the user has already selected the song
   // it also updates the data for all charts via the chartService
   selectSong(index: number, childIndex: number, checkbox) {
-    let id = checkbox.target.id;
+    const id = checkbox.target.id;
 
     if (id === 'checkbox_' + index) {
-      let versionIDs: string[] = [];
+      const versionIDs: string[] = [];
       this.searchMatchList[index].versions.forEach(version => {
         versionIDs.push(version.id);
       });
@@ -89,6 +87,9 @@ export class NavComponent implements OnInit {
             this.chartService.SetData(this.loadedItems,  this.matchForAdditionalInfo);
             console.log('äääh: ', this.matchForAdditionalInfo);
             this.createIDarray();
+            this.searcher.songTopicsFromDb(this.idsForChild).then((topicRes) => {
+              this.chartService.SetDataTopics(topicRes.body);
+            });
             this.createTotalComments();
             // this.dataService.setVideoIds(this.loadedItems);
           });
@@ -98,7 +99,7 @@ export class NavComponent implements OnInit {
         this.createIDarray();
       }
     } else if (id === 'subcheckbox_' + childIndex) {
-      let versionID: string[] = [];
+      const versionID: string[] = [];
       versionID.push(this.searchMatchList[index].versions[childIndex].id);
 
       if (checkbox.target.checked) {
@@ -116,10 +117,11 @@ export class NavComponent implements OnInit {
               isGroup: false, id: versionID[0]});
               this.chartService.SetData(this.loadedItems, this.matchForAdditionalInfo);
               this.createIDarray();
-            // this.dataService.setVideoIds(this.loadedItems);
+              this.searcher.songTopicsFromDb(this.idsForChild).then((topicRes) => {
+                this.chartService.SetDataTopics(topicRes.body);
+              });
           });
         }
-
       } else {
         this.makeTheRemoval(versionID, index, childIndex);
         this.createIDarray();
@@ -135,7 +137,7 @@ export class NavComponent implements OnInit {
     if (childIndex === null) { // is group
       console.log('group');
       this.loadedItems.forEach((item, index) => {
-        if(item.videoIds !== undefined) {
+        if (item.videoIds !== undefined) {
           if (item.videoIds[0] === versionIDs[0]) {
             this.loadedItems.splice(index, 1);
             this.matchForAdditionalInfo.splice(index, 1);
@@ -145,12 +147,11 @@ export class NavComponent implements OnInit {
           }
         }
       });
-
     } else {
       console.log('single');
         this.loadedItems.forEach((item, index) => {
-          if(item.videoIds === undefined) {
-            if(item[0].videoIds[0] === versionIDs[0]) {
+          if (item.videoIds === undefined) {
+            if (item[0].videoIds[0] === versionIDs[0]) {
               this.loadedItems.splice(index, 1);
               this.matchForAdditionalInfo.splice(index, 1);
               this.labelsForChips.splice(index, 1);
@@ -174,7 +175,7 @@ export class NavComponent implements OnInit {
 
     if (element.isGroup) {
       // console.log(this.searchMatchList[index]);
-      let tmp_element = this.searchMatchList[index];
+      const tmp_element = this.searchMatchList[index];
       this.searchMatchList.splice(index, 1);
       setTimeout(() => {
         this.searchMatchList.splice(index, 0, tmp_element);
@@ -187,7 +188,7 @@ export class NavComponent implements OnInit {
           // console.log(element.id);
           if (v.id === element.id) {
             console.log('xxxx: ',  this.searchMatchList[idx].versions[i]);
-            let tmp_element = this.searchMatchList[idx].versions[i];
+            const tmp_element = this.searchMatchList[idx].versions[i];
             this.searchMatchList[idx].versions.splice(i, 1);
             setTimeout(() => {
               this.searchMatchList[idx].versions.splice(i, 0, tmp_element);
@@ -202,9 +203,9 @@ export class NavComponent implements OnInit {
   toggleAccordion(index, event) {
     // console.log('XXXXX event: ', event);
     // console.log('accordion.....was toggled with index ', index, ' and the event is: ', event);
-    let element = document.getElementById('accordion_' + index);
-    let panel = document.getElementById('panel_' + index);
-    let img = document.getElementById('img_' + index);
+    const element = document.getElementById('accordion_' + index);
+    const panel = document.getElementById('panel_' + index);
+    const img = document.getElementById('img_' + index);
 
     if (panel.style.maxHeight) {
       panel.style.maxHeight = null;
@@ -238,7 +239,7 @@ export class NavComponent implements OnInit {
     this.searchMatchList.forEach( e => {
       // console.log('1_1: ', +e.versions[0].statistics.commentCount);
       e.versions.forEach( v => {
-        let num = +v.statistics.commentCount;
+        const num = +v.statistics.commentCount;
         this.totalCommentsForChild = this.totalCommentsForChild + num;
       });
     });

@@ -64,7 +64,10 @@ export class DataService {
     // return this.requestService.get('songDetails/' + JSON.stringify(value));
     return this.requestService.get('songAggregations/' + JSON.stringify(value));
     // return this.httpClient.get('https://jukebox.fhstp.ac.at/quickSearch' + search);
+  }
 
+  songTopics(value: string[]): Promise<any> {
+    return this.requestService.get('songTopics/' + JSON.stringify(value));
   }
 
   songDetailsMock(): Observable<any[]> {
@@ -72,7 +75,7 @@ export class DataService {
     return this.httpClient.get('../../../assets/newMockData.json') as any;
   }
 
-  getComments(nbComments: number, order: String, ids: String[], startDate: any, endDate: any): Promise<any>{
+  getComments(nbComments: number, order: String, ids: String[], startDate: any, endDate: any): Promise<any> {
 
     // console.log('send me the new comments pls');
     // console.log(nbComments);

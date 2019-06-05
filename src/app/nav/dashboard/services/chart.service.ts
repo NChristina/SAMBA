@@ -12,6 +12,9 @@ export class ChartService {
   private cfilterSource = new BehaviorSubject(crossfilter([]));
   private currentCfilter = this.cfilterSource.asObservable();
 
+  private chartTopicsSource = new BehaviorSubject([]);
+  private currentChartTopics = this.chartTopicsSource.asObservable();
+
   private chartRangeSource = new BehaviorSubject([]);
   private currentChartRange = this.chartRangeSource.asObservable();
   private loggedIn = false;
@@ -54,6 +57,14 @@ export class ChartService {
 
   GetData(): Observable<any[]> {
     return this.currentChartData;
+  }
+
+  SetDataTopics(topicData: any) {
+    this.chartTopicsSource.next(topicData);
+  }
+
+  GetDataTopics(): Observable<any> {
+    return this.currentChartTopics;
   }
 
   reloadForResetFilters() {
