@@ -3,6 +3,7 @@ import { SearchService } from './services/search.service';
 import { MdcSnackbar, MdcSnackbarConfig } from '@angular-mdc/web';
 import { ChartService } from './dashboard/services/chart.service';
 import { DataService } from './services/data.service';
+
 @Component({
   selector: 'app-nav',
   templateUrl: './nav.component.html',

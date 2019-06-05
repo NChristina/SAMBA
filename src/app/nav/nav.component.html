@@ -62,8 +62,10 @@
     <mdc-toolbar>
       <mdc-toolbar-row>
         <mdc-toolbar-section [alignStart]="true">
-          <mdc-icon mdc-toolbar-menu-icon (click)="persistent.open()">menu</mdc-icon>
-          <mdc-toolbar-title>Please select a song</mdc-toolbar-title>
+            <button class="main_button" (click)="persistent.open()">
+                <mdc-icon mdc-toolbar-menu-icon >add</mdc-icon>
+                <h1>Add Video(s)</h1>
+            </button>
         </mdc-toolbar-section>
         <mdc-toolbar-section [alignEnd]="true" [shrinkToFit]="true">
           <img
@@ -74,7 +76,7 @@
         </mdc-toolbar-section>
       </mdc-toolbar-row>
     </mdc-toolbar>
-    <mdc-chip-set #inputchipset [input]="true">
+    <mdc-chip-set #inputchipset [input]="true" style="margin-left: 20px;">
       <mdc-chip
       [ngStyle]="{'background-color': element.isGroup ? '#DCDCDC' : '#C0D9D9'}"
         *ngFor="let element of labelsForChips; let i = index"
@@ -86,9 +88,10 @@
         <mdc-chip-icon trailing>cancel</mdc-chip-icon>
       </mdc-chip>
     </mdc-chip-set>
+    
     <div class="flexBtnContainer">
-      <span flex></span>
-      <button class="correctResetBtn" mat-raised-button trailing color="primary" (click)="resetFilters()">RESET FILTERS<mat-icon>refresh</mat-icon></button>
+      <span flex></span> 
+      <button class="correctResetBtn" (click)="resetFilters()"><p>Reset Filters</p> <mat-icon>refresh</mat-icon></button>
     </div>
     <div class="contentmargin">
       <app-dashboard [idsForChild]="idsForChild" [totalCommentsForChild]="totalCommentsForChild"></app-dashboard>
