@@ -86,7 +86,7 @@ export class NavComponent implements OnInit {
             this.labelsForChips.push({title: this.matchForAdditionalInfo[this.matchForAdditionalInfo.length - 1].title + ' - '
             + this.matchForAdditionalInfo[this.matchForAdditionalInfo.length - 1].artist, isGroup: true});
             this.chartService.SetData(this.loadedItems,  this.matchForAdditionalInfo);
-            console.log('äääh: ', this.matchForAdditionalInfo);
+            // console.log('äääh: ', this.matchForAdditionalInfo);
             this.createIDarray();
             this.searcher.songTopicsFromDb(this.idsForChild).then((topicRes) => {
               this.chartService.SetDataTopics(topicRes.body);
@@ -110,7 +110,7 @@ export class NavComponent implements OnInit {
         } else {
           this.chartService.setSpinner(true);
 
-          console.log('add only me: ', versionID);
+          // console.log('add only me: ', versionID);
           this.searcher.songDetailsFromDb(versionID).then((results) => {
             this.loadedItems.push(results.body);
             this.matchForAdditionalInfo.push(this.searchMatchList[index].versions[childIndex]);
@@ -132,11 +132,11 @@ export class NavComponent implements OnInit {
 
   // für die SEARCH LIST
   makeTheRemoval(versionIDs, idx, childIndex) {
-    console.log('info: ', versionIDs, ' // index: ', idx, '// childIndex: ', childIndex);
-    console.log('delete out of loadedItems: ', this.loadedItems);
+    // console.log('info: ', versionIDs, ' // index: ', idx, '// childIndex: ', childIndex);
+    // console.log('delete out of loadedItems: ', this.loadedItems);
 
     if (childIndex === null) { // is group
-      console.log('group');
+      // console.log('group');
       this.loadedItems.forEach((item, index) => {
         if (item.videoIds !== undefined) {
           if (item.videoIds[0] === versionIDs[0]) {
@@ -149,7 +149,7 @@ export class NavComponent implements OnInit {
         }
       });
     } else {
-      console.log('single');
+      // console.log('single');
         this.loadedItems.forEach((item, index) => {
           if (item.videoIds === undefined) {
             if (item[0].videoIds[0] === versionIDs[0]) {
@@ -167,8 +167,8 @@ export class NavComponent implements OnInit {
   // für die chips!!!
   // das hakal von der checkbox in der suchleiste muss auch entfernt werden!!!
   removeSelectedSong(element, index) {
-    console.log('element: ', element);
-    console.log('index: ', index);
+    // console.log('element: ', element);
+    // console.log('index: ', index);
     this.loadedItems.splice(index, 1);
     this.labelsForChips.splice(index, 1);
     this.matchForAdditionalInfo.splice(index, 1);
@@ -188,7 +188,7 @@ export class NavComponent implements OnInit {
           // console.log('at index ', i , ': ', v.id);
           // console.log(element.id);
           if (v.id === element.id) {
-            console.log('xxxx: ',  this.searchMatchList[idx].versions[i]);
+            // console.log('xxxx: ',  this.searchMatchList[idx].versions[i]);
             const tmp_element = this.searchMatchList[idx].versions[i];
             this.searchMatchList[idx].versions.splice(i, 1);
             setTimeout(() => {
@@ -218,7 +218,7 @@ export class NavComponent implements OnInit {
   }
   createIDarray() {
     this.idsForChild = [];
-    console.log('createIDarray out of this.loadedItems: ', this.loadedItems);
+    // console.log('createIDarray out of this.loadedItems: ', this.loadedItems);
     if (this.loadedItems !== undefined) {
       this.loadedItems.forEach(l => {
         if (l.videoIds !== undefined) {
@@ -234,7 +234,7 @@ export class NavComponent implements OnInit {
         }
       });
     }
-    console.log('xxxx: ', this.idsForChild);
+    // console.log('xxxx: ', this.idsForChild);
   }
   createTotalComments() {
     this.searchMatchList.forEach( e => {
@@ -244,6 +244,6 @@ export class NavComponent implements OnInit {
         this.totalCommentsForChild = this.totalCommentsForChild + num;
       });
     });
-    console.log('totalComments: ', this.totalCommentsForChild);
+    // console.log('totalComments: ', this.totalCommentsForChild);
   }
 }

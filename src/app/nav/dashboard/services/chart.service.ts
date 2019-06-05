@@ -108,8 +108,8 @@ export class ChartService {
     totalViews = 0;
     totalLikes = 0;
     totalDislikes = 0;
-
     data.forEach((song, index) => {
+
       let control = 0;
       // unterscheidung zw 1 version oder 1. gruppe für additionalInfo!!!
       if ('etag' in additionalInfo[index]) {

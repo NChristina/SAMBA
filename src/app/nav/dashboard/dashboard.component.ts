@@ -20,7 +20,7 @@ export class DashboardComponent implements OnInit {
   }
 
   ngOnInit() {
-    console.log(this.idsForChild);
+    // console.log(this.idsForChild);
   }
 
 }

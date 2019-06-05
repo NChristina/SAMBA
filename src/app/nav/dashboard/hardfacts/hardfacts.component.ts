@@ -61,14 +61,41 @@ export class HardfactsComponent implements OnInit {
       let countedSongidx = 0;
       videoSummAux.forEach((sent) => { if (inList === false) { (sent.song === d.song) ? inList = true : countedSongidx++; } });
       if (!inList) {
-        let publishedAtAux = d.publishedAt.split('-');
-        publishedAtAux = publishedAtAux[2] + '.' + publishedAtAux[1] + '.' + publishedAtAux[0];
-        videoSummAux.push({ song: d.song, songFull: d.songFull, artist: d.artist, publishedAt: publishedAtAux, video_key: d.song_id });
+        const mlikes = this.shortValues(d.videoLikes);
+        const mviews = this.shortValues(d.videoViews);
+        const mdlikes = this.shortValues(d.videoDislikes);
+
+        videoSummAux.push({ song: d.song, songFull: d.songFull, artist: d.artist,
+          likes: mlikes, dislikes: mdlikes, views: mviews, video_key: d.song_id });
       }
     });
 
     this.videoSummary = videoSummAux;
     this.nbSongs = videoSummAux.length;
+  }
+
+  shortValues(value) {
+    const count = this.digits_count(value);
+
+    if (count >= 10) {
+      value = Math.round(value / 1000000000);
+      value = value + 'B';
+    } else if (count >= 7) {
+      value = Math.round(value / 1000000);
+      value = value + 'M';
+    } else if (count >= 4) {
+      value = Math.round(value / 1000);
+      value = value + 'K';
+    }
+
+    return value;
+  }
+
+  digits_count(n) {
+    let count = 0;
+    if (n >= 1) { ++count; }
+    while (n / 10 >= 1) { n /= 10; ++count; }
+    return count;
   }
 
   // sets the crossfilter dimension
@@ -334,14 +361,4 @@ export class HardfactsComponent implements OnInit {
       document.getElementById('likeChart').classList.remove('hide');
     }
   }
-
-  // cutTextForLabels(str: string, length: number, ending: string) {
-  //   if (str.length > length) {
-  //     let newString = str.substring(0, length - ending.length) + ending;
-  //     console.log('string: ', newString);
-  //     return {label: newString};
-  //   } else {
-  //     return {label: str};
-  //   }
-  // }
 }

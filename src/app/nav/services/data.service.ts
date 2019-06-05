@@ -4,8 +4,6 @@ import { Database } from 'arangojs/lib/web';
 import { AppConstants } from '../../shared/app.constants';
 import { Observable } from 'rxjs';
 
-
-
 @Injectable()
 export class DataService {
   private data;
@@ -27,7 +25,6 @@ export class DataService {
     this.db = new Database({
       url: this.p_url
     });
-    console.log('am i called from the beginning?');
     this.db.useDatabase(this.p_db_name);
     this.db.useBasicAuth(this.p_auth_name, this.p_auth_password);
     this.service = this.db.route('search', {  });
@@ -55,14 +52,12 @@ export class DataService {
     const search = value.replace(' ', '%20');
     return this.requestService.get('quickSearch/' + search);
     // return this.httpClient.get( this.baseURL + this.dbName + this.serviceName + 'quickSearch/' + search);
-
     // return this.httpClient.get( 'https://jukebox.fhstp.ac.at:8531/_db/ForTunesV0_1/quickSearch/quickSearch/'  + search);
-
   }
 
   songDetails(value: string[]): Promise<any> {
-    // return this.requestService.get('songDetails/' + JSON.stringify(value));
     return this.requestService.get('songAggregations/' + JSON.stringify(value));
+    // return this.requestService.get('songDetails/' + JSON.stringify(value));
     // return this.httpClient.get('https://jukebox.fhstp.ac.at/quickSearch' + search);
   }
 
@@ -76,7 +71,6 @@ export class DataService {
   }
 
   getComments(nbComments: number, order: String, ids: String[], startDate: any, endDate: any): Promise<any> {
-
     // console.log('send me the new comments pls');
     // console.log(nbComments);
     // console.log(order);
