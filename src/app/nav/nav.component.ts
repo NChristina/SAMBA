@@ -21,6 +21,7 @@ export class NavComponent implements OnInit {
   loadedMockData = [];
   labelsForChips = [];
   config: MdcSnackbarConfig = { align: 'top'};
+  openDrawer = false;
 
   // idsForChild: string[] = [];
   // startDateForChild: any;
@@ -255,4 +256,39 @@ export class NavComponent implements OnInit {
     });
     // console.log('totalComments: ', this.totalCommentsForChild);
   }
+
+
+  setOpen() {
+    this.openDrawer = !this.openDrawer;
+  }
+
+  changeFocus() {
+    const elm: HTMLElement = document.getElementById('main_buttonAdd') as HTMLElement;
+    if (elm && this.openDrawer) { elm.click(); }
+  }
+
+  shortValues(value) {
+    const count = this.digits_count(value);
+
+    if (count >= 10) {
+      value = Math.round(value / 1000000000);
+      value = value + 'B';
+    } else if (count >= 7) {
+      value = Math.round(value / 1000000);
+      value = value + 'M';
+    } else if (count >= 4) {
+      value = Math.round(value / 1000);
+      value = value + 'K';
+    }
+
+    return value;
+  }
+
+  digits_count(n) {
+    let count = 0;
+    if (n >= 1) { ++count; }
+    while (n / 10 >= 1) { n /= 10; ++count; }
+    return count;
+  }
 }
+

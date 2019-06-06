@@ -17,7 +17,7 @@ export class TopicComponent implements OnInit {
   cfilter: CrossFilter.CrossFilter<{}>;
   listSongs = [];
   wordCounted = [];
-  data: any[];
+  data: any;
   totalComments = 0;
 
 
@@ -25,6 +25,7 @@ export class TopicComponent implements OnInit {
 
   ngOnInit() {
     this.chartService.GetDataTopics().subscribe((data) => {
+      // this.data = data;
       this.totalComments = Math.round((data.commentsUsed * 100) / data.commentsAll);
       this.dataCloud = data.dataCloud;
       this.listSongs = data.listSongs;
@@ -68,7 +69,7 @@ export class TopicComponent implements OnInit {
       while (i < 10 && j < this.wordCounted.length) {
         if (this.wordCounted[j].songs.indexOf(song) !== -1) {
           const p = document.createElement('p');
-          const topic = document.createTextNode('- ' + this.wordCounted[j].text + ' (' + this.wordCounted[j].count + ')');
+          const topic = document.createTextNode('- ' + this.wordCounted[j].text);
           p.appendChild(topic);
           const sentcolor = this.getColor(this.wordCounted[j].sentiment / this.wordCounted[j].count);
           p.style.color = sentcolor;

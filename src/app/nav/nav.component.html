@@ -19,12 +19,7 @@
         </div>
         <p id="sFtext">No results were found for this search.</p>
       </div>
-      <div
-
-        id="{{'accordion_' + ix}}"
-        class="accordion song_list_item list-group-item list-group-item-action flex-column align-items-start"
-        *ngFor="let match of searchMatchList; let ix = index"
-      >
+      <div id="{{'accordion_' + ix}}" class="accordion song_list_item list-group-item list-group-item-action flex-column align-items-start" *ngFor="let match of searchMatchList; let ix = index">
         <div class="d-flex w-100 justify-content-between">
           <b class="mb-1">{{ match.artist }} - {{ match.title }}</b>
           <div class="checkbox" #checkbox1 (change)="selectSong(ix, null, $event)">
@@ -32,27 +27,28 @@
           </div>
         </div>
         <div class="d-flex w-100 justify-content-between">
-          <small>{{ match.versions.length }} Versions of this song</small>
+          <small *ngIf="match.versions.length > 1">{{ match.versions.length }} Videos matching</small>
+          <small *ngIf="match.versions.length === 1">{{ match.versions.length }} Video matching</small>
           <img (click)="toggleAccordion(ix, $event)" id="{{'img_' + ix}}" height ="10px" src="../../assets/chevron_down.svg">
         </div>
         <div class="panel list-group "  id="{{'panel_' + ix}}">
-          <div
-            class="list-group-item flex-column align-items-start"
-            *ngFor="let version of match.versions, let iy = index"
-          >
-          <div class="d-flex w-100 justify-content-between">
-            <b>{{ version.snippet.title }}</b>
-            <div class="checkbox" (change)="selectSong(ix, iy, $event)">
-              <label><input type="checkbox" id="{{ 'subcheckbox_' + iy }}" value=""/></label>
+          <div class="list-group-item flex-column align-items-start" *ngFor="let version of match.versions, let iy = index">
+            <div class="d-flex w-100 justify-content-between">
+              <b>{{ version.snippet.title }}</b>
+              <div class="checkbox" (change)="selectSong(ix, iy, $event)">
+                <label><input type="checkbox" id="{{ 'subcheckbox_' + iy }}" value=""/></label>
+              </div>
             </div>
-          </div>
-          <div class="d-flex w-100 justify-content-between">
-            <small>{{version.statistics.nbCommentInDb}} comments | {{version.statistics.likeCount}} likes | {{version.statistics.dislikeCount}} dislikes</small>
-            <a class="song_link" href="https://www.youtube.com/watch?v={{ version.id }}" target="_blank">
-              <img height="15px" src="../../assets/002-unlink.svg"/>
-            </a>
-          </div>
-          <small>{{version.statistics.viewCount}} views</small>
+            <div class="d-flex w-100 justify-content-between" style="margin-top:7px">
+              <small><mdc-icon class="iconsVersions" mdc-toolbar-menu-icon>mode_comment</mdc-icon> {{shortValues(version.statistics.nbCommentInDb)}} comments  </small>
+              <a class="song_link" href="https://www.youtube.com/watch?v={{ version.id }}" target="_blank">
+                <img height="15px" src="../../assets/002-unlink.svg"/>
+              </a>
+            </div>
+            <small>
+                <mdc-icon class="iconsVersions" mdc-toolbar-menu-icon style="margin-top:4px;">trending_up</mdc-icon> 
+                {{shortValues(version.statistics.likeCount)}} likes | {{shortValues(version.statistics.dislikeCount)}} dislikes | {{shortValues(version.statistics.viewCount)}} views
+            </small>
           </div>
         </div>
       </div>
@@ -62,8 +58,9 @@
     <mdc-toolbar>
       <mdc-toolbar-row>
         <mdc-toolbar-section [alignStart]="true">
-            <button class="main_button" (click)="persistent.open()">
-                <mdc-icon mdc-toolbar-menu-icon >add</mdc-icon>
+            <button id="main_buttonAdd" class="main_button" (click)="persistent.open(); setOpen()">
+                <mdc-icon mdc-toolbar-menu-icon *ngIf="openDrawer">keyboard_arrow_left</mdc-icon>
+                <mdc-icon mdc-toolbar-menu-icon *ngIf="!openDrawer">keyboard_arrow_right</mdc-icon>
                 <h1>Add Video(s)</h1>
             </button>
         </mdc-toolbar-section>
@@ -93,8 +90,8 @@
       <span flex></span> 
       <button class="correctResetBtn" (click)="resetFilters()"><p>Reset Filters</p> <mat-icon>refresh</mat-icon></button>
     </div>
-    <div class="contentmargin">
-      <app-dashboard [idsForChild]="idsForChild" [totalCommentsForChild]="totalCommentsForChild"></app-dashboard>
+    <div class="contentmargin" >
+      <app-dashboard (click)="changeFocus()" [idsForChild]="idsForChild" [totalCommentsForChild]="totalCommentsForChild"></app-dashboard>
     </div>
   </div>
 </div>
