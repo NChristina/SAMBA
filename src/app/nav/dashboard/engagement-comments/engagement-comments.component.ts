@@ -118,14 +118,14 @@ export class EngagementCommentsComponent implements OnInit {
       if (d.likeCount > 0) {
         return 'Liked';
       } else {
-        return 'Others';
+        return 'All';
       }
     })
     .entries(this.data);
     nested.forEach((like) => {
       const g = this.dimension.group().reduceSum((d: any) => {
         let catg = '';
-        if (d.likeCount > 0) { catg = 'Liked'; } else { catg = 'Others'; }
+        if (d.likeCount > 0) { catg = 'Liked'; } else { catg = 'All'; }
         return catg === like.key;
       });
       groups.push({group: g, likes: like.key });

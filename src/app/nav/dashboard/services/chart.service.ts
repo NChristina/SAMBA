@@ -154,8 +154,15 @@ export class ChartService {
         let sentx = 0;
         let currentNbCommentsLanguage = date.languageDistribution[lidx].nbComments;
         let currentNbCommentsSent = mSentiment[sentx].nbComments;
+        let currentNbLikedComments = date.likedComments;
 
         for (let i = 0; i < date.nbComments; i ++) {
+          let mlikeCount = 0;
+          if (currentNbLikedComments > 0) {
+            mlikeCount = 1;
+            currentNbLikedComments -= 1;
+          }
+
           const analysisObject = {
             languageProbability: 1,
             mainLanguage: date.languageDistribution[lidx].language,
@@ -175,8 +182,8 @@ export class ChartService {
           dataPoints.push({
             _key: control,              // where the comment key was
             authorDisplayName: null,    // author display name of comment
-            likeCount: 0,            // like count of comment
-            replyCount: 0,           // reply count of comment
+            likeCount: mlikeCount,      // like count of comment
+            replyCount: 0,              // reply count of comment
             publishedAt: date.publishedAt,
             text: null,                 // text of the comment
             song: songShort,            // *** song title of the commented song (max 15 char)
