@@ -38,7 +38,7 @@ export class CommentComponent implements OnInit, OnChanges {
   ngOnInit() {
     console.log(this.ids);
     this.chartService.getChartRange().subscribe( data => {
-      this.fetchComments(this.ids);
+      //this.fetchComments(this.ids);
       if (data.range !== undefined) {
         this.testStart = data.range[0];
         this.testEnd = data.range[1];
@@ -50,7 +50,7 @@ export class CommentComponent implements OnInit, OnChanges {
     this.chartService.GetData().subscribe((data) => {
       // console.log('subscription of getData.... ', data);
       // console.log('are the ids already there? ', this.ids);
-      this.fetchComments(this.ids);
+      //this.fetchComments(this.ids);
 
       if (data[0] !== undefined) {
         this.testStart = new Date(data[0].publishedAt);
@@ -65,7 +65,7 @@ export class CommentComponent implements OnInit, OnChanges {
    for (let propName in changes) {
      if(propName === 'ids') {
       // console.log('YYYYYYYYYYYYYYYYYYYYYYYYY: ', propName);
-      this.fetchComments(this.ids);
+      //this.fetchComments(this.ids);
      }
    }
   }

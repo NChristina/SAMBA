@@ -62,6 +62,7 @@ export class DataService {
   }
 
   songTopics(value: string[]): Promise<any> {
+    console.log(JSON.stringify(value));
     return this.requestService.get('songTopics/' + JSON.stringify(value));
   }
 
@@ -71,13 +72,19 @@ export class DataService {
   }
 
   getComments(nbComments: number, order: String, ids: String[], startDate: any, endDate: any): Promise<any> {
-    // console.log('send me the new comments pls');
-    // console.log(nbComments);
-    // console.log(order);
-    // console.log(ids);
-    // console.log(startDate);
-    // console.log(endDate);
-    return this.requestService.get('comments/' + JSON.stringify(ids));
-    // return this.httpClient.get('../../../assets/newMockData.json') as any;
+    // Default values
+    if (!nbComments) { nbComments = 25; }
+    if (!order) { order = 'other'; }
+    if (!startDate) { startDate = '2000-01-29T15:48:52.000Z'; }
+    if (!endDate) { endDate = '3000-12-29T15:48:52.000Z'; }
+
+    const value = {
+      'idArray': ids,
+      'nbComments': nbComments,
+      'order': order,
+      'startDate': startDate ,
+      'endDate': endDate};
+
+    return this.requestService.get('comments/' + JSON.stringify(value));
   }
 }

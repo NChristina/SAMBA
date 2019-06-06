@@ -91,6 +91,11 @@ export class NavComponent implements OnInit {
             this.searcher.songTopicsFromDb(this.idsForChild).then((topicRes) => {
               this.chartService.SetDataTopics(topicRes.body);
             });
+
+            /*this.searcher.getCommentsFromDb(5, '', this.idsForChild, '', '').then((comments) => {
+              console.log(comments.body);
+            });*/
+
             this.createTotalComments();
             // this.dataService.setVideoIds(this.loadedItems);
           });
@@ -121,6 +126,10 @@ export class NavComponent implements OnInit {
               this.searcher.songTopicsFromDb(this.idsForChild).then((topicRes) => {
                 this.chartService.SetDataTopics(topicRes.body);
               });
+
+              /*this.searcher.getCommentsFromDb(5, '', this.idsForChild, '', '').then((comments) => {
+                console.log(comments.body);
+              });*/
           });
         }
       } else {

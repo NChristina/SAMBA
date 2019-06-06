@@ -52,6 +52,14 @@ export class SearchService {
     }
   }
 
+  getCommentsFromDb(nbComments: number, order: String, ids: String[], startDate: any, endDate: any): Promise<any> {
+    if (ids === undefined) {
+      console.log('the value is undefined ?!');
+    } else {
+      return this.dataService.getComments(nbComments, order, ids, startDate, endDate);
+    }
+  }
+
   // splits the value and the song title by words and look for each word if it
   // matches any word. Results will be pushed to a list, after that the list will
   // be sorted by match count, comments and views
