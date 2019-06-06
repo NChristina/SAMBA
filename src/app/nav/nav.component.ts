@@ -76,30 +76,36 @@ export class NavComponent implements OnInit {
         versionIDs.push(version.id);
       });
       if (checkbox.target.checked) {
-        if (this.loadedItems.length === 8) {
-              const snackBar = this.snackbar.show('You can only pick 8 items', 'OK', this.config);
-              return;
-        } else {
-          this.chartService.setSpinner(true);
-          this.searcher.songDetailsFromDb(versionIDs).then((results) => {
-            this.loadedItems.push(results.body[0]);
-            this.matchForAdditionalInfo.push(this.searchMatchList[index]);
-            this.labelsForChips.push({title: this.matchForAdditionalInfo[this.matchForAdditionalInfo.length - 1].title + ' - '
-            + this.matchForAdditionalInfo[this.matchForAdditionalInfo.length - 1].artist, isGroup: true});
-            this.chartService.SetData(this.loadedItems,  this.matchForAdditionalInfo);
-            // console.log('äääh: ', this.matchForAdditionalInfo);
-            this.createIDarray();
-            this.searcher.songTopicsFromDb(this.idsForChild).then((topicRes) => {
-              this.chartService.SetDataTopics(topicRes.body);
+        const confirmAdd = confirm('You are adding a group of videos to your workspace. It can take more time than loading single videos.');
+        if (confirmAdd) {
+          if (this.loadedItems.length === 8) {
+                const snackBar = this.snackbar.show('You can only pick 8 items', 'OK', this.config);
+                return;
+          } else {
+            this.chartService.setSpinner(true);
+            this.searcher.songDetailsFromDb(versionIDs).then((results) => {
+              this.loadedItems.push(results.body[0]);
+              this.matchForAdditionalInfo.push(this.searchMatchList[index]);
+              this.labelsForChips.push({title: this.matchForAdditionalInfo[this.matchForAdditionalInfo.length - 1].title + ' - '
+              + this.matchForAdditionalInfo[this.matchForAdditionalInfo.length - 1].artist, isGroup: true});
+              this.chartService.SetData(this.loadedItems,  this.matchForAdditionalInfo);
+              // console.log('äääh: ', this.matchForAdditionalInfo);
+              this.createIDarray();
+              this.searcher.songTopicsFromDb(this.idsForChild).then((topicRes) => {
+                this.chartService.SetDataTopics(topicRes.body);
+              });
+
+              /*this.searcher.getCommentsFromDb(5, '', this.idsForChild, '', '').then((comments) => {
+                console.log(comments.body);
+              });*/
+
+              this.createTotalComments();
+              // this.dataService.setVideoIds(this.loadedItems);
             });
-
-            /*this.searcher.getCommentsFromDb(5, '', this.idsForChild, '', '').then((comments) => {
-              console.log(comments.body);
-            });*/
-
-            this.createTotalComments();
-            // this.dataService.setVideoIds(this.loadedItems);
-          });
+          }
+        } else {
+          const elm: HTMLElement = document.getElementById(id) as HTMLElement;
+          if (elm) { elm.click(); }
         }
       } else {
         this.makeTheRemoval(versionIDs, index, childIndex);
