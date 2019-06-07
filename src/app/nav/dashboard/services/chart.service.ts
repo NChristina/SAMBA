@@ -20,6 +20,7 @@ export class ChartService {
   private loggedIn = false;
   private spinner = false;
   private dataForReset: any;
+  private videoIds = [];
 
   constructor() {
     this.GetData().subscribe((data) => {
@@ -54,6 +55,10 @@ export class ChartService {
     this.chartDataSource.next(newData);
     this.changeCrossfilter(crossfilter(newData));
     this.spinner = false;
+  }
+
+  GetVideoIds(): any {
+    return this.videoIds;
   }
 
   GetData(): Observable<any[]> {
@@ -109,6 +114,7 @@ export class ChartService {
     totalViews = 0;
     totalLikes = 0;
     totalDislikes = 0;
+    this.videoIds = [];
     data.forEach((song, index) => {
 
       let control = 0;
@@ -145,6 +151,12 @@ export class ChartService {
       // console.log('aggregations of song: ', song[0].aggregations);
       let tmp_song = song;
       isGroup ? tmp_song = tmp_song : tmp_song = song[0];
+
+      if (tmp_song) {
+        const newVideoIds = this.videoIds.concat(tmp_song.videoIds);
+        this.videoIds = newVideoIds;
+      }
+      console.log(this.videoIds);
 
       tmp_song.aggregations.forEach( date => {
         // console.log('language obj: ', date.languageDistribution);
