@@ -211,7 +211,7 @@ export class SentimentComponent implements OnInit {
         if (this.enableNA) {
           groupedValue = (sentSummNA * 100) / sumAll;
         } else {
-          return 100;
+          return 0;
         }
       } else { console.log('Sentiment' + sentiment + ' does not exist'); }
     } /* else {

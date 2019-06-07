@@ -19,18 +19,28 @@ export class TopicComponent implements OnInit {
   wordCounted = [];
   data: any;
   totalComments = 0;
+  isLoading = false;
 
 
   constructor(private chartService: ChartService, private _element: ElementRef) { }
 
   ngOnInit() {
+
+    this.chartService.GetData().subscribe((data) => {
+      this.data = data;
+      if (this.data.length > 0) { this.isLoading = true; }
+    });
+
     this.chartService.GetDataTopics().subscribe((data) => {
-      // this.data = data;
+      if (this.data.length <= 0) { data = this.data; }
       this.totalComments = Math.round((data.commentsUsed * 100) / data.commentsAll);
       this.dataCloud = data.dataCloud;
       this.listSongs = data.listSongs;
       this.wordCounted = data.wordCounted;
-      if (this.listSongs) {this.createLists(); }
+      if (this.listSongs) {
+        this.createLists();
+        this.isLoading = false;
+      }
     });
 
     this.chartService.getCrossfilter().subscribe((filter) => {

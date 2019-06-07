@@ -77,17 +77,51 @@ export class HardfactsComponent implements OnInit {
   shortValues(value) {
     const count = this.digits_count(value);
 
-    if (count >= 10) {
-      value = Math.round(value / 1000000000);
-      value = value + 'B';
+    if (count >= 67) {
+      value = Math.round(value / Math.pow(10, 66)); value = value + 'c';
+    } else if (count >= 64) {
+      value = Math.round(value / Math.pow(10, 63)); value = value + 'v';
+    } else if (count >= 61) {
+      value = Math.round(value / Math.pow(10, 60)); value = value + 'N';
+    } else if (count >= 58) {
+      value = Math.round(value / Math.pow(10, 57)); value = value + 'O';
+    } else if (count >= 55) {
+      value = Math.round(value / Math.pow(10, 54)); value = value + 'St';
+    } else if (count >= 52) {
+      value = Math.round(value / Math.pow(10, 51)); value = value + 'Sd';
+    } else if (count >= 49) {
+      value = Math.round(value / Math.pow(10, 48)); value = value + 'Qd';
+    } else if (count >= 46) {
+      value = Math.round(value / Math.pow(10, 45)); value = value + 'Qt';
+    } else if (count >= 43) {
+      value = Math.round(value / Math.pow(10, 42)); value = value + 'T';
+    } else if (count >= 40) {
+      value = Math.round(value / Math.pow(10, 39)); value = value + 'D';
+    } else if (count >= 37) {
+      value = Math.round(value / Math.pow(10, 36)); value = value + 'U';
+    } else if (count >= 34) {
+      value = Math.round(value / Math.pow(10, 33)); value = value + 'd';
+    } else if (count >= 31) {
+      value = Math.round(value / Math.pow(10, 30)); value = value + 'n';
+    } else if (count >= 28) {
+      value = Math.round(value / Math.pow(10, 27)); value = value + 'o';
+    } else if (count >= 25) {
+      value = Math.round(value / Math.pow(10, 24)); value = value + 'S';
+    } else if (count >= 22) {
+      value = Math.round(value / Math.pow(10, 21)); value = value + 's';
+    } else if (count >= 19) {
+      value = Math.round(value / Math.pow(10, 18)); value = value + 'Q';
+    } else if (count >= 16) {
+      value = Math.round(value / Math.pow(10, 15)); value = value + 'q';
+    } else if (count >= 13) {
+      value = Math.round(value / Math.pow(10, 12)); value = value + 't';
+    } else if (count >= 10) {
+      value = Math.round(value / Math.pow(10, 9)); value = value + 'B';
     } else if (count >= 7) {
-      value = Math.round(value / 1000000);
-      value = value + 'M';
+      value = Math.round(value / Math.pow(10, 6)); value = value + 'M';
     } else if (count >= 4) {
-      value = Math.round(value / 1000);
-      value = value + 'K';
+      value = Math.round(value / Math.pow(10, 3)); value = value + 'K';
     }
-
     return value;
   }
 

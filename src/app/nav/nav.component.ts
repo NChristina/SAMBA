@@ -22,11 +22,6 @@ export class NavComponent implements OnInit {
   labelsForChips = [];
   config: MdcSnackbarConfig = { align: 'top'};
   openDrawer = false;
-
-  // idsForChild: string[] = [];
-  // startDateForChild: any;
-  // endDateForchild: any;
-
   idsForChild = [];
   totalCommentsForChild = 0;
 
@@ -36,27 +31,25 @@ export class NavComponent implements OnInit {
 
   ngOnInit() {
     document.getElementById('sFimg').style.display = 'none'; // Spinner OFF default
-
   }
 
   resetFilters() {
     this.chartService.reloadForResetFilters();
   }
 
-
   submitQuickSearch(value: string) {
     if (value) {
       // Entered submitSearch in nav comp
-      document.getElementById('sFtext').style.display = 'none'; // Remove any alert
-      document.getElementById('sFimg').style.display = 'block'; // Spinner ON
+      document.getElementById('sFtext').style.display = 'none';       // Remove any alert
+      document.getElementById('sFimg').style.display = 'block';       // Spinner ON
 
       this.searchMatchList = [];
       this.isSearching = true;
       this.searcher.quickSearchFromDb(value.trim()).then((results) => {
-        document.getElementById('sFimg').style.display = 'none'; // Spinner OFF
+        document.getElementById('sFimg').style.display = 'none';      // Spinner OFF
         // console.log('I GOT A RESULT: ', results.body);
         if (results.body.length === 0) {
-          document.getElementById('sFtext').style.display = 'block'; // Display alert
+          document.getElementById('sFtext').style.display = 'block';  // Display alert
         }
         this.searchMatchList = results.body;
         this.isSearching = false;
@@ -75,6 +68,7 @@ export class NavComponent implements OnInit {
       this.searchMatchList[index].versions.forEach(version => {
         versionIDs.push(version.id);
       });
+
       if (checkbox.target.checked) {
         const confirmAdd = confirm('You are adding a group of videos to your workspace. It can take more time than loading single videos.');
         if (confirmAdd) {
@@ -89,12 +83,8 @@ export class NavComponent implements OnInit {
               this.labelsForChips.push({title: this.matchForAdditionalInfo[this.matchForAdditionalInfo.length - 1].title + ' - '
               + this.matchForAdditionalInfo[this.matchForAdditionalInfo.length - 1].artist, isGroup: true});
               this.chartService.SetData(this.loadedItems,  this.matchForAdditionalInfo);
-              // console.log('äääh: ', this.matchForAdditionalInfo);
               this.createIDarray();
-              this.searcher.songTopicsFromDb(this.idsForChild).then((topicRes) => {
-                this.chartService.SetDataTopics(topicRes.body);
-              });
-
+              this.requestTopics();
               /*this.searcher.getCommentsFromDb(5, '', this.idsForChild, '', '').then((comments) => {
                 console.log(comments.body);
               });*/
@@ -104,6 +94,7 @@ export class NavComponent implements OnInit {
             });
           }
         } else {
+          // cancel insertion of group
           const elm: HTMLElement = document.getElementById(id) as HTMLElement;
           if (elm) { elm.click(); }
         }
@@ -130,18 +121,13 @@ export class NavComponent implements OnInit {
               isGroup: false, id: versionID[0]});
               this.chartService.SetData(this.loadedItems, this.matchForAdditionalInfo);
               this.createIDarray();
-              this.searcher.songTopicsFromDb(this.idsForChild).then((topicRes) => {
-                this.chartService.SetDataTopics(topicRes.body);
-              });
-
-              /*this.searcher.getCommentsFromDb(5, '', this.idsForChild, '', '').then((comments) => {
-                console.log(comments.body);
-              });*/
+              this.requestTopics();
           });
         }
       } else {
         this.makeTheRemoval(versionID, index, childIndex);
         this.createIDarray();
+        this.requestTopics();
       }
     }
   }
@@ -160,7 +146,6 @@ export class NavComponent implements OnInit {
             this.matchForAdditionalInfo.splice(index, 1);
             this.labelsForChips.splice(index, 1);
             this.chartService.SetData(this.loadedItems, this.matchForAdditionalInfo);
-
           }
         }
       });
@@ -183,8 +168,6 @@ export class NavComponent implements OnInit {
   // für die chips!!!
   // das hakal von der checkbox in der suchleiste muss auch entfernt werden!!!
   removeSelectedSong(element, index) {
-    // console.log('element: ', element);
-    // console.log('index: ', index);
     this.loadedItems.splice(index, 1);
     this.labelsForChips.splice(index, 1);
     this.matchForAdditionalInfo.splice(index, 1);
@@ -201,10 +184,7 @@ export class NavComponent implements OnInit {
     } else {
       this.searchMatchList.forEach((e, idx) => {
         e.versions.forEach((v, i) => {
-          // console.log('at index ', i , ': ', v.id);
-          // console.log(element.id);
           if (v.id === element.id) {
-            // console.log('xxxx: ',  this.searchMatchList[idx].versions[i]);
             const tmp_element = this.searchMatchList[idx].versions[i];
             this.searchMatchList[idx].versions.splice(i, 1);
             setTimeout(() => {
@@ -215,11 +195,10 @@ export class NavComponent implements OnInit {
       });
     }
     this.createIDarray();
-
+    this.requestTopics();
   }
+
   toggleAccordion(index, event) {
-    // console.log('XXXXX event: ', event);
-    // console.log('accordion.....was toggled with index ', index, ' and the event is: ', event);
     const element = document.getElementById('accordion_' + index);
     const panel = document.getElementById('panel_' + index);
     const img = document.getElementById('img_' + index);
@@ -232,6 +211,7 @@ export class NavComponent implements OnInit {
       (img as HTMLImageElement).src = '../../assets/chevron_up.svg'; // set attribute
     }
   }
+
   createIDarray() {
     this.idsForChild = [];
     // console.log('createIDarray out of this.loadedItems: ', this.loadedItems);
@@ -252,6 +232,7 @@ export class NavComponent implements OnInit {
     }
     // console.log('xxxx: ', this.idsForChild);
   }
+
   createTotalComments() {
     this.searchMatchList.forEach( e => {
       // console.log('1_1: ', +e.versions[0].statistics.commentCount);
@@ -262,7 +243,6 @@ export class NavComponent implements OnInit {
     });
     // console.log('totalComments: ', this.totalCommentsForChild);
   }
-
 
   setOpen() {
     this.openDrawer = !this.openDrawer;
@@ -276,15 +256,14 @@ export class NavComponent implements OnInit {
   shortValues(value) {
     const count = this.digits_count(value);
 
-    if (count >= 10) {
-      value = Math.round(value / 1000000000);
-      value = value + 'B';
+    if (count >= 13) {
+      value = Math.round(value / Math.pow(10, 12)); value = value + 't';
+    } else if (count >= 10) {
+      value = Math.round(value / Math.pow(10, 9)); value = value + 'B';
     } else if (count >= 7) {
-      value = Math.round(value / 1000000);
-      value = value + 'M';
+      value = Math.round(value / Math.pow(10, 6)); value = value + 'M';
     } else if (count >= 4) {
-      value = Math.round(value / 1000);
-      value = value + 'K';
+      value = Math.round(value / Math.pow(10, 3)); value = value + 'K';
     }
 
     return value;
@@ -295,6 +274,12 @@ export class NavComponent implements OnInit {
     if (n >= 1) { ++count; }
     while (n / 10 >= 1) { n /= 10; ++count; }
     return count;
+  }
+
+  requestTopics() {
+    this.searcher.songTopicsFromDb(this.idsForChild).then((topicRes) => {
+      this.chartService.SetDataTopics(topicRes.body);
+    });
   }
 }
 

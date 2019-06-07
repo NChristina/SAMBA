@@ -1,3 +1,4 @@
+<div *ngIf="isLoading" class="loadingSignal"><app-loading-svg></app-loading-svg><p>Loading new topics</p></div>
 <div class="grid-container">
   <mat-grid-list cols="1" rowHeight="40px">
     <div class="wrapper" (mouseover)="setTooltipInfo($event, tooltipinfo);" style="float:right" class="tooltInfo"> 

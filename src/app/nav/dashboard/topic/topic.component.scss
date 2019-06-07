@@ -38,5 +38,24 @@ p.footerTopics{
 .wrapper.dataCloud .tooltInfo_text {
   width: fit-content;
 }
+
+.loadingSignal {
+  margin: auto;
+  width: 100%;
+  padding: 0px;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.loadingSignal p {
+  margin: -20px 0px 0px 0px;
+  padding: 0;
+  text-align: center;
+  font-size: 0.8em;
+  color: #333;
+  font-style: italic;
+}
+
   
 

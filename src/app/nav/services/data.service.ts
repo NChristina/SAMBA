@@ -62,7 +62,6 @@ export class DataService {
   }
 
   songTopics(value: string[]): Promise<any> {
-    console.log(JSON.stringify(value));
     return this.requestService.get('songTopics/' + JSON.stringify(value));
   }
 
