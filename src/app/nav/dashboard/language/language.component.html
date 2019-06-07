@@ -16,3 +16,9 @@
 <div id="languageGraph" class="maxSize aggregationView"></div>
 <div id="languageBarGraph" class="maxSize comparisonView"></div>
 <p class="notDataWarn" *ngIf="this.notDataWarn">Not enough data to render chart.</p>
+
+<div class="wrapperLangCaption" >
+    <div *ngIf="showLangCaption"> 
+        <p  class="footerLang"> * {{langCaption}} </p>
+    </div>
+</div>

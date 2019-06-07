@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ChartService } from '../services/chart.service';
+import * as langCodes from '../../../shared/iso639';
 import * as d3 from 'd3';
 import * as dc from 'dc';
 
@@ -23,6 +24,8 @@ export class LanguageComponent implements OnInit {
   renderedChart = false;
   notDataWarn = false;
   nbSongs = 0;
+  langCaption = '';
+  showLangCaption = false;
 
   constructor(private chartService: ChartService) { }
 
@@ -44,9 +47,14 @@ export class LanguageComponent implements OnInit {
           this.countSongs();
           this.renderChart();
           this.renderBarChart();
+          this.showCaption();
+          this.showLangCaption = true;
         } else {
           this.notDataWarn = true;
+          this.showLangCaption = false;
         }
+      } else {
+        this.showLangCaption = false;
       }
     });
     this.chartService.GetData().subscribe((data) => {
@@ -76,6 +84,30 @@ export class LanguageComponent implements OnInit {
 
     this.renderedChart = false;
     this.setVisibilityofViews();
+  }
+
+  showCaption() {
+    let caption = '';
+    if (this.langGroups[0]) {
+      caption = caption + '(' + this.langGroups[0].lang + ') ' + this.codeToLanguage(this.langGroups[0].lang);
+    }
+    if (this.langGroups[1]) {
+      caption = caption + ', (' + this.langGroups[1].lang + ') ' + this.codeToLanguage(this.langGroups[1].lang);
+    }
+    if (this.langGroups[2]) {
+      caption = caption + ', (' + this.langGroups[2].lang + ') ' + this.codeToLanguage(this.langGroups[2].lang);
+    }
+
+    this.langCaption = caption;
+  }
+
+  codeToLanguage(code: string) {
+    let result = code;
+    langCodes.iso639.forEach((l) => {
+      if (l.code === code) { result = l.lang; }
+    });
+
+    return result;
   }
 
   diff_months(dt2, dt1) {
