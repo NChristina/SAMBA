@@ -49,6 +49,7 @@ export class CommentComponent implements OnInit, OnChanges {
       this.mvideoIds = this.chartService.GetVideoIds();
 
       if (data.length > 0 && this.mvideoIds && this.mvideoIds.length > 0) {
+        this.totalComments = data.length;
         this.fetchComments(this.mvideoIds);
       } else if (data.length <= 0) {
         this.receivedComments = [];
@@ -203,7 +204,7 @@ export class CommentComponent implements OnInit, OnChanges {
     const date = publishedDate.split('T')[0];
     const time = publishedDate.split('T')[1].split('.')[0];
     return date + ' ' + time;
-    return publishedDate;
+    // return publishedDate;
   }
 
   // // sets the tooltip on mouseover
