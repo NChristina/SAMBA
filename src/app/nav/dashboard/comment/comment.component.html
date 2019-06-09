@@ -1,9 +1,9 @@
 <div class="grid-container">
   <mat-grid-list cols="3" rowHeight="50px">
       <div class="filterComp">
-          <form style="display:inline; margin-right: 1px">
+          <form ngForm [formGroup]="myFormGroup" style="display:inline; margin-right: 1px">
               <label>Showing&nbsp;</label>
-              <input #box id="showCommentsAmmount" [(value)]="nbComments" type="number" required="" />
+              <input #box id="showCommentsAmmount" formControlName="nbComments" [(value)]="nbComments" type="number" required="" (keydown.enter)="textareaEnterPressed($event)" />
               <label>&nbsp;of {{totalComments}} comments</label>
           </form>
           
@@ -64,8 +64,8 @@
                 <div style="padding: 0px 10px 20px 50px">
                   <div class="post-heading">
                     <div class="comment-author"><img src="../../../../assets/user.svg" style ="height: 20px; margin: 0px 5px -5px 0px"> {{reply.snippet.authorDisplayName}} | {{this.dateTimeParser(reply.snippet.publishedAt)}}</div>
-                  </div>
-                  <p class="comment-text" style="color: black"> {{reply.snippet.textDisplay}} </p>
+                  </div> 
+                  <p [innerHTML]="reply.snippet.textDisplay" class="comment-text" style="color: black"></p>
                   <div class="bottom-comment" style="float: left; margin-left: 15px">
                     {{reply.snippet.likeCount}} <img src="../../../../assets/002-like.svg" height="13px" class="iconStyle" style="margin: 0px 5px">
                   </div>

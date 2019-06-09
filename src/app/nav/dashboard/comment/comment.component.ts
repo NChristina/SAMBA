@@ -2,7 +2,7 @@ import { Component, OnInit, Input, OnChanges, SimpleChanges, SimpleChange } from
 import * as crossfilter from 'crossfilter';
 import * as dc from 'dc';
 import { ChartService } from '../services/chart.service';
-import { FormControl } from '@angular/forms';
+import { FormControl, FormGroup } from '@angular/forms';
 import { DataService } from '../../services/data.service';
 
 @Component({
@@ -30,7 +30,10 @@ export class CommentComponent implements OnInit, OnChanges {
     { value: 'date desc', description: 'dateDesc'},
     { value: 'date asc', description: 'dateAsc' },
   ];
-  foodControl = new FormControl();
+  myFormGroup = new FormGroup({
+    nbComments: new FormControl()
+  });
+
 
   constructor(private chartService: ChartService, private dataService: DataService) {}
 
@@ -220,5 +223,17 @@ export class CommentComponent implements OnInit, OnChanges {
     tooltip.style.position = 'fixed';
     tooltip.style.top = (event.clientY - tooltip.offsetHeight) + 'px';
     tooltip.style.left = (event.clientX - tooltip.offsetWidth - 5) + 'px';
+  }
+
+  textareaEnterPressed($event: KeyboardEvent): boolean {
+    $event.preventDefault();
+    $event.stopPropagation();
+    const newNbComm = this.myFormGroup.get('nbComments').value;
+    if (newNbComm && !isNaN(newNbComm)) {
+      this.nbComments = newNbComm;
+    }
+
+    this.runFetchComments();
+    return true;
   }
 }
