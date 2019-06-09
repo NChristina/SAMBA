@@ -54,8 +54,11 @@
               </div>
               <img src="../../../../assets/{{this.getSentiment(comment.sentiment, 'mean').icon }}" height="13px" class="iconStyle" style="margin: 0px 5px">
           </a>
-          <div *ngIf="displaySent == comment.commentID" class="pSt" id="{{'pSt_' + comment.commentID }}" style="display:inline; background:#aaa; color:#fff; font-size:0.8em; padding:1px 5px;">
-            NLTK: {{this.getSentiment(comment.sentiment, 'nltk').sent}} | TextBlob: {{this.getSentiment(comment.sentiment, 'blob').sent}} | AFINN: {{this.getSentiment(comment.sentiment, 'afinn').sent}} 
+          <div *ngIf="displaySent == comment.commentID" (mouseover)="setTooltipInfoSent($event, tooltipinfo);" class="pSt tooltInfo" id="{{'pSt_' + comment.commentID }}" style="display:inline; background:#aaa; color:#fff; font-size:0.8em; padding:1px 5px;">
+            NLTK: {{this.getSentiment(comment.sentiment, 'nltk').sent}} | TextBlob: {{this.getSentiment(comment.sentiment, 'blob').sent}} | AFINN: {{this.getSentiment(comment.sentiment, 'afinn').sent}} &nbsp;&nbsp;
+            <span #tooltipinfo class="tooltInfo_text">
+              <p><img height="13px" src="../../assets/000-info.svg"> Sentiment scores are calculated with three sentiment analysis tools (AFINN, NLTK, and TextBlob). Non-English comments are not assessed by the tools.</p>
+            </span>
           </div>
         </div>
         

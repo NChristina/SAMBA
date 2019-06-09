@@ -240,6 +240,13 @@ export class CommentComponent implements OnInit {
     tooltip.style.left = (event.clientX - tooltip.offsetWidth - 5) + 'px';
   }
 
+  // // sets the tooltip on mouseover
+  setTooltipInfoSent(event: MouseEvent, tooltip: HTMLSpanElement) {
+    tooltip.style.position = 'fixed';
+    tooltip.style.top = (event.clientY + 10) + 'px';
+    tooltip.style.left = (event.clientX - (tooltip.offsetWidth / 2)) + 'px';
+  }
+
   textareaEnterPressed($event: KeyboardEvent): boolean {
     $event.preventDefault();
     $event.stopPropagation();
