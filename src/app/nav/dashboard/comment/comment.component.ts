@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, OnChanges, SimpleChanges, SimpleChange } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import * as crossfilter from 'crossfilter';
 import * as dc from 'dc';
 import { ChartService } from '../services/chart.service';
@@ -10,15 +10,22 @@ import { DataService } from '../../services/data.service';
   templateUrl: './comment.component.html',
   styleUrls: ['./comment.component.scss'],
 })
-export class CommentComponent implements OnInit, OnChanges {
+export class CommentComponent implements OnInit {
   @Input() ids: any;
   @Input() totalComments: any;
-  dateStart: any;
-  dateEnd: any;
-  doNotUseDefaultOnDate = false;
+  dateStart = '';         // default
+  dateEnd = '';           // default
   nbComments = 25;        // default
   order = 'repliesDesc';  // default
   mvideoIds: string[];
+
+  prevDateStart = '';         // previous
+  prevDateEnd = '';           // previous
+  prevNbComments = 25;        // previous
+  prevOrder = 'repliesDesc';  // previous
+  prevMvideoIds: string[];    // previous
+
+  isLoading = false;
   displaySent = '';
   displayReplies = '';
   receivedComments: any;
@@ -34,54 +41,33 @@ export class CommentComponent implements OnInit, OnChanges {
     nbComments: new FormControl()
   });
 
-
   constructor(private chartService: ChartService, private dataService: DataService) {}
 
   ngOnInit() {
     this.chartService.getChartRange().subscribe( data => {
-      // this.fetchComments(this.ids);
-      if (data && data.range) {
-        this.dateStart = data.range[0];
-        this.dateEnd = data.range[1];
-        // console.log('we have the filtered range: ', this.dateStart, ' to ', this.dateEnd);
-      }
+      if (data && data.range && this.mvideoIds && this.mvideoIds.length > 0) {
+        this.dateStart = data.range[0].toISOString();
+        this.dateEnd = data.range[1].toISOString();
 
+        // one could fetch comments right after filter
+        // but if the number of comments is to big
+        // that can take a long time to receive an answer from the db
+        // this.fetchComments(this.mvideoIds);
+      }
     });
 
     this.chartService.GetData().subscribe((data) => {
-      if (data) {
-        this.totalComments = data.length;
-      } else {
-        this.totalComments = 0;
-      }
-
+      (data) ? this.totalComments = data.length : this.totalComments = 0;
       this.mvideoIds = this.chartService.GetVideoIds();
 
       if (data && data.length > 0 && this.mvideoIds && this.mvideoIds.length > 0) {
+        this.dateStart = '';
+        this.dateEnd = '';
         this.fetchComments(this.mvideoIds);
       } else if (data && data.length <= 0) {
         this.receivedComments = [];
       }
-
-      if (data && data[0] !== undefined) {
-        this.dateStart = new Date(data[0].publishedAt);
-        this.dateEnd = new Date(data[data.length - 1].publishedAt);
-        // console.log('first date: ', this.dateStart);
-        // console.log('last date: ', this.dateEnd);
-      }
     });
-  }
-
-  ngOnChanges(changes: SimpleChanges): void {
-   /* const name: SimpleChange = changes.name;
-    console.log('prev value: ', name.previousValue);
-    console.log('got name: ', name.currentValue);*/
-   /*for (const propName in changes) {
-     if (propName === 'ids') {
-      // console.log('YYYYYYYYYYYYYYYYYYYYYYYYY: ', propName);
-      // this.fetchComments(this.ids);
-     }
-   }*/
   }
 
   runFetchComments() {
@@ -96,14 +82,37 @@ export class CommentComponent implements OnInit, OnChanges {
   }
 
   fetchComments(videoIdsArr) {
-    console.log(this.dateStart);
-    console.log(this.dateEnd);
-    this.dateStart = '';
-    this.dateEnd = '';
+    if (!this.dateStart) { this.dateStart = ''; }
+    if (!this.dateEnd) { this.dateEnd = ''; }
 
-    this.dataService.getComments(this.nbComments, this.order, videoIdsArr, this.dateStart, this.dateEnd).then((results) => {
-      this.receivedComments = results.body[0].comments;
-    });
+    if (!this.isLoading && this.isNewRequest(this.nbComments, this.order, videoIdsArr, this.dateStart, this.dateEnd)) {
+      this.savePreviousValues(this.nbComments, this.order, videoIdsArr, this.dateStart, this.dateEnd);
+      this.isLoading = true;
+      this.dataService.getComments(this.nbComments, this.order, videoIdsArr, this.dateStart, this.dateEnd).then((results) => {
+        this.receivedComments = results.body[0].comments;
+        this.isLoading = false;
+      });
+    }
+  }
+
+  isNewRequest(nbComments: number, order: string, ids: string[], startDate: any, endDate: any) {
+    if (this.prevDateStart !== startDate ||
+        this.prevDateEnd !== endDate ||
+        this.prevNbComments !== nbComments ||
+        this.prevOrder !== order ||
+        this.prevMvideoIds !== ids) {
+          return true;
+        } else {
+          return false;
+        }
+  }
+
+  savePreviousValues(nbComments: number, order: string, ids: string[], startDate: any, endDate: any) {
+    this.prevDateStart = startDate;
+    this.prevDateEnd = endDate;
+    this.prevNbComments = nbComments;
+    this.prevOrder = order;
+    this.prevMvideoIds = ids;
   }
 
   onSelectionChange(event: { index: any, value: any }) {
@@ -127,7 +136,6 @@ export class CommentComponent implements OnInit, OnChanges {
       this.order = this.filter[5].description;
       break;
     }
-    console.log(this.order);
   }
 
   displaySentimentDetails(id: string) {
