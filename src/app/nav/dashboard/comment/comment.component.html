@@ -15,7 +15,7 @@
                 <p><img height="15px" src="../../assets/010-warning.svg">  The more comments you fetch, the longer it will take to load them.</p>
               </span>
           </div>
-          <button class="correctResetBtn" style="float:right;" [disabled]="ids.length === 0"><mat-icon (click)="runFetchComments()">cloud_download</mat-icon></button>
+          <button title="Get Comments" class="correctResetBtn" style="float:right;" [disabled]="ids.length === 0"><mat-icon (click)="runFetchComments()">cloud_download</mat-icon></button>
           <mdc-select #select placeholder="replies desc" ngModel #demoSelectModel="ngModel" name="filter" style="float:right;" (selectionChange)="onSelectionChange($event)">
             <option *ngFor="let fi of filter" [value]="fi.value"> {{ fi.value }} </option>
           </mdc-select>

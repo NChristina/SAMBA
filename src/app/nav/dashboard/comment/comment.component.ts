@@ -85,6 +85,11 @@ export class CommentComponent implements OnInit, OnChanges {
   }
 
   runFetchComments() {
+    const newNbComm = this.myFormGroup.get('nbComments').value;
+    if (newNbComm && !isNaN(newNbComm)) {
+      this.nbComments = newNbComm;
+    }
+
     if (this.mvideoIds && this.mvideoIds.length > 0) {
       this.fetchComments(this.mvideoIds);
     }
@@ -122,6 +127,7 @@ export class CommentComponent implements OnInit, OnChanges {
       this.order = this.filter[5].description;
       break;
     }
+    console.log(this.order);
   }
 
   displaySentimentDetails(id: string) {
@@ -228,11 +234,6 @@ export class CommentComponent implements OnInit, OnChanges {
   textareaEnterPressed($event: KeyboardEvent): boolean {
     $event.preventDefault();
     $event.stopPropagation();
-    const newNbComm = this.myFormGroup.get('nbComments').value;
-    if (newNbComm && !isNaN(newNbComm)) {
-      this.nbComments = newNbComm;
-    }
-
     this.runFetchComments();
     return true;
   }
