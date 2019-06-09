@@ -300,18 +300,24 @@ export class SentimentComponent implements OnInit {
   }
 
   defineChartColors() {
-    switch (Object.keys(this.sentGroups).length) {
-      case 1:
-        return ['#EEEEEE'];
-      case 2:
-        return ['#4daf4a', '#EEEEEE'];
-      case 3:
-        return ['#4daf4a', '#666666', '#EEEEEE'];
-      case 4:
-        return ['#4daf4a', '#666666', '#ff7f00', '#EEEEEE'];
-      default:
-        return ['#4daf4a', '#666666', '#ff7f00', '#984ea3', '#EEEEEE'];
-    }
+    const colorArray = [];
+    const sentGroupsOrdered = this.reorderGroups();
+
+    sentGroupsOrdered.forEach((g) => {
+      if (g.sent === 'Pos') {
+        colorArray.push('#4daf4a');
+      } else if (g.sent === 'Neu') {
+        colorArray.push('#666666');
+      } else if (g.sent === 'Neg') {
+        colorArray.push('#ff7f00');
+      } else if (g.sent === 'Mix') {
+        colorArray.push('#984ea3');
+      } else if (g.sent === 'N/A') {
+        colorArray.push('#EEEEEE');
+      }
+    });
+
+    return colorArray;
   }
 
   // Renders line chart (aggregation)
