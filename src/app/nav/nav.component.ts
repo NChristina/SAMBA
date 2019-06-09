@@ -87,10 +87,6 @@ export class NavComponent implements OnInit {
               this.chartService.SetData(this.loadedItems,  this.matchForAdditionalInfo);
               this.createIDarray();
               this.requestTopics();
-              /*this.searcher.getCommentsFromDb(5, '', this.idsForChild, '', '').then((comments) => {
-                console.log(comments.body);
-              });*/
-
               this.createTotalComments();
               // this.dataService.setVideoIds(this.loadedItems);
             });
@@ -114,7 +110,6 @@ export class NavComponent implements OnInit {
               return;
         } else {
           this.chartService.setSpinner(true);
-
           // console.log('add only me: ', versionID);
           this.searcher.songDetailsFromDb(versionID).then((results) => {
             this.loadedItems.push(results.body);
@@ -136,9 +131,6 @@ export class NavComponent implements OnInit {
 
   // für die SEARCH LIST
   makeTheRemoval(versionIDs, idx, childIndex) {
-    // console.log('info: ', versionIDs, ' // index: ', idx, '// childIndex: ', childIndex);
-    // console.log('delete out of loadedItems: ', this.loadedItems);
-
     if (childIndex === null) { // is group
       // console.log('group');
       this.loadedItems.forEach((item, index) => {
@@ -176,7 +168,6 @@ export class NavComponent implements OnInit {
     this.chartService.SetData(this.loadedItems, this.matchForAdditionalInfo);
 
     if (element.isGroup) {
-      // console.log(this.searchMatchList[index]);
       const tmp_element = this.searchMatchList[index];
       this.searchMatchList.splice(index, 1);
       setTimeout(() => {
@@ -216,34 +207,28 @@ export class NavComponent implements OnInit {
 
   createIDarray() {
     this.idsForChild = [];
-    // console.log('createIDarray out of this.loadedItems: ', this.loadedItems);
     if (this.loadedItems !== undefined) {
       this.loadedItems.forEach(l => {
         if (l.videoIds !== undefined) {
-          // console.log('i am group');
           l.videoIds.forEach(i => {
             this.idsForChild.push(i);
           });
         } else {
-          // console.log('i am single: ', l);
           l[0].videoIds.forEach(i => {
             this.idsForChild.push(i);
           });
         }
       });
     }
-    // console.log('xxxx: ', this.idsForChild);
   }
 
   createTotalComments() {
     this.searchMatchList.forEach( e => {
-      // console.log('1_1: ', +e.versions[0].statistics.commentCount);
       e.versions.forEach( v => {
         const num = +v.statistics.commentCount;
         this.totalCommentsForChild = this.totalCommentsForChild + num;
       });
     });
-    // console.log('totalComments: ', this.totalCommentsForChild);
   }
 
   setOpen() {

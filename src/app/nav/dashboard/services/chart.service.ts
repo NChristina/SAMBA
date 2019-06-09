@@ -21,10 +21,10 @@ export class ChartService {
   private spinner = false;
   private dataForReset: any;
   private videoIds = [];
+  private topicsRequested = false;
 
   constructor() {
     this.GetData().subscribe((data) => {
-      // console.log('subscription of getData.... ');
       this.changeCrossfilter(crossfilter(data));
     });
   }
@@ -38,6 +38,9 @@ export class ChartService {
   }
 
   public setSpinner(value) {
+    if (value) {
+      this.SetTopicsRequested();
+    }
     this.spinner = value;
   }
 
@@ -67,16 +70,28 @@ export class ChartService {
 
   SetDataTopics(topicData: any) {
     this.chartTopicsSource.next(topicData);
+    this.ResetTopicsRequested();
   }
 
   GetDataTopics(): Observable<any> {
     return this.currentChartTopics;
   }
 
+  GetTopicsRequested() {
+    return this.topicsRequested;
+  }
+
+  SetTopicsRequested() {
+    this.topicsRequested = true;
+  }
+
+  ResetTopicsRequested() {
+    this.topicsRequested = false;
+  }
+
   reloadForResetFilters() {
     this.chartDataSource.next(this.dataForReset);
     this.changeCrossfilter(crossfilter(this.dataForReset));
-
   }
 
   // informs all crossfilter subscribers that the crossfilter variable has changed
@@ -125,7 +140,6 @@ export class ChartService {
         // console.log('I AM ONLY ONE VERSION');
         isGroup = false;
         const words = additionalInfo[index].snippet.title.split('-');
-        // console.log('words: ', words);
         artist = words[0];
         title = words[1];
         songID = additionalInfo[index].id;
@@ -145,17 +159,12 @@ export class ChartService {
 
         // building together total views, dislikes and likes of 1-? versions, whatever is given in addtionalInfo variable
         additionalInfo[index].versions.forEach ((version) => {
-          console.log('views??: ', totalViews);
-          console.log('value to be added: ', typeof +version.statistics.viewCount);
-
-          // console.log(version.statistics.likeCount);
           if (version.statistics.viewCount !== undefined ) { totalViews = (+totalViews) + (+version.statistics.viewCount); }
           if (version.statistics.likeCount !== undefined ) { totalLikes = (+totalLikes) + (+version.statistics.likeCount); }
           if (version.statistics.dislikeCount !== undefined ) { totalDislikes = (+totalDislikes) + (+version.statistics.dislikeCount); }
         });
       }
 
-      // console.log('aggregations of song: ', song[0].aggregations);
       let tmp_song = song;
       isGroup ? tmp_song = tmp_song : tmp_song = song[0];
 
@@ -163,11 +172,8 @@ export class ChartService {
         const newVideoIds = this.videoIds.concat(tmp_song.videoIds);
         this.videoIds = newVideoIds;
       }
-      console.log(this.videoIds);
 
       tmp_song.aggregations.forEach( date => {
-        // console.log('language obj: ', date.languageDistribution);
-        // console.log('date ', tmp_song.aggregations);
         const mSentiment = this.fixSentimentData(date.sentimentDistribution[0]);
 
         let lidx = 0;
@@ -228,8 +234,6 @@ export class ChartService {
     dataPoints.sort((a, b) => {
       return new Date(a.publishedAt) > new Date(b.publishedAt) ? -1 : 1;
     });
-    // console.log('old data structure: ', data);
-    // console.log('new data structure: ', dataPoints);
 
     return dataPoints;
   }

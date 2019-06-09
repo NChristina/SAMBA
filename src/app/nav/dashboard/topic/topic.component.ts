@@ -28,7 +28,9 @@ export class TopicComponent implements OnInit {
 
     this.chartService.GetData().subscribe((data) => {
       this.data = data;
-      if (this.data && this.data.length > 0) { this.isLoading = true; }
+      if (this.data && this.data.length > 0 && this.chartService.GetTopicsRequested()) {
+        this.isLoading = true;
+      }
     });
 
     this.chartService.GetDataTopics().subscribe((data) => {
