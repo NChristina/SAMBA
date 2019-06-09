@@ -66,6 +66,7 @@ export class CommentComponent implements OnInit {
         this.fetchComments(this.mvideoIds);
       } else if (data && data.length <= 0) {
         this.receivedComments = [];
+        this.nbComments = 25;
       }
     });
   }
