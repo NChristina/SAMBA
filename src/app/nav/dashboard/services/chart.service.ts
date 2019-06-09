@@ -111,11 +111,13 @@ export class ChartService {
     let songID = '';
     let songKey = '';
 
-    totalViews = 0;
-    totalLikes = 0;
-    totalDislikes = 0;
+
     this.videoIds = [];
     data.forEach((song, index) => {
+
+      totalViews = 0;
+      totalLikes = 0;
+      totalDislikes = 0;
 
       let control = 0;
       // unterscheidung zw 1 version oder 1. gruppe für additionalInfo!!!
@@ -133,6 +135,8 @@ export class ChartService {
         totalLikes =  additionalInfo[index].statistics.likeCount;
         totalDislikes =  additionalInfo[index].statistics.dislikeCount;
       } else {
+        console.log('a group was added');
+
         isGroup = true;
         artist = additionalInfo[index].artist;
         title = additionalInfo[index].title;
@@ -141,10 +145,13 @@ export class ChartService {
 
         // building together total views, dislikes and likes of 1-? versions, whatever is given in addtionalInfo variable
         additionalInfo[index].versions.forEach ((version) => {
+          console.log('views??: ', totalViews);
+          console.log('value to be added: ', typeof +version.statistics.viewCount);
+
           // console.log(version.statistics.likeCount);
-          if (version.statistics.viewCount !== undefined ) { totalViews += parseInt(version.statistics.viewCount, 10); }
-          if (version.statistics.likeCount !== undefined ) { totalLikes += parseInt(version.statistics.likeCount, 10); }
-          if (version.statistics.dislikeCount !== undefined ) { totalDislikes += parseInt(version.statistics.dislikeCount, 10); }
+          if (version.statistics.viewCount !== undefined ) { totalViews = (+totalViews) + (+version.statistics.viewCount); }
+          if (version.statistics.likeCount !== undefined ) { totalLikes = (+totalLikes) + (+version.statistics.likeCount); }
+          if (version.statistics.dislikeCount !== undefined ) { totalDislikes = (+totalDislikes) + (+version.statistics.dislikeCount); }
         });
       }
 
