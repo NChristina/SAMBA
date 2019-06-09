@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, OnInit, Input, OnChanges, SimpleChanges, SimpleChange } from '@angular/core';
 import * as crossfilter from 'crossfilter';
 import * as dc from 'dc';
 import { ChartService } from '../services/chart.service';
@@ -46,10 +46,15 @@ export class CommentComponent implements OnInit, OnChanges {
     });
 
     this.chartService.GetData().subscribe((data) => {
+      if (data) {
+        this.totalComments = data.length;
+      } else {
+        this.totalComments = 0;
+      }
+
       this.mvideoIds = this.chartService.GetVideoIds();
 
       if (data.length > 0 && this.mvideoIds && this.mvideoIds.length > 0) {
-        this.totalComments = data.length;
         this.fetchComments(this.mvideoIds);
       } else if (data.length <= 0) {
         this.receivedComments = [];
@@ -65,6 +70,9 @@ export class CommentComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
+   /* const name: SimpleChange = changes.name;
+    console.log('prev value: ', name.previousValue);
+    console.log('got name: ', name.currentValue);*/
    /*for (const propName in changes) {
      if (propName === 'ids') {
       // console.log('YYYYYYYYYYYYYYYYYYYYYYYYY: ', propName);
