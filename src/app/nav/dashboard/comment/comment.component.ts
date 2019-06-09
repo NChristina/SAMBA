@@ -40,7 +40,7 @@ export class CommentComponent implements OnInit, OnChanges {
   ngOnInit() {
     this.chartService.getChartRange().subscribe( data => {
       // this.fetchComments(this.ids);
-      if (data.range !== undefined) {
+      if (data && data.range) {
         this.dateStart = data.range[0];
         this.dateEnd = data.range[1];
         // console.log('we have the filtered range: ', this.dateStart, ' to ', this.dateEnd);
@@ -57,13 +57,13 @@ export class CommentComponent implements OnInit, OnChanges {
 
       this.mvideoIds = this.chartService.GetVideoIds();
 
-      if (data.length > 0 && this.mvideoIds && this.mvideoIds.length > 0) {
+      if (data && data.length > 0 && this.mvideoIds && this.mvideoIds.length > 0) {
         this.fetchComments(this.mvideoIds);
-      } else if (data.length <= 0) {
+      } else if (data && data.length <= 0) {
         this.receivedComments = [];
       }
 
-      if (data[0] !== undefined) {
+      if (data && data[0] !== undefined) {
         this.dateStart = new Date(data[0].publishedAt);
         this.dateEnd = new Date(data[data.length - 1].publishedAt);
         // console.log('first date: ', this.dateStart);

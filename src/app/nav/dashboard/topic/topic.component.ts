@@ -28,11 +28,11 @@ export class TopicComponent implements OnInit {
 
     this.chartService.GetData().subscribe((data) => {
       this.data = data;
-      if (this.data.length > 0) { this.isLoading = true; }
+      if (this.data && this.data.length > 0) { this.isLoading = true; }
     });
 
     this.chartService.GetDataTopics().subscribe((data) => {
-      if (this.data.length <= 0) { data = this.data; }
+      if (this.data && this.data.length <= 0) { data = this.data; }
       this.totalComments = Math.round((data.commentsUsed * 100) / data.commentsAll);
       this.dataCloud = data.dataCloud;
       this.listSongs = data.listSongs;

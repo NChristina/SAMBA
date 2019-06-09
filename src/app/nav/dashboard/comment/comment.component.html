@@ -15,7 +15,7 @@
                 <p><img height="15px" src="../../assets/010-warning.svg">  The more comments you fetch, the longer it will take to load them.</p>
               </span>
           </div>
-          <button title="Get Comments" class="correctResetBtn" style="float:right;" [disabled]="ids.length === 0"><mat-icon (click)="runFetchComments()">cloud_download</mat-icon></button>
+          <button title="Get Comments" class="correctResetBtn" style="float:right;" [disabled]="ids && ids.length === 0"><mat-icon (click)="runFetchComments()">cloud_download</mat-icon></button>
           <mdc-select #select placeholder="replies desc" ngModel #demoSelectModel="ngModel" name="filter" style="float:right;" (selectionChange)="onSelectionChange($event)">
             <option *ngFor="let fi of filter" [value]="fi.value"> {{ fi.value }} </option>
           </mdc-select>
@@ -41,7 +41,7 @@
         <div class="bottom-comment" style="float: left; margin-left: 15px">{{comment.likes}}
           <img src="../../../../assets/002-like.svg" height="13px" class="iconStyle" style="margin: 0px 5px"> |
         
-          <a style="text-decoration: none; cursor: pointer;" (click)="displayReplyDetails(comment.commentID)" class="accordion" id="{{'replyCount_' + comment.commentID }}">
+          <a *ngIf="comment" style="text-decoration: none; cursor: pointer;" (click)="displayReplyDetails(comment.commentID)" class="accordion" id="{{'replyCount_' + comment.commentID }}">
               {{comment.replies.length}}
             <img src="../../../../assets/001-reply.svg" height="13px" class="iconStyle" style="margin: 0px 5px">
             <img *ngIf="displayReplies != comment.commentID" src="../../../../assets/010-down.svg" height="13px" id="{{'iDown_' + comment.commentID}}" style="display:inline;margin: 0px 3px">

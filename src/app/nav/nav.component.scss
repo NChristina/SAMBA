@@ -147,6 +147,7 @@
   border: none;
   margin: 0px 19px;
   cursor: pointer;
+  outline: none;
 }
 
 .main_button:active{
@@ -180,6 +181,7 @@
   display: flex;
   border: 1px solid #888;
   cursor: pointer;
+  outline: none;
 }
 
 .correctResetBtn:active {

@@ -63,15 +63,17 @@ export class MainvisComponent implements OnInit {
       }
     });
     this.chartService.GetData().subscribe(data => {
-      this.data = data;
-      this.songs = d3
-        .nest()
-        .key((d: any) => d.song_key)
-        .key((d: any) => d.song)
-        .entries(this.data);
-      // console.log(this.songs);
-      if (this.showTotalComments) {
-        this.songs.push({ key: '-------', values: [{ key: 'Total Comments', values: this.data }]});
+      if (data) {
+        this.data = data;
+        this.songs = d3
+          .nest()
+          .key((d: any) => d.song_key)
+          .key((d: any) => d.song)
+          .entries(this.data);
+        // console.log(this.songs);
+        if (this.showTotalComments) {
+          this.songs.push({ key: '-------', values: [{ key: 'Total Comments', values: this.data }]});
+        }
       }
     });
   }
@@ -209,7 +211,7 @@ export class MainvisComponent implements OnInit {
   // slider methods
   // sets the additional values for the slider
   setSliderValues() {
-    if (this.data.length < 1) {
+    if (this.data && this.data.length < 1) {
       return;
     }
     const dates = d3

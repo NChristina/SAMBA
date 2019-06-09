@@ -14,7 +14,7 @@
   </div>
 </div>
 
-<div class="legend" [mdcElevation]="2" *ngIf="this.songs.length > 0">
+<div class="legend" [mdcElevation]="2" *ngIf="this.songs && this.songs.length > 0">
   <div class="legendElement" *ngFor="let song of this.songs; let i = index">
     <div class="colorRect" ></div>
     <p class="rectText">{{ song.values[0].key }}</p>
@@ -23,4 +23,4 @@
 </div>
 <div id="compositeChart" class="maxSize">
 </div>
-<ng5-slider #slider *ngIf="this.data.length > 0" [options]="this.options" [(value)]="this.value" [(highValue)]="this.value2" (valueChange)="setMinRangeValue($event)" (highValueChange)="setMaxRangeValue($event)"></ng5-slider>
+<ng5-slider #slider *ngIf="this.data && this.data.length > 0" [options]="this.options" [(value)]="this.value" [(highValue)]="this.value2" (valueChange)="setMinRangeValue($event)" (highValueChange)="setMaxRangeValue($event)"></ng5-slider>

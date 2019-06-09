@@ -144,7 +144,7 @@ export class LanguageComponent implements OnInit {
 
   // returns a crossfilter-group for each language x
   private getLanguageGroups(): { group: CrossFilter.Group<{}, Date, any>, lang: string}[] {
-    if (this.data.length < 0) { return; }
+    if (this.data && this.data.length < 0) { return; }
     const groups: { group: CrossFilter.Group<{}, Date, any>, lang: string}[] = [];
 
     // group by language

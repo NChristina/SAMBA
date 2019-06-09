@@ -232,7 +232,7 @@ export class SentimentComponent implements OnInit {
 
   // returns a crossfilter-group for each sentiment x
   private getSentGroups(): { group: CrossFilter.Group<{}, Date, any>, sent: string}[] {
-    if (this.data.length < 0) { return; }
+    if (this.data && this.data.length < 0) { return; }
     const groups: { group: CrossFilter.Group<{}, Date, any>, sent: string}[] = [];
 
     // group by sentiment

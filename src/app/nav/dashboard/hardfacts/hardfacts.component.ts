@@ -160,7 +160,7 @@ export class HardfactsComponent implements OnInit {
 
   // returns a crossfilter-group for each language x
   private getLikeGroups(): { group: CrossFilter.Group<{}, Date, any>, likes: string}[] {
-    if (this.data.length < 0) { return; }
+    if (this.data && this.data.length < 0) { return; }
     const groups: { group: CrossFilter.Group<{}, Date, any>, likes: string}[] = [];
 
     // group by likes

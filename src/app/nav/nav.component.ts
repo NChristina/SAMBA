@@ -34,7 +34,9 @@ export class NavComponent implements OnInit {
   }
 
   resetFilters() {
-    this.chartService.reloadForResetFilters();
+    if (this.idsForChild && this.idsForChild.length > 0) {
+      this.chartService.reloadForResetFilters();
+    }
   }
 
   submitQuickSearch(value: string) {
@@ -48,7 +50,7 @@ export class NavComponent implements OnInit {
       this.searcher.quickSearchFromDb(value.trim()).then((results) => {
         document.getElementById('sFimg').style.display = 'none';      // Spinner OFF
         // console.log('I GOT A RESULT: ', results.body);
-        if (results.body.length === 0) {
+        if (results.body && results.body.length === 0) {
           document.getElementById('sFtext').style.display = 'block';  // Display alert
         }
         this.searchMatchList = results.body;
@@ -72,7 +74,7 @@ export class NavComponent implements OnInit {
       if (checkbox.target.checked) {
         const confirmAdd = confirm('You are adding a group of videos to your workspace. It can take more time than loading single videos.');
         if (confirmAdd) {
-          if (this.loadedItems.length === 8) {
+          if (this.loadedItems && this.loadedItems.length === 8) {
                 const snackBar = this.snackbar.show('You can only pick 8 items', 'OK', this.config);
                 return;
           } else {
@@ -107,7 +109,7 @@ export class NavComponent implements OnInit {
       versionID.push(this.searchMatchList[index].versions[childIndex].id);
 
       if (checkbox.target.checked) {
-        if (this.loadedItems.length === 8) {
+        if (this.loadedItems && this.loadedItems.length === 8) {
               const snackBar = this.snackbar.show('You can only pick 8 items', 'OK', this.config);
               return;
         } else {

@@ -17,7 +17,7 @@
 
 <div id="summary" class="maxSize aggregationView">
     
-  <table id="videoTable" *ngIf="this.data.length">
+  <table id="videoTable" *ngIf="this.data && this.data.length">
     <tr>
       <th>Music - Singer</th>
       <th class="center"><mat-icon style="font-size: 13px; height: 13px">thumb_down</mat-icon></th> 
@@ -44,7 +44,7 @@
 <div id="likeChart" class="maxSize comparisonView"></div>
 <p class="notDataWarn" *ngIf="this.notDataWarn">Not enough data to render chart.</p>
 
-<div class="wrapper" *ngIf="this.data.length && this.compView">
+<div class="wrapper" *ngIf="this.data && this.data.length && this.compView">
   <div (mouseover)="setTooltip($event, tooltip1);" class="fab_button"> 
     Total Comments: {{ this.data.length }} 
     <span #tooltip1 class="tooltip_text">

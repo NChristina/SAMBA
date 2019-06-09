@@ -51,7 +51,7 @@ export class ChartService {
     this.spinner = true;
     const newData = this.miniDataStructure(value, additionalInfo);
     this.dataForReset = newData;
-    if (newData.length <= 0) { const topicData = {}; this.SetDataTopics(topicData); }
+    if (!newData || newData.length <= 0) { const topicData = {}; this.SetDataTopics(topicData); }
     this.chartDataSource.next(newData);
     this.changeCrossfilter(crossfilter(newData));
     this.spinner = false;
