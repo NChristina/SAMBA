@@ -16,7 +16,7 @@
     </div>
     <button (click)="switchView('compButton');" class="sentComp compButton" style="float:right"><img height="24px" title="Comparison View" src="../../assets/000-barchart.svg"> </button>
     <button (click)="switchView('aggrButton');" class="sentAggr aggrButton active" style="float:right"><img height="24px" title="Aggregated View" src="../../assets/000-chart.svg"> </button>
-
+    <mat-icon *ngIf="appliedFilter" class="timeFilterIcon" title="Applied Time Filter">date_range</mat-icon>
     <h2>Sentiment</h2>        
 </mat-grid-list>
 </div>

@@ -23,6 +23,7 @@ export class EngagementCommentsComponent implements OnInit {
   notDataWarn = false;
   engagementSumm = [];
   nbSongs = 0;
+  appliedFilter = false;
 
   constructor(private chartService: ChartService, private _element: ElementRef) { }
 
@@ -43,7 +44,7 @@ export class EngagementCommentsComponent implements OnInit {
         // If there is at least one like group:
         if (this.likeGroups[0]) {
           this.notDataWarn = false;
-          this.countEngagement();
+          this.countEngagement('', '', false);
           this.renderChart();
           this.renderBarChart();
         } else {
@@ -54,12 +55,15 @@ export class EngagementCommentsComponent implements OnInit {
 
     // gets the range through the chart service from the mainVis Component
     this.chartService.getChartRange().subscribe((range) => {
-      if (this.data !== undefined && range.range !== null && range.range !== undefined) {
+      if (this.data && range.range) {
         (this.diff_months(range.range[0], range.range[1]) < 2) ? this.notDataWarn = true : this.notDataWarn = false;
         this.likeLineChart
           .x(d3.scaleTime().domain([range.range[0], range.range[1]]))
           .y(d3.scaleLinear().domain([0, this.getMaxGroupValue()]))
           .round(d3.timeMonth);
+
+        this.countEngagement(range.range[0].toString(), range.range[1].toString(), true);
+        this.renderBarChart();
         this.likeLineChart.redraw();
       } else {
         if (!dc.chartRegistry.list().some((c) => c.hasFilter())) {
@@ -68,6 +72,11 @@ export class EngagementCommentsComponent implements OnInit {
             .x(d3.scaleTime().domain([d3.min(this.data, (d: any) => new Date(d.publishedAt)),
               d3.max(this.data, (d: any) => new Date(d.publishedAt))]))
             .y(d3.scaleLinear().domain([0, this.maxGroupValue]));
+        }
+
+        if (this.data && this.data.length > 0) {
+          this.countEngagement('', '', false);
+          this.renderBarChart();
         }
       }
     });
@@ -215,30 +224,49 @@ export class EngagementCommentsComponent implements OnInit {
     this.likeLineChart.render();
   }
 
+  isInDateRange(publishedAt: any, startDate: any, endDate: any) {
+    if (new Date(publishedAt) > new Date(startDate) && new Date(publishedAt) < new Date(endDate)) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   // summarizes the sentiment for positive, neutral, and negative scores
-  countEngagement() {
+  countEngagement(startDate: any, endDate: any, isFiltered: boolean) {
+    let includeItem = true;
     const engagementSummAux = [];
+
     this.data.forEach((d) => {
-      let inList = false;
-      let countedSongidx = 0;
-
-      // Is the song already in the list?
-      engagementSummAux.forEach((sent) => {
-        if (inList === false) {
-          if (sent.song === d.song) { inList = true; } else { countedSongidx++; }
-        }
-      });
-
-      if (inList) {
-        if (d.likeCount && d.likeCount > 0) {
-          engagementSummAux[countedSongidx].countLike++;
-        }
-        engagementSummAux[countedSongidx].countComments++;
+      if (isFiltered) {
+        this.isInDateRange(d.publishedAt, startDate, endDate) ? includeItem = true : includeItem = false;
+        this.appliedFilter = true;
       } else {
-        if (d.likeCount && d.likeCount > 0) {
-            engagementSummAux.push({ song: d.song, countComments: 1, countLike: 1 });
+        this.appliedFilter = false;
+      }
+
+      if (includeItem) {
+        let inList = false;
+        let countedSongidx = 0;
+
+        // Is the song already in the list?
+        engagementSummAux.forEach((sent) => {
+          if (inList === false) {
+            if (sent.song === d.song) { inList = true; } else { countedSongidx++; }
+          }
+        });
+
+        if (inList) {
+          if (d.likeCount && d.likeCount > 0) {
+            engagementSummAux[countedSongidx].countLike++;
+          }
+          engagementSummAux[countedSongidx].countComments++;
         } else {
-          engagementSummAux.push({ song: d.song, countComments: 1, countLike: 0 });
+          if (d.likeCount && d.likeCount > 0) {
+              engagementSummAux.push({ song: d.song, countComments: 1, countLike: 1 });
+          } else {
+            engagementSummAux.push({ song: d.song, countComments: 1, countLike: 0 });
+          }
         }
       }
     });
