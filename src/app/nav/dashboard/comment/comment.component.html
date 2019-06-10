@@ -2,13 +2,15 @@
 <div class="grid-container">
   <mat-grid-list cols="3" rowHeight="50px">
       <div class="filterComp">
+          <mat-icon *ngIf="appliedFilter" class="timeFilterIcon" style="float:left;margin:15px" title="Applied Time Filter">date_range</mat-icon>
+
           <form ngForm [formGroup]="myFormGroup" style="display:inline; margin-right: 1px">
               <label>Showing&nbsp;</label>
               <input #box id="showCommentsAmmount" formControlName="nbComments" [(value)]="nbComments" type="number" required="" (keydown.enter)="textareaEnterPressed($event)" />
               <label>&nbsp;of {{totalComments}} comments</label>
           </form>
           
-          <div class="wrapper" (mouseover)="setTooltipInfo($event, tooltipinfo);" style="float:right;margin:15px 0 0 25px;" class="tooltInfo">
+          <div class="wrapper" (mouseover)="setTooltipInfo($event, tooltipinfo);" style="float:right;margin:15px 0 0 15px;" class="tooltInfo">
               <img height="30px" style="float:right" src="../../assets/000-info.svg">
               <span #tooltipinfo class="tooltInfo_text">
                 <p>Based on your selected videos and the time span you selected, you see the comments. You can order the comments by replies, likes and date - ascending or descending. You can also chose the ammount of comments to be rendered.</p>
@@ -21,7 +23,8 @@
             <option *ngFor="let fi of filter" [value]="fi.value"> {{ fi.value }} </option>
           </mdc-select>
         </div>
-        <h2>Comments</h2>
+        
+        <h2 class="cardTitle">Comments</h2>
   </mat-grid-list>
 </div>
 <hr />

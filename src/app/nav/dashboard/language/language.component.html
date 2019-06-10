@@ -9,7 +9,10 @@
         </div>
         <button (click)="switchView('compButton');" class="langComp compButton" style="float:right"><img height="24px" title="Comparison View" src="../../assets/000-barchart.svg"> </button>
         <button (click)="switchView('aggrButton');" class="langAggr aggrButton active" style="float:right"><img height="24px" title="Aggregated View" src="../../assets/000-chart.svg"> </button>
-        <h2>Language</h2>
+        <mat-icon *ngIf="appliedFilter" class="timeFilterIcon" title="Applied Time Filter">date_range</mat-icon>
+
+        <h2 class="cardTitleBox">Language</h2>
+        <mat-icon class="cardTitleIcon" title="Language">language</mat-icon>
     </mat-grid-list>
 </div>
 <hr />

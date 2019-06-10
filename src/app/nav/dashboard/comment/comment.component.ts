@@ -25,6 +25,8 @@ export class CommentComponent implements OnInit {
   prevOrder = 'repliesDesc';  // previous
   prevMvideoIds: string[];    // previous
 
+  appliedFilter = false;
+
   isLoading = false;
   displaySent = '';
   displayReplies = '';
@@ -45,14 +47,12 @@ export class CommentComponent implements OnInit {
 
   ngOnInit() {
     this.chartService.getChartRange().subscribe( data => {
-      if (data && data.range && this.mvideoIds && this.mvideoIds.length > 0) {
+      if (data && data.range) {
         this.dateStart = data.range[0].toISOString();
         this.dateEnd = data.range[1].toISOString();
-
-        // one could fetch comments right after filter
-        // but if the number of comments is to big
-        // that can take a long time to receive an answer from the db
-        // this.fetchComments(this.mvideoIds);
+      } else {
+        this.dateStart = '';
+        this.dateEnd = '';
       }
     });
 
@@ -60,10 +60,10 @@ export class CommentComponent implements OnInit {
       (data) ? this.totalComments = data.length : this.totalComments = 0;
       this.mvideoIds = this.chartService.GetVideoIds();
 
-      if (data && data.length > 0 && this.mvideoIds && this.mvideoIds.length > 0) {
+      if (data && data.length > 0) {
         this.dateStart = '';
         this.dateEnd = '';
-        this.fetchComments(this.mvideoIds);
+        this.runFetchComments();
       } else if (data && data.length <= 0) {
         this.receivedComments = [];
         this.nbComments = 25;
@@ -85,8 +85,10 @@ export class CommentComponent implements OnInit {
   fetchComments(videoIdsArr) {
     if (!this.dateStart) { this.dateStart = ''; }
     if (!this.dateEnd) { this.dateEnd = ''; }
+    (this.dateStart === '' && this.dateEnd === '') ? this.appliedFilter = false : this.appliedFilter = true;
+    // const newRequest = this.isNewRequest(this.nbComments, this.order, videoIdsArr, this.dateStart, this.dateEnd);
 
-    if (!this.isLoading && this.isNewRequest(this.nbComments, this.order, videoIdsArr, this.dateStart, this.dateEnd)) {
+    if (!this.isLoading) {
       this.savePreviousValues(this.nbComments, this.order, videoIdsArr, this.dateStart, this.dateEnd);
       this.isLoading = true;
       this.dataService.getComments(this.nbComments, this.order, videoIdsArr, this.dateStart, this.dateEnd).then((results) => {

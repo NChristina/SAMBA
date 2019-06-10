@@ -26,6 +26,7 @@ export class LanguageComponent implements OnInit {
   nbSongs = 0;
   langCaption = '';
   showLangCaption = false;
+  appliedFilter = false;
 
   constructor(private chartService: ChartService) { }
 
@@ -39,7 +40,7 @@ export class LanguageComponent implements OnInit {
       this.setBarDimension();
       if (this.data && this.data.length > 0) {
         this.langGroups = this.getLanguageGroups();
-        this.countMainLang();
+        this.countMainLang('', '', false);
 
         // If there is at least one language group:
         if (this.langGroups[0]) {
@@ -63,12 +64,15 @@ export class LanguageComponent implements OnInit {
 
     // gets the range through the chart service from the mainVis Component
     this.chartService.getChartRange().subscribe((range) => {
-      if (this.data !== undefined && range.range !== null && range.range !== undefined) {
+      if (this.data && range.range) {
         (this.diff_months(range.range[0], range.range[1]) < 2) ? this.notDataWarn = true : this.notDataWarn = false;
         this.languageChart
           .x(d3.scaleTime().domain([range.range[0], range.range[1]]))
           .y(d3.scaleLinear().domain([0, this.getMaxGroupValue()]))
           .round(d3.timeMonth);
+
+        this.countMainLang(range.range[0].toString(), range.range[1].toString(), true);
+        this.renderBarChart();
         this.languageChart.redraw();
 
       } else {
@@ -78,6 +82,11 @@ export class LanguageComponent implements OnInit {
             .x(d3.scaleTime().domain([d3.min(this.data, (d: any) => new Date(d.publishedAt)),
               d3.max(this.data, (d: any) => new Date(d.publishedAt))]))
             .y(d3.scaleLinear().domain([0, this.maxGroupValue]));
+        }
+
+        if (this.data && this.data.length > 0) {
+          this.countMainLang('', '', false);
+          this.renderBarChart();
         }
       }
     });
@@ -131,13 +140,21 @@ export class LanguageComponent implements OnInit {
     });
   }
 
+  isInDateRange(publishedAt: any, startDate: any, endDate: any) {
+    if (new Date(publishedAt) > new Date(startDate) && new Date(publishedAt) < new Date(endDate)) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   countSongs() {
     const sentSummAux = [];
     this.data.forEach((d) => {
-      let inList = false;
-      let countedSongidx = 0;
-      sentSummAux.forEach((sent) => { if (inList === false) { (sent.song === d.song) ? inList = true : countedSongidx++; } });
-      if (!inList) { sentSummAux.push({ song: d.song }); }
+        let inList = false;
+        let countedSongidx = 0;
+        sentSummAux.forEach((sent) => { if (inList === false) { (sent.song === d.song) ? inList = true : countedSongidx++; } });
+        if (!inList) { sentSummAux.push({ song: d.song }); }
     });
     this.nbSongs = sentSummAux.length;
   }
@@ -189,10 +206,19 @@ export class LanguageComponent implements OnInit {
     return groups;
   }
 
-  countMainLang() {
+  countMainLang(startDate: any, endDate: any, isFiltered: boolean) {
+    let includeItem = true;
     const langSummAux = [];
+
     this.data.forEach((d) => {
-      if (d.analysis && d.analysis.mainLanguage) {
+      if (isFiltered) {
+        this.isInDateRange(d.publishedAt, startDate, endDate) ? includeItem = true : includeItem = false;
+        this.appliedFilter = true;
+      } else {
+        this.appliedFilter = false;
+      }
+
+      if (d.analysis && d.analysis.mainLanguage && includeItem) {
         let inList = false;
         let countedSongidx = 0;
 

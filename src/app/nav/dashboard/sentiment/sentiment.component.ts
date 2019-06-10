@@ -25,6 +25,7 @@ export class SentimentComponent implements OnInit {
   notDataWarn = false;
   enableNA = true;
   nbSongs = 0;
+  appliedFilter = false;
 
   constructor(private chartService: ChartService, private _element: ElementRef) { }
 
@@ -33,23 +34,21 @@ export class SentimentComponent implements OnInit {
     this.sentimentLineChart = dc.lineChart('#sentimentChartLine');
     this.sentimentBarChart = dc.barChart('#sentimentChart');
     this.chartService.GetData().subscribe((data) => {
-
       this.data = data;
-      // console.log(data);
     });
 
     this.chartService.getCrossfilter().subscribe((filter) => {
-
       this.cfilter = filter;
       this.setDimension();
       this.setBarDimension();
+
       if (this.data && this.data.length > 0) {
         this.sentGroups = this.getSentGroups();
 
         // If there is at least one sentiment group:
         if (this.sentGroups[0]) {
           this.notDataWarn = false;
-          this.countSentiment();
+          this.countSentiment('', '', false);
           this.renderChart();
           this.renderBarChart();
         } else {
@@ -60,13 +59,15 @@ export class SentimentComponent implements OnInit {
 
     // gets the range through the chart service from the mainVis Component
     this.chartService.getChartRange().subscribe((range) => {
-
-      if (this.data !== undefined && range.range !== null && range.range !== undefined) {
+      if (this.data && range.range) {
         (this.diff_months(range.range[0], range.range[1]) < 2) ? this.notDataWarn = true : this.notDataWarn = false;
         this.sentimentLineChart
           .x(d3.scaleTime().domain([range.range[0], range.range[1]]))
           .y(d3.scaleLinear().domain([0, this.getMaxGroupValue()]))
           .round(d3.timeMonth);
+
+        this.countSentiment(range.range[0].toString(), range.range[1].toString(), true);
+        this.renderBarChart();
         this.sentimentLineChart.redraw();
       } else {
         if (!dc.chartRegistry.list().some((c) => c.hasFilter())) {
@@ -75,6 +76,11 @@ export class SentimentComponent implements OnInit {
             .x(d3.scaleTime().domain([d3.min(this.data, (d: any) => new Date(d.publishedAt)),
               d3.max(this.data, (d: any) => new Date(d.publishedAt))]))
             .y(d3.scaleLinear().domain([0, this.maxGroupValue]));
+        }
+
+        if (this.data && this.data.length > 0) {
+          this.countSentiment('', '', false);
+          this.renderBarChart();
         }
       }
     });
@@ -100,11 +106,28 @@ export class SentimentComponent implements OnInit {
     }
   }
 
+  isInDateRange(publishedAt: any, startDate: any, endDate: any) {
+    if (new Date(publishedAt) > new Date(startDate) && new Date(publishedAt) < new Date(endDate)) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   // summarizes the sentiment for positive, neutral, and negative scores
-  countSentiment() {
+  countSentiment(startDate: any, endDate: any, isFiltered: boolean) {
+    let includeItem = true;
     const sentSummAux = [];
+
     this.data.forEach((d) => {
-      if (d.analysis) {
+      if (isFiltered) {
+        this.isInDateRange(d.publishedAt, startDate, endDate) ? includeItem = true : includeItem = false;
+        this.appliedFilter = true;
+      } else {
+        this.appliedFilter = false;
+      }
+
+      if (d.analysis && includeItem) {
         let inList = false;
         let countedSongidx = 0;
 
