@@ -371,3 +371,21 @@ body {
   float: right;
 }
 
+@media (max-width: 1530px) {
+  h2.cardTitle {
+    display: none;
+  }
+}
+
+@media (max-width: 1200px) {
+  h2.cardTitleBox {
+    display: none;
+  }
+}
+
+@media (min-width: 1200px) {
+  .mat-icon.cardTitleIcon {
+    display: none;
+  }
+}
+
