@@ -23,7 +23,7 @@ export class CommentComponent implements OnInit {
   prevNbComments = 25;        // previous
   prevOrder = 'repliesDesc';  // previous
   prevMvideoIds: string[];    // previous
-
+  data: any[];
   appliedFilter = false;
 
   isLoading = false;
@@ -56,6 +56,7 @@ export class CommentComponent implements OnInit {
     });
 
     this.chartService.GetData().subscribe((data) => {
+      this.data = data;
       this.mvideoIds = this.chartService.GetVideoIds();
 
       if (data && data.length > 0) {
@@ -69,6 +70,26 @@ export class CommentComponent implements OnInit {
         this.nbComments = 25;
       }
     });
+  }
+
+  countFilteredData(startDate: any, endDate: any) {
+    let countData = 0;
+
+    this.data.forEach((d) => {
+      if (this.isInDateRange(d.publishedAt, startDate, endDate)) {
+        countData++;
+      }
+    });
+
+    return countData;
+  }
+
+  isInDateRange(publishedAt: any, startDate: any, endDate: any) {
+    if (new Date(publishedAt) > new Date(startDate) && new Date(publishedAt) < new Date(endDate)) {
+      return true;
+    } else {
+      return false;
+    }
   }
 
   runFetchComments() {
@@ -94,6 +115,11 @@ export class CommentComponent implements OnInit {
       this.dataService.getComments(this.nbComments, this.order, videoIdsArr, this.dateStart, this.dateEnd).then((results) => {
         this.receivedComments = results.body[0].comments;
         this.isLoading = false;
+        if (this.appliedFilter) {
+          this.totalComments = this.countFilteredData(this.dateStart, this.dateEnd);
+        } else {
+          this.totalComments = this.data.length;
+        }
       });
     }
   }
