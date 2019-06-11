@@ -11,8 +11,7 @@ import { DataService } from '../../services/data.service';
   styleUrls: ['./comment.component.scss'],
 })
 export class CommentComponent implements OnInit {
-  @Input() ids: any;
-  @Input() totalComments: any;
+  totalComments = 0;
   dateStart = '';         // default
   dateEnd = '';           // default
   nbComments = 25;        // default
@@ -57,14 +56,15 @@ export class CommentComponent implements OnInit {
     });
 
     this.chartService.GetData().subscribe((data) => {
-      (data) ? this.totalComments = data.length : this.totalComments = 0;
       this.mvideoIds = this.chartService.GetVideoIds();
 
       if (data && data.length > 0) {
+        this.totalComments = data.length;
         this.dateStart = '';
         this.dateEnd = '';
         this.runFetchComments();
       } else if (data && data.length <= 0) {
+        this.totalComments = 0;
         this.receivedComments = [];
         this.nbComments = 25;
       }
