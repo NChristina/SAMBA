@@ -53,6 +53,8 @@ export class NavComponent implements OnInit {
         if (results.body && results.body.length === 0) {
           document.getElementById('sFtext').style.display = 'block';  // Display alert
         }
+        // console.log('respond from quicksearch: ', results.body);
+
         this.searchMatchList = results.body;
         this.isSearching = false;
       });
@@ -114,6 +116,12 @@ export class NavComponent implements OnInit {
           this.searcher.songDetailsFromDb(versionID).then((results) => {
             this.loadedItems.push(results.body);
             this.matchForAdditionalInfo.push(this.searchMatchList[index].versions[childIndex]);
+            // console.log('mimi: ', this.searchMatchList[index].artist);
+
+
+            this.matchForAdditionalInfo[this.matchForAdditionalInfo.length-1].artist = this.searchMatchList[index].artist;
+
+
             this.labelsForChips.push({title: this.matchForAdditionalInfo[this.matchForAdditionalInfo.length - 1].snippet.title,
               isGroup: false, id: versionID[0]});
               this.chartService.SetData(this.loadedItems, this.matchForAdditionalInfo);

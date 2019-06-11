@@ -138,10 +138,27 @@ export class ChartService {
       // unterscheidung zw 1 version oder 1. gruppe für additionalInfo!!!
       if ('etag' in additionalInfo[index]) {
         // console.log('I AM ONLY ONE VERSION');
+
+        //bauuuustellleee höhöhöhö
         isGroup = false;
         const words = additionalInfo[index].snippet.title.split('-');
+        // console.log('words[0]: ', words[0]);
+        // console.log('words[1]: ', words[1]);
+        // console.log('words[2]: ', words[2]);
         artist = words[0];
         title = words[1];
+
+        if (words[1] === undefined) {
+          // console.log('HEYYYYYY title is empty');
+          // console.log('artist: ', additionalInfo[index]);
+          artist =  additionalInfo[index].artist;
+          title = words[0];
+        }
+
+        if (words[2] !== undefined) {
+          title = title + ' ' + words[2];
+        }
+
         songID = additionalInfo[index].id;
         songKey = additionalInfo[index]._key;
 
@@ -149,7 +166,7 @@ export class ChartService {
         totalLikes =  additionalInfo[index].statistics.likeCount;
         totalDislikes =  additionalInfo[index].statistics.dislikeCount;
       } else {
-        console.log('a group was added');
+        // console.log('a group was added');
 
         isGroup = true;
         artist = additionalInfo[index].artist;
