@@ -94,39 +94,53 @@ export class MainvisComponent implements OnInit {
       .nest()
       .key((comment: any) => comment.song)
       .entries(this.data);
-    nestedData.forEach(song => {
-      const lineChart = dc.lineChart(this.compositeChart)
-      .ordinalColors(['red', 'green', 'blue'])
-      .colorAccessor(function(d, i) {
-        if (i % 2 === 0) {
-          return 0;
-        } else {
-          return 1;
-        }
-      });
-      // comulative show option
-      // if (this.chartShowOption === 3) {
-      //   const dataLength = this.data.length;
-      //   const dates = d3.nest().key((d: any) => this.getDateStringByShowOption(d.publishedAt)).entries(song.values);
-      //   for (let i = 0; i < dates.length; i++) {
-      //     if ((i + 1) === dates.length) {
-      //       break;
-      //     }
-      //     const date = new Date(this.getDateStringByShowOption(dates[i].key));
-      //     const date2 = new Date(this.getDateStringByShowOption(dates[i + 1].key));
-      //     const daysBetween = Math.floor( (date.getTime() - date2.getTime()) / 86400000); // 86400000 = one day
-      //     this.addDaysToData(daysBetween, dates[i].values.length, date, song.key);
-      //   }
-      //   // console.log(dataLength, this.data.length);
-      //   lineChart.interpolate('monotone');
+    console.log('how many times does that actually happen?');
+    for (let idx = 0; idx <= nestedData.length; idx++) {
+      console.log('first value of idx: ', idx);
+      if (idx === 0) {
+        console.log('i should be the total view: ', idx);
+        console.log('length of nestedData: ', nestedData.length);
+        const lineChart = dc.lineChart(this.compositeChart)
+        .dashStyle([5, 5]);
 
-      // }
-      const group = this.dimension.group().reduceSum((d: any) => {
-        return d.song === song.key;
-      });
-      lineChart.group(group);
-      charts.push(lineChart);
-    });
+        const group = this.dimension.group().reduceSum((d: any) => {
+          return true;
+        });
+        lineChart.group(group);
+        charts.push(lineChart);
+      } else {
+        const lineChart = dc.lineChart(this.compositeChart)
+        .colorAccessor(function(d, i) {
+          if (i % 2 === 0) {
+            return 0;
+          } else {
+            return 1;
+          }
+        });
+        const group = this.dimension.group().reduceSum((d: any) => {
+          return d.song === nestedData[idx-1].key;
+        });
+        lineChart.group(group);
+        charts.push(lineChart);
+      }
+    }
+    // nestedData.forEach(song => {
+    //   console.log('so this happens two times too?');
+    //   const lineChart = dc.lineChart(this.compositeChart)
+    //   .ordinalColors(['red', 'green', 'blue'])
+    //   .colorAccessor(function(d, i) {
+    //     if (i % 2 === 0) {
+    //       return 0;
+    //     } else {
+    //       return 1;
+    //     }
+    //   });
+    //   const group = this.dimension.group().reduceSum((d: any) => {
+    //     return d.song === song.key;
+    //   });
+    //   lineChart.group(group);
+    //   charts.push(lineChart);
+    // });
     if (this.showTotalComments) {
       charts.push(dc.lineChart(this.compositeChart).group(this.dimension.group()).renderDataPoints(true).colors('red'));
     }

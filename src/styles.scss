@@ -232,41 +232,44 @@ body {
 
 // Custom STYLES
 .sub:nth-child(2) .chart-body .stack-list .stack .line {
+  stroke: rgb(66, 66, 66) !important;
+}
+.sub:nth-child(3) .chart-body .stack-list .stack .line {
   stroke: #7fc97f !important;
   stroke-width: 3;
 }
 
-.sub:nth-child(3) .chart-body .stack-list .stack .line {
+.sub:nth-child(4) .chart-body .stack-list .stack .line {
   stroke: #beaed4 !important;
   stroke-width: 3;
 }
 
-.sub:nth-child(4) .chart-body .stack-list .stack .line {
+.sub:nth-child(5) .chart-body .stack-list .stack .line {
   stroke: #fdc086 !important;
   stroke-width: 3;
 }
 
-.sub:nth-child(5) .chart-body .stack-list .stack .line {
+.sub:nth-child(6) .chart-body .stack-list .stack .line {
   stroke: #ffff99 !important;
   stroke-width: 3;
 }
 
-.sub:nth-child(6) .chart-body .stack-list .stack .line {
+.sub:nth-child(7) .chart-body .stack-list .stack .line {
   stroke: #386cb0 !important;
   stroke-width: 3;
 }
 
-.sub:nth-child(7) .chart-body .stack-list .stack .line {
+.sub:nth-child(8) .chart-body .stack-list .stack .line {
   stroke: #f0027f !important;
   stroke-width: 3;
 }
 
-.sub:nth-child(8) .chart-body .stack-list .stack .line {
+.sub:nth-child(9) .chart-body .stack-list .stack .line {
   stroke: #bf5b17 !important;
   stroke-width: 3;
 }
 
-.sub:nth-child(9) .chart-body .stack-list .stack .line {
+.sub:nth-child(10) .chart-body .stack-list .stack .line {
   stroke: #666666 !important;
   stroke-width: 3;
 }
