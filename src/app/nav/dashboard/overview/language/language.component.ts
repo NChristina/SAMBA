@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { ChartService } from '../services/chart.service';
-import * as langCodes from '../../../shared/iso639';
+import { ChartService } from '../../services/chart.service';
+import * as langCodes from '../../../../shared/iso639';
 import * as d3 from 'd3';
 import * as dc from 'dc';
 

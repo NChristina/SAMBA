@@ -42,19 +42,20 @@ import { MdcDrawerModule,
         MdcSelectModule
         } from '@angular-mdc/web';
 import { TagCloudModule } from 'angular-tag-cloud-module';
-import { DashboardComponent } from './nav/dashboard/dashboard.component';
-import { HardfactsComponent } from './nav/dashboard/hardfacts/hardfacts.component';
-import { LanguageComponent } from './nav/dashboard/language/language.component';
-import { CommentComponent } from './nav/dashboard/comment/comment.component';
-import { MainvisComponent } from './nav/dashboard/mainvis/mainvis.component';
-import { SentimentComponent } from './nav/dashboard/sentiment/sentiment.component';
 import { Ng5SliderModule } from 'ng5-slider';
-import { TopicComponent } from './nav/dashboard/topic/topic.component';
 import { LoadingModalComponent } from './nav/loading-modal/loading-modal.component';
 import { LoadingSvgComponent } from './shared/loading-svg/loading-svg.component';
-import { LoginComponent } from './login/login.component';
 import { AuthGuardService } from './shared/auth-guard.service';
-import { EngagementCommentsComponent } from './nav/dashboard/engagement-comments/engagement-comments.component';
+
+import { LoginComponent } from './login/login.component';
+import { DashboardComponent } from './nav/dashboard/dashboard.component';
+import { CommentComponent } from './nav/dashboard/comment/comment.component';
+import { HardfactsComponent } from './nav/dashboard/hardfacts/hardfacts.component';
+import { MainvisComponent } from './nav/dashboard/mainvis/mainvis.component';
+import { EngagementCommentsComponent } from './nav/dashboard/overview/engagement-comments/engagement-comments.component';
+import { LanguageComponent } from './nav/dashboard/overview/language/language.component';
+import { SentimentComponent } from './nav/dashboard/overview/sentiment/sentiment.component';
+import { TopicComponent } from './nav/dashboard/overview/topic/topic.component';
 
 @NgModule({
   declarations: [
@@ -73,7 +74,6 @@ import { EngagementCommentsComponent } from './nav/dashboard/engagement-comments
     EngagementCommentsComponent,
   ],
   imports: [
-
     AppRoutingModule,
     BrowserModule,
     BrowserAnimationsModule,

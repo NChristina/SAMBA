@@ -1,6 +1,6 @@
 import { Component, ViewChild , OnInit, ElementRef } from '@angular/core';
 import { CloudData, CloudOptions, TagCloudComponent } from 'angular-tag-cloud-module';
-import { ChartService } from '../services/chart.service';
+import { ChartService } from '../../services/chart.service';
 import * as sw from 'stopword';
 
 @Component({

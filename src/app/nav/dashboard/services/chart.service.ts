@@ -120,37 +120,25 @@ export class ChartService {
     let totalViews: number;
     let totalLikes: number;
     let totalDislikes: number;
-
     let artist = '';
     let title = '';
     let songID = '';
     let songKey = '';
-
-
     this.videoIds = [];
-    data.forEach((song, index) => {
 
+    data.forEach((song, index) => {
       totalViews = 0;
       totalLikes = 0;
       totalDislikes = 0;
-
       let control = 0;
       // unterscheidung zw 1 version oder 1. gruppe für additionalInfo!!!
       if ('etag' in additionalInfo[index]) {
-        // console.log('I AM ONLY ONE VERSION');
-
-        //bauuuustellleee höhöhöhö
         isGroup = false;
         const words = additionalInfo[index].snippet.title.split('-');
-        // console.log('words[0]: ', words[0]);
-        // console.log('words[1]: ', words[1]);
-        // console.log('words[2]: ', words[2]);
         artist = words[0];
         title = words[1];
 
         if (words[1] === undefined) {
-          // console.log('HEYYYYYY title is empty');
-          // console.log('artist: ', additionalInfo[index]);
           artist =  additionalInfo[index].artist;
           title = words[0];
         }
@@ -161,12 +149,10 @@ export class ChartService {
 
         songID = additionalInfo[index].id;
         songKey = additionalInfo[index]._key;
-
         totalViews = additionalInfo[index].statistics.viewCount;
         totalLikes =  additionalInfo[index].statistics.likeCount;
         totalDislikes =  additionalInfo[index].statistics.dislikeCount;
       } else {
-        // console.log('a group was added');
 
         isGroup = true;
         artist = additionalInfo[index].artist;
@@ -192,7 +178,6 @@ export class ChartService {
 
       tmp_song.aggregations.forEach( date => {
         const mSentiment = this.fixSentimentData(date.sentimentDistribution[0]);
-
         let lidx = 0;
         let sentx = 0;
         let currentNbCommentsLanguage = date.languageDistribution[lidx].nbComments;

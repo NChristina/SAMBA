@@ -1,5 +1,5 @@
 import { Component, OnInit, ElementRef } from '@angular/core';
-import { ChartService } from '../services/chart.service';
+import { ChartService } from '../../services/chart.service';
 import * as d3 from 'd3';
 import * as crossfilter from 'crossfilter';
 import * as dc from 'dc';

@@ -1,19 +1,18 @@
 import {Component, OnInit} from '@angular/core';
 import {ChartService} from '../services/chart.service';
-import * as d3 from 'd3';
-import * as crossfilter from 'crossfilter';
-import * as dc from 'dc';
 import {Options, LabelType} from 'ng5-slider';
 import {SliderComponent} from '../../../../../node_modules/ng5-slider/slider.component';
 import {MdcFab} from '../../../../../node_modules/@angular-mdc/web';
-
-
+import * as crossfilter from 'crossfilter';
+import * as d3 from 'd3';
+import * as dc from 'dc';
 
 @Component({
   selector: 'app-mainvis',
   templateUrl: './mainvis.component.html',
   styleUrls: ['./mainvis.component.scss'],
 })
+
 export class MainvisComponent implements OnInit {
   // chart values
   cfilter: CrossFilter.CrossFilter<{}>;
@@ -26,16 +25,12 @@ export class MainvisComponent implements OnInit {
   rowtip;
   maxGroupValue;
   currentFilterValues = [];
-
-
   // slider values
   protected value: number;
   protected value2: number;
   protected options: Options;
   private chartRange1;
   private chartRange2;
-
-
   private initialValues;
   // total comments
   protected showTotalComments = false;
@@ -43,7 +38,6 @@ export class MainvisComponent implements OnInit {
   constructor(private chartService: ChartService) {}
 
   ngOnInit() {
-
     this.rowtip = d3.select('body').append('div')
     .attr('class', 'tooltip')
     .attr('x', 10)
@@ -62,6 +56,7 @@ export class MainvisComponent implements OnInit {
         this.setSliderValues();
       }
     });
+
     this.chartService.GetData().subscribe(data => {
       if (data) {
         this.data = data;
@@ -94,15 +89,10 @@ export class MainvisComponent implements OnInit {
       .nest()
       .key((comment: any) => comment.song)
       .entries(this.data);
-    console.log('how many times does that actually happen?');
     for (let idx = 0; idx <= nestedData.length; idx++) {
-      console.log('first value of idx: ', idx);
       if (idx === 0) {
-        console.log('i should be the total view: ', idx);
-        console.log('length of nestedData: ', nestedData.length);
         const lineChart = dc.lineChart(this.compositeChart)
         .dashStyle([5, 5]);
-
         const group = this.dimension.group().reduceSum((d: any) => {
           return true;
         });
@@ -111,36 +101,16 @@ export class MainvisComponent implements OnInit {
       } else {
         const lineChart = dc.lineChart(this.compositeChart)
         .colorAccessor(function(d, i) {
-          if (i % 2 === 0) {
-            return 0;
-          } else {
-            return 1;
-          }
+          if (i % 2 === 0) { return 0; } else { return 1; }
         });
         const group = this.dimension.group().reduceSum((d: any) => {
-          return d.song === nestedData[idx-1].key;
+          return d.song === nestedData[idx - 1].key;
         });
         lineChart.group(group);
         charts.push(lineChart);
       }
     }
-    // nestedData.forEach(song => {
-    //   console.log('so this happens two times too?');
-    //   const lineChart = dc.lineChart(this.compositeChart)
-    //   .ordinalColors(['red', 'green', 'blue'])
-    //   .colorAccessor(function(d, i) {
-    //     if (i % 2 === 0) {
-    //       return 0;
-    //     } else {
-    //       return 1;
-    //     }
-    //   });
-    //   const group = this.dimension.group().reduceSum((d: any) => {
-    //     return d.song === song.key;
-    //   });
-    //   lineChart.group(group);
-    //   charts.push(lineChart);
-    // });
+
     if (this.showTotalComments) {
       charts.push(dc.lineChart(this.compositeChart).group(this.dimension.group()).renderDataPoints(true).colors('red'));
     }
@@ -165,7 +135,6 @@ export class MainvisComponent implements OnInit {
       .shareTitle(true)
       .compose(this.lineCharts);
 
-
     // sends data to the language chart component on brush-filtering //
     this.compositeChart.on('filtered', (chart, filter) => {
       if (filter) {
@@ -173,15 +142,10 @@ export class MainvisComponent implements OnInit {
       } else {
         this.maxGroupValue = this.getMaxGroupValue(this.chartRange1, this.chartRange2);
       }
-      // console.log('value of maxGroupValue: ', this.maxGroupValue);
       this.compositeChart.y(d3.scaleLinear().domain([0, this.maxGroupValue]));
-      // console.log('filter: ', filter);
-      // console.log('chart: ', chart);
       this.chartService.setChartRange({range: filter, chart: chart});
     });
     this.compositeChart.render();
-    // this.compositeChart.svg().append('path').attr('d', this.path);
-
   }
   addDaysToData (days: number, amount: number, from: Date, song: string = '') {
     if (days === 0) {
@@ -208,7 +172,6 @@ export class MainvisComponent implements OnInit {
       }
     }
   }
-
 
   // sets the display mode of the line chart (daily, monthly, yearly)
   setShowOption(index: number) {
@@ -256,9 +219,6 @@ export class MainvisComponent implements OnInit {
     }
     this.options = {
       floor: new Date(dates[0].key).getTime(),
-      // stepsArray: dates.map((date: any) => {
-      //   return { value: new Date(date.key).getTime() };
-      // }),
       translate: (value: number, label: LabelType): string => {
         switch (this.chartShowOption) {
           default:
@@ -340,8 +300,5 @@ export class MainvisComponent implements OnInit {
     return m / 100 * 110; // 10% padding oben drauf
   }
 
-  getFilteredRange(begin, end) {
-
-
-  }
+  getFilteredRange(begin, end) {}
 }

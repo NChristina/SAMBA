@@ -14,32 +14,25 @@ export class SearchService {
 
   loadMockData(): Observable<any[]> {
     const d =  this.dataService.songDetailsMock();
-    console.log('xx: ', d);
     return d;
   }
 
   searchFromDb(value: string): Promise<any> {
-    console.log('entered searchFromDb() in search.service.ts: ', value);
     if (value.length < 1) {
       return;
     }
-    console.log('???: ', this.dataService.search(value));
     return this.dataService.search(value);
   }
 
   quickSearchFromDb(value: string): Promise<any> {
-    console.log('entered quickSearchFromDb() in search.service.ts: ', value);
     if (value.length < 1) {
-      console.log('smoller than 1');
       return;
     }
     return this.dataService.quickSearch(value);
   }
 
   songDetailsFromDb(value: string[]): Promise<any> {
-    // console.log('entered searchFromDb() in search.service.ts: ', value);
     if (value === undefined) {
-      console.log('the value is undefined ?!');
     } else {
       return this.dataService.songDetails(value);
     }
@@ -47,7 +40,6 @@ export class SearchService {
 
   songTopicsFromDb(value: string[]): Promise<any> {
     if (value === undefined) {
-      console.log('the value is undefined ?!');
     } else {
       return this.dataService.songTopics(value);
     }
@@ -55,7 +47,6 @@ export class SearchService {
 
   getCommentsFromDb(nbComments: number, order: String, ids: String[], startDate: any, endDate: any): Promise<any> {
     if (ids === undefined) {
-      console.log('the value is undefined ?!');
     } else {
       return this.dataService.getComments(nbComments, order, ids, startDate, endDate);
     }

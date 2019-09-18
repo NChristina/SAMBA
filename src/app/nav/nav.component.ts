@@ -41,7 +41,7 @@ export class NavComponent implements OnInit {
 
   submitQuickSearch(value: string) {
     if (value) {
-      console.log('SEARCH UWAHHHHH !!!!!: ', value);
+      // console.log('SEARCH UWAHHHHH !!!!!: ', value);
       // Entered submitSearch in nav comp
       document.getElementById('sFtext').style.display = 'none';       // Remove any alert
       document.getElementById('sFimg').style.display = 'block';       // Spinner ON
@@ -50,11 +50,11 @@ export class NavComponent implements OnInit {
       this.isSearching = true;
       this.searcher.quickSearchFromDb(value.trim()).then((results) => {
         document.getElementById('sFimg').style.display = 'none';      // Spinner OFF
-        console.log('I GOT A RESULT: ', results.body);
+        // console.log('I GOT A RESULT: ', results.body);
         if (results.body && results.body.length === 0) {
           document.getElementById('sFtext').style.display = 'block';  // Display alert
         }
-        console.log('respond from quicksearch: ', results.body);
+        // console.log('respond from quicksearch: ', results.body);
 
         this.searchMatchList = results.body;
         this.isSearching = false;
@@ -67,7 +67,7 @@ export class NavComponent implements OnInit {
   // it also updates the data for all charts via the chartService
   selectSong(index: number, childIndex: number, checkbox) {
     const id = checkbox.target.id;
-    console.log('select song has been triggered with: ', index, '// ', childIndex, '// ', checkbox);
+    // console.log('select song has been triggered with: ', index, '// ', childIndex, '// ', checkbox);
 
     if (id === 'checkbox_' + index) {
       const versionIDs: string[] = [];
@@ -82,10 +82,10 @@ export class NavComponent implements OnInit {
                 const snackBar = this.snackbar.show('You can only pick 8 items', 'OK', this.config);
                 return;
           } else {
-            console.log('group added?');
+            // console.log('group added?');
             this.chartService.setSpinner(true);
             this.searcher.songDetailsFromDb(versionIDs).then((results) => {
-              console.log('does anything happen with the result? :', results);
+              // console.log('does anything happen with the result? :', results);
               this.loadedItems.push(results.body[0]);
               this.matchForAdditionalInfo.push(this.searchMatchList[index]);
               this.labelsForChips.push({title: this.matchForAdditionalInfo[this.matchForAdditionalInfo.length - 1].title + ' - '
@@ -109,7 +109,7 @@ export class NavComponent implements OnInit {
     } else if (id === 'subcheckbox_' + childIndex) {
       const versionID: string[] = [];
       versionID.push(this.searchMatchList[index].versions[childIndex].id);
-      console.log('UWAHHHHH: ', this.searchMatchList[index].versions[childIndex].id);
+      // console.log('UWAHHHHH: ', this.searchMatchList[index].versions[childIndex].id);
 
       if (checkbox.target.checked) {
         if (this.loadedItems && this.loadedItems.length === 8) {
@@ -124,7 +124,7 @@ export class NavComponent implements OnInit {
             // console.log('mimi: ', this.searchMatchList[index].artist);
 
 
-            this.matchForAdditionalInfo[this.matchForAdditionalInfo.length-1].artist = this.searchMatchList[index].artist;
+            this.matchForAdditionalInfo[this.matchForAdditionalInfo.length - 1].artist = this.searchMatchList[index].artist;
 
 
             this.labelsForChips.push({title: this.matchForAdditionalInfo[this.matchForAdditionalInfo.length - 1].snippet.title,

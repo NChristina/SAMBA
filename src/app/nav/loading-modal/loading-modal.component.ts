@@ -10,8 +10,8 @@ display = 'none';
 
 
   constructor() {
-  let modal = document.getElementById('myModal');
-  let btn = document.getElementById('myBtn');
+  const modal = document.getElementById('myModal');
+  const btn = document.getElementById('myBtn');
   // let span = document.getElementsByClassName('close')[0];
    }
   open() {
