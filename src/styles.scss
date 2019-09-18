@@ -232,35 +232,46 @@ body {
 
 // Custom STYLES
 .sub:nth-child(2) .chart-body .stack-list .stack .line {
-  stroke: #7fc97f !important;
+  stroke: rgb(66, 66, 66) !important;
 }
-
 .sub:nth-child(3) .chart-body .stack-list .stack .line {
-  stroke: #beaed4 !important;
+  stroke: #7fc97f !important;
+  stroke-width: 3;
 }
 
 .sub:nth-child(4) .chart-body .stack-list .stack .line {
-  stroke: #fdc086 !important;
+  stroke: #beaed4 !important;
+  stroke-width: 3;
 }
 
 .sub:nth-child(5) .chart-body .stack-list .stack .line {
-  stroke: #ffff99 !important;
+  stroke: #fdc086 !important;
+  stroke-width: 3;
 }
 
 .sub:nth-child(6) .chart-body .stack-list .stack .line {
-  stroke: #386cb0 !important;
+  stroke:	#9932CC !important;
+  stroke-width: 3;
 }
 
 .sub:nth-child(7) .chart-body .stack-list .stack .line {
-  stroke: #f0027f !important;
+  stroke: #386cb0 !important;
+  stroke-width: 3;
 }
 
 .sub:nth-child(8) .chart-body .stack-list .stack .line {
-  stroke: #bf5b17 !important;
+  stroke: #f0027f !important;
+  stroke-width: 3;
 }
 
 .sub:nth-child(9) .chart-body .stack-list .stack .line {
+  stroke: #bf5b17 !important;
+  stroke-width: 3;
+}
+
+.sub:nth-child(10) .chart-body .stack-list .stack .line {
   stroke: #666666 !important;
+  stroke-width: 3;
 }
 
 .legendElement[_ngcontent-c7]:nth-child(1) .colorRect[_ngcontent-c7] {
@@ -276,7 +287,7 @@ body {
 }
 
 .legendElement[_ngcontent-c7]:nth-child(4) .colorRect[_ngcontent-c7] {
-  background-color: #ffff99 !important;
+  background-color:	#9932CC !important;
 }
 
 .legendElement[_ngcontent-c7]:nth-child(5) .colorRect[_ngcontent-c7] {
@@ -306,7 +317,7 @@ body {
   height: 19px;
 }
 
-.switch input { 
+.switch input {
   opacity: 0;
   width: 0;
   height: 0;

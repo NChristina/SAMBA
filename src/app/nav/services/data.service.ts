@@ -50,6 +50,7 @@ export class DataService {
 
   quickSearch(value: string): Promise<any> {
     const search = value.replace(' ', '%20');
+    console.log('quickSearch triggered, or nah? ', search);
     return this.requestService.get('quickSearch/' + search);
     // return this.httpClient.get( this.baseURL + this.dbName + this.serviceName + 'quickSearch/' + search);
     // return this.httpClient.get( 'https://jukebox.fhstp.ac.at:8531/_db/ForTunesV0_1/quickSearch/quickSearch/'  + search);

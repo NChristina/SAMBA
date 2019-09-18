@@ -28,8 +28,9 @@ export class SearchService {
   }
 
   quickSearchFromDb(value: string): Promise<any> {
-    // console.log('entered quickSearchFromDb() in search.service.ts: ', value);
+    console.log('entered quickSearchFromDb() in search.service.ts: ', value);
     if (value.length < 1) {
+      console.log('smoller than 1');
       return;
     }
     return this.dataService.quickSearch(value);
