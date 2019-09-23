@@ -17,7 +17,6 @@ export class SentimentComponent implements OnInit {
   dimension: CrossFilter.Dimension<{}, Date>;
   dimensionBar: CrossFilter.Dimension<{}, number>;
   sentGroups: { group: CrossFilter.Group<{}, Date, any>, sent: string}[];
-  sentimentLineChart: dc.LineChart;
   sentimentBarChart: dc.BarChart;
   private maxGroupValue;
   sentSumm = [];
@@ -31,7 +30,6 @@ export class SentimentComponent implements OnInit {
 
   ngOnInit() {
     // initialization of the chart
-    this.sentimentLineChart = dc.lineChart('#sentimentChartLine');
     this.sentimentBarChart = dc.barChart('#sentimentChart');
     this.chartService.GetData().subscribe((data) => {
       this.data = data;
@@ -49,7 +47,6 @@ export class SentimentComponent implements OnInit {
         if (this.sentGroups[0]) {
           this.notDataWarn = false;
           this.countSentiment('', '', false);
-          this.renderChart();
           this.renderBarChart();
         } else {
           this.notDataWarn = true;
@@ -61,21 +58,11 @@ export class SentimentComponent implements OnInit {
     this.chartService.getChartRange().subscribe((range) => {
       if (this.data && range.range) {
         (this.diff_months(range.range[0], range.range[1]) < 2) ? this.notDataWarn = true : this.notDataWarn = false;
-        this.sentimentLineChart
-          .x(d3.scaleTime().domain([range.range[0], range.range[1]]))
-          .y(d3.scaleLinear().domain([0, this.getMaxGroupValue()]))
-          .round(d3.timeMonth);
-
         this.countSentiment(range.range[0].toString(), range.range[1].toString(), true);
         this.renderBarChart();
-        this.sentimentLineChart.redraw();
       } else {
         if (!dc.chartRegistry.list().some((c) => c.hasFilter())) {
           this.notDataWarn = false;
-          this.sentimentLineChart
-            .x(d3.scaleTime().domain([d3.min(this.data, (d: any) => new Date(d.publishedAt)),
-              d3.max(this.data, (d: any) => new Date(d.publishedAt))]))
-            .y(d3.scaleLinear().domain([0, this.maxGroupValue]));
         }
 
         if (this.data && this.data.length > 0) {
@@ -86,7 +73,6 @@ export class SentimentComponent implements OnInit {
     });
 
     this.renderedChart = false;
-    this.setVisibilityofViews();
   }
 
   diff_months(dt2, dt1) {
@@ -336,56 +322,11 @@ export class SentimentComponent implements OnInit {
       } else if (g.sent === 'Mix') {
         colorArray.push('#984ea3');
       } else if (g.sent === 'N/A') {
-        colorArray.push('#EEEEEE');
+        colorArray.push('#DDDDDD');
       }
     });
 
     return colorArray;
-  }
-
-  // Renders line chart (aggregation)
-  renderChart () {
-    this.maxGroupValue = this.getMaxGroupValue();
-    const sentGroupsOrdered = this.reorderGroups();
-    const chartColors = this.defineChartColors();
-    let firstItem = 0;
-    while (!sentGroupsOrdered[firstItem] && firstItem < 5) {firstItem++; }
-    const group1 = sentGroupsOrdered[firstItem];
-    this.sentimentLineChart
-      .renderArea(true)
-      .width(300)
-      .height(200)
-      .ordinalColors(chartColors)
-      .useViewBoxResizing(true)
-      .dimension(this.dimension)
-      .x(d3.scaleTime().domain([d3.min(this.data, (d: any) => new Date(d.publishedAt)),
-        d3.max(this.data, (d: any) => new Date(d. publishedAt))]))
-      .xAxisLabel('Date')
-      .y(d3.scaleLinear().domain([0, this.maxGroupValue]))
-      .yAxisLabel('Comment Amount')
-      .interpolate('monotone')
-      .legend(dc.legend().x(250).y(10).itemHeight(13).gap(5))
-      .brushOn(true)
-      .group(group1.group, group1.sent)
-      .valueAccessor(function (d) {
-          return d.value;
-      })
-      .xAxis().ticks(4);
-    let maxSent = 0;
-    if (sentGroupsOrdered.length > 1) {
-      sentGroupsOrdered.forEach((group) => {
-        if (group.group === group1.group || maxSent === 4) {
-          return;
-        }
-        // stacks the groups
-        this.sentimentLineChart
-          .stack(group.group, group.sent, function (d) {
-          return d.value;
-        });
-        maxSent++;
-      });
-    }
-    this.sentimentLineChart.render();
   }
 
   // renders bar chart (comparison)
@@ -405,7 +346,7 @@ export class SentimentComponent implements OnInit {
     this.sentimentBarChart
       .width(300)
       .height(200)
-      .ordinalColors(['#4daf4a', '#666666', '#ff7f00', '#984ea3', '#eeeeee'])
+      .ordinalColors(['#4daf4a', '#666666', '#ff7f00', '#984ea3', '#DDDDDD'])
       .useViewBoxResizing(true)
       .dimension(this.dimensionBar)
       .yAxisLabel('Sentiment (%)')
@@ -508,30 +449,4 @@ export class SentimentComponent implements OnInit {
     tooltip.style.top = (event.clientY - tooltip.offsetHeight) + 'px';
     tooltip.style.left = (event.clientX + 5) + 'px';
   }
-
-  switchView(button: string) {
-    if (button === 'aggrButton' && !this.aggrView) {
-      this.aggrView = true;
-      this.compView = false;
-      document.getElementsByClassName('sentAggr')[0].classList.toggle('active');
-      document.getElementsByClassName('sentComp')[0].classList.toggle('active');
-    } else if (button === 'compButton' && !this.compView) {
-      this.aggrView = false;
-      this.compView = true;
-      document.getElementsByClassName('sentAggr')[0].classList.toggle('active');
-      document.getElementsByClassName('sentComp')[0].classList.toggle('active');
-    }
-    this.setVisibilityofViews();
-  }
-
-  setVisibilityofViews() {
-    if (this.aggrView) {
-      document.getElementById('sentimentChartLine').classList.remove('hide');
-      document.getElementById('sentimentChart').classList.add('hide');
-    } else if (this.compView) {
-      document.getElementById('sentimentChartLine').classList.add('hide');
-      document.getElementById('sentimentChart').classList.remove('hide');
-    }
-  }
-
 }

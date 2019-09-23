@@ -17,7 +17,6 @@ export class LanguageComponent implements OnInit {
   dimension: CrossFilter.Dimension<{}, Date>;
   dimensionBar: CrossFilter.Dimension<{}, number>;
   data: any[];
-  languageChart: dc.LineChart;
   barChart: dc.BarChart;
   langGroups: { group: CrossFilter.Group<{}, Date, any>, lang: string}[];
   private maxGroupValue;
@@ -32,7 +31,6 @@ export class LanguageComponent implements OnInit {
 
   ngOnInit() {
     // initialization of the chart
-    this.languageChart = dc.lineChart('#languageGraph');
     this.barChart = dc.barChart('#languageBarGraph');
     this.chartService.getCrossfilter().subscribe((filter) => {
       this.cfilter = filter;
@@ -46,7 +44,6 @@ export class LanguageComponent implements OnInit {
         if (this.langGroups[0]) {
           this.notDataWarn = false;
           this.countSongs();
-          this.renderChart();
           this.renderBarChart();
           this.showCaption();
           this.showLangCaption = true;
@@ -66,22 +63,11 @@ export class LanguageComponent implements OnInit {
     this.chartService.getChartRange().subscribe((range) => {
       if (this.data && range.range) {
         (this.diff_months(range.range[0], range.range[1]) < 2) ? this.notDataWarn = true : this.notDataWarn = false;
-        this.languageChart
-          .x(d3.scaleTime().domain([range.range[0], range.range[1]]))
-          .y(d3.scaleLinear().domain([0, this.getMaxGroupValue()]))
-          .round(d3.timeMonth);
-
         this.countMainLang(range.range[0].toString(), range.range[1].toString(), true);
         this.renderBarChart();
-        this.languageChart.redraw();
-
       } else {
         if (!dc.chartRegistry.list().some((c) => c.hasFilter())) {
           this.notDataWarn = false;
-          this.languageChart
-            .x(d3.scaleTime().domain([d3.min(this.data, (d: any) => new Date(d.publishedAt)),
-              d3.max(this.data, (d: any) => new Date(d.publishedAt))]))
-            .y(d3.scaleLinear().domain([0, this.maxGroupValue]));
         }
 
         if (this.data && this.data.length > 0) {
@@ -93,7 +79,6 @@ export class LanguageComponent implements OnInit {
     });
 
     this.renderedChart = false;
-    this.setVisibilityofViews();
   }
 
   showCaption() {
@@ -268,45 +253,6 @@ export class LanguageComponent implements OnInit {
     return m;
   }
 
-  // renders the chart
-  renderChart () {
-    this.maxGroupValue = this.getMaxGroupValue();
-    const group1 = this.langGroups[0];
-    this.languageChart
-        .renderArea(true)
-        .width(300)
-        .height(200)
-        .ordinalColors(['#8c564b', '#bcbd22', '#e377c2', '#17becf', '#7f7f7f', '#9467bd', '#d62728', '#2ca02c', '#ff7f0e', '#1f77b4'])
-        .useViewBoxResizing(true)
-        .dimension(this.dimension)
-        .x(d3.scaleTime().domain([d3.min(this.data, (d: any) => new Date(d.publishedAt)),
-          d3.max(this.data, (d: any) => new Date(d. publishedAt))]))
-        .xAxisLabel('Date')
-        .y(d3.scaleLinear().domain([0, this.maxGroupValue]))
-        .yAxisLabel('Comment Amount')
-        .interpolate('monotone')
-        .legend(dc.legend().x(250).y(10).itemHeight(13).gap(5))
-        .brushOn(true)
-        .group(group1.group, group1.lang)
-        .valueAccessor(function (d) {
-            return d.value;
-        })
-        .xAxis().ticks(4);
-      let maxLang = 0;
-      this.langGroups.forEach((group) => {
-        if (group.group === group1.group || maxLang === 2) {
-          return;
-        }
-        // stacks the groups
-        this.languageChart
-          .stack(group.group, group.lang, function (d) {
-          return d.value;
-        });
-        maxLang++;
-      });
-    this.languageChart.render();
-  }
-
   // Get summed values for the bar chart
   getPercentLang (id: any, lang: string) {
     let groupedValue = 0;
@@ -473,30 +419,5 @@ export class LanguageComponent implements OnInit {
     tooltip.style.position = 'fixed';
     tooltip.style.top = (event.clientY - tooltip.offsetHeight) + 'px';
     tooltip.style.left = (event.clientX + 5) + 'px';
-  }
-
-  switchView(button: string) {
-    if (button === 'aggrButton' && !this.aggrView) {
-      this.aggrView = true;
-      this.compView = false;
-      document.getElementsByClassName('langAggr')[0].classList.toggle('active');
-      document.getElementsByClassName('langComp')[0].classList.toggle('active');
-    } else if (button === 'compButton' && !this.compView) {
-      this.aggrView = false;
-      this.compView = true;
-      document.getElementsByClassName('langAggr')[0].classList.toggle('active');
-      document.getElementsByClassName('langComp')[0].classList.toggle('active');
-    }
-    this.setVisibilityofViews();
-  }
-
-  setVisibilityofViews() {
-    if (this.aggrView) {
-      document.getElementById('languageGraph').classList.remove('hide');
-      document.getElementById('languageBarGraph').classList.add('hide');
-    } else if (this.compView) {
-      document.getElementById('languageGraph').classList.add('hide');
-      document.getElementById('languageBarGraph').classList.remove('hide');
-    }
   }
 }

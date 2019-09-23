@@ -225,6 +225,7 @@ body {
 }
 
 .tools.hide,
+.view.hide,
 .aggregationView.hide,
 .comparisonView.hide{
   display: none;
@@ -380,6 +381,7 @@ body {
 .timeFilterIcon {
   color: #FF6700;
   float: right;
+  margin-right: 5px;
 }
 
 @media (max-width: 1530px) {

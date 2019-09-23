@@ -7,8 +7,6 @@
                     <p><img height="15px" src="../../assets/000-barchart.svg"> For the comparison view, each bar of the chart shows the percentage of comments per language in the videos selected for each song.</p>
             </span>
         </div>
-        <button (click)="switchView('compButton');" class="langComp compButton" style="float:right"><img height="24px" title="Comparison View" src="../../assets/000-barchart.svg"> </button>
-        <button (click)="switchView('aggrButton');" class="langAggr aggrButton active" style="float:right"><img height="24px" title="Aggregated View" src="../../assets/000-chart.svg"> </button>
         <mat-icon *ngIf="appliedFilter" class="timeFilterIcon" title="Applied Time Filter">date_range</mat-icon>
 
         <h2 class="cardTitleBox">Language</h2>
@@ -16,7 +14,7 @@
     </mat-grid-list>
 </div>
 <hr />
-<div id="languageGraph" class="maxSize aggregationView"></div>
+
 <div id="languageBarGraph" class="maxSize comparisonView"></div>
 <p class="notDataWarn" *ngIf="this.notDataWarn">Not enough data to render chart.</p>
 

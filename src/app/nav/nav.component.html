@@ -60,9 +60,9 @@
 
           <div class="mainMenu">
               <button (click)="switchView('Comments');" [className]="showContent == 'Comments' ? 'active menu_Comments' : 'menu_Comments first'"><img height="24px" title="Comments" src="../../assets/menu_comment.svg">Comments</button>
+              <button (click)="switchView('Sentiment');" [className]="showContent == 'Sentiment' ? 'active menu_Sentiment' : 'menu_Sentiment'"><img height="24px" title="Sentiment" src="../../assets/menu_sentiment.svg">Sentiment</button>
               <button (click)="switchView('Engagement');" [className]="showContent == 'Engagement' ? 'active menu_Engagement' : 'menu_Engagement'"><img height="24px" title="Engagement" src="../../assets/menu_engagement.svg">Engagement</button>
               <button (click)="switchView('Language');" [className]="showContent == 'Language' ? 'active menu_Language' : 'menu_Language'"><img height="24px" title="Language" src="../../assets/menu_language.svg">Language</button>
-              <button (click)="switchView('Sentiment');" [className]="showContent == 'Sentiment' ? 'active menu_Sentiment' : 'menu_Sentiment'"><img height="24px" title="Sentiment" src="../../assets/menu_sentiment.svg">Sentiment</button>
             </div>
 
             <img class="logoSamba" src="../../assets/Samba_Logo_rgb_transparent_cut.png" alt="samba logo"/>
@@ -80,8 +80,7 @@
         <mdc-chip-icon *ngIf="element.isGroup" leading>group</mdc-chip-icon>
         <mdc-chip-icon trailing>cancel</mdc-chip-icon>
       </mdc-chip>
-    </mdc-chip-set>-->
-    
+    </mdc-chip-set>-->    
 
     <div class="contentmargin" (click)="changeFocus()">
       <div class="grid-container">  
@@ -99,7 +98,10 @@
             <mat-card class="dashboard-card comment-section">
               <mat-card-content class="dashboard-card-content">
                   <button class="correctResetBtn" (click)="resetFilters()"><p>Reset Filters</p> <mat-icon>refresh</mat-icon></button>
-                  <app-mainvis id="mainVis"></app-mainvis>
+                  <app-mainvis id="timeView_Comments" class="view"></app-mainvis>
+                  <app-time-engagement-comments class="view" id="timeView_Engagement"></app-time-engagement-comments>
+                  <app-time-language class="view" id="timeView_Language"></app-time-language>
+                  <app-time-sentiment class="view" id="timeView_Sentiment"></app-time-sentiment>
               </mat-card-content>
             </mat-card>
           </mat-grid-tile>
@@ -107,10 +109,10 @@
           <mat-grid-tile [colspan]="1" [rowspan]="2">
             <mat-card class="dashboard-card">
               <mat-card-content>
-                <app-topic *ngIf="showContent == 'Comments'"></app-topic>
-                <app-engagement-comments *ngIf="showContent == 'Engagement'"></app-engagement-comments>
-                <app-language *ngIf="showContent == 'Language'"></app-language>
-                <app-sentiment *ngIf="showContent == 'Sentiment'"></app-sentiment>
+                <app-topic class="view" id="overview_Comments"></app-topic>
+                <app-engagement-comments class="view" id="overview_Engagement"></app-engagement-comments>
+                <app-language class="view" id="overview_Language"></app-language>
+                <app-sentiment class="view" id="overview_Sentiment"></app-sentiment>
               </mat-card-content>
             </mat-card>
           </mat-grid-tile>

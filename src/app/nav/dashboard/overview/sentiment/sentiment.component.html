@@ -14,8 +14,6 @@
                     Non-English comments are not assessed by the tools and are shown as N/A (not available).</p>
         </span>
     </div>
-    <button (click)="switchView('compButton');" class="sentComp compButton" style="float:right"><img height="24px" title="Comparison View" src="../../assets/000-barchart.svg"> </button>
-    <button (click)="switchView('aggrButton');" class="sentAggr aggrButton active" style="float:right"><img height="24px" title="Aggregated View" src="../../assets/000-chart.svg"> </button>
     <mat-icon *ngIf="appliedFilter" class="timeFilterIcon" title="Applied Time Filter">date_range</mat-icon>  
     
     <h2 class="cardTitleBox">Sentiment</h2>
@@ -24,11 +22,10 @@
 </div>
 <hr />
 
-<div id="sentimentChartLine" class="maxSize aggregationView"></div>
 <div id="sentimentChart" class="maxSize comparisonView"></div>
 <p class="notDataWarn" *ngIf="this.notDataWarn">Not enough data to render chart.</p>
 
-<div class="sentEnableNA" *ngIf="this.data && this.data.length && this.compView">
+<div class="sentEnableNA" *ngIf="this.data && this.data.length">
     <p>Show N/A</p>
     <label (click)="toggleNA()" title="Show Not Available Sentiment Data" class="switch">
         <input id="slider" type="checkbox" checked><span class="slider round"></span>

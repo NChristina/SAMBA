@@ -32,6 +32,7 @@ export class NavComponent implements OnInit {
 
   ngOnInit() {
     document.getElementById('sFimg').style.display = 'none'; // Spinner OFF default
+    this.setVisibilityofViews();
   }
 
   resetFilters() {
@@ -299,7 +300,22 @@ export class NavComponent implements OnInit {
           this.showContent = 'Sentiment';
           break;
       }
+      this.setVisibilityofViews();
     }
+  }
+
+  setVisibilityofViews() {
+    document.getElementById('overview_Comments').classList.add('hide');
+    document.getElementById('overview_Engagement').classList.add('hide');
+    document.getElementById('overview_Language').classList.add('hide');
+    document.getElementById('overview_Sentiment').classList.add('hide');
+    document.getElementById('overview_' + this.showContent).classList.remove('hide');
+
+    document.getElementById('timeView_Comments').classList.add('hide');
+    document.getElementById('timeView_Engagement').classList.add('hide');
+    document.getElementById('timeView_Language').classList.add('hide');
+    document.getElementById('timeView_Sentiment').classList.add('hide');
+    document.getElementById('timeView_' + this.showContent).classList.remove('hide');
   }
 }
 

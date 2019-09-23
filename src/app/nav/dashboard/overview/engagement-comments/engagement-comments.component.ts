@@ -9,14 +9,12 @@ import * as dc from 'dc';
   styleUrls: ['./engagement-comments.component.scss']
 })
 export class EngagementCommentsComponent implements OnInit {
-  aggrView = true;
-  compView = false;
   data: any[];
   cfilter: CrossFilter.CrossFilter<{}>;
   dimension: CrossFilter.Dimension<{}, Date>;
   dimensionBar: CrossFilter.Dimension<{}, number>;
   likeGroups: { group: CrossFilter.Group<{}, Date, any>, likes: string}[];
-  likeLineChart: dc.LineChart;
+
   likeBarChart: dc.BarChart;
   private maxGroupValue;
   renderedChart = false;
@@ -29,7 +27,6 @@ export class EngagementCommentsComponent implements OnInit {
 
   ngOnInit() {
     // initialization of the chart
-    this.likeLineChart = dc.lineChart('#engChartLine');
     this.likeBarChart = dc.barChart('#engChart');
     this.chartService.GetData().subscribe((data) => {
       this.data = data;
@@ -45,7 +42,7 @@ export class EngagementCommentsComponent implements OnInit {
         if (this.likeGroups[0]) {
           this.notDataWarn = false;
           this.countEngagement('', '', false);
-          this.renderChart();
+          // this.renderChart();
           this.renderBarChart();
         } else {
           this.notDataWarn = true;
@@ -57,23 +54,10 @@ export class EngagementCommentsComponent implements OnInit {
     this.chartService.getChartRange().subscribe((range) => {
       if (this.data && range.range) {
         (this.diff_months(range.range[0], range.range[1]) < 2) ? this.notDataWarn = true : this.notDataWarn = false;
-        this.likeLineChart
-          .x(d3.scaleTime().domain([range.range[0], range.range[1]]))
-          .y(d3.scaleLinear().domain([0, this.getMaxGroupValue()]))
-          .round(d3.timeMonth);
-
         this.countEngagement(range.range[0].toString(), range.range[1].toString(), true);
         this.renderBarChart();
-        this.likeLineChart.redraw();
       } else {
-        if (!dc.chartRegistry.list().some((c) => c.hasFilter())) {
-          this.notDataWarn = false;
-          this.likeLineChart
-            .x(d3.scaleTime().domain([d3.min(this.data, (d: any) => new Date(d.publishedAt)),
-              d3.max(this.data, (d: any) => new Date(d.publishedAt))]))
-            .y(d3.scaleLinear().domain([0, this.maxGroupValue]));
-        }
-
+        if (!dc.chartRegistry.list().some((c) => c.hasFilter())) { this.notDataWarn = false; }
         if (this.data && this.data.length > 0) {
           this.countEngagement('', '', false);
           this.renderBarChart();
@@ -82,7 +66,6 @@ export class EngagementCommentsComponent implements OnInit {
     });
 
     this.renderedChart = false;
-    this.setVisibilityofViews();
   }
 
   diff_months(dt2, dt1) {
@@ -181,47 +164,6 @@ export class EngagementCommentsComponent implements OnInit {
       case 3:
           return ['#377eb8', '#a8a8a8', '#ff0000'];
     }
-  }
-
-  // Renders line chart (aggregation)
-  renderChart () {
-    this.maxGroupValue = this.getMaxGroupValue();
-    const sentGroupsOrdered = this.reorderGroups();
-    const chartColors = this.defineChartColors();
-    const group1 = sentGroupsOrdered[0];
-    this.likeLineChart
-        .renderArea(true)
-        .width(300)
-        .height(200)
-        .ordinalColors(chartColors)
-        .useViewBoxResizing(true)
-        .dimension(this.dimension)
-        .x(d3.scaleTime().domain([d3.min(this.data, (d: any) => new Date(d.publishedAt)),
-          d3.max(this.data, (d: any) => new Date(d. publishedAt))]))
-        .xAxisLabel('Date')
-        .y(d3.scaleLinear().domain([0, this.maxGroupValue]))
-        .yAxisLabel('Comment Amount')
-        .interpolate('monotone')
-        .legend(dc.legend().x(250).y(10).itemHeight(13).gap(5))
-        .brushOn(true)
-        .group(group1.group, group1.likes)
-        .valueAccessor(function (d) {
-            return d.value;
-        })
-        .xAxis().ticks(4);
-      let maxSent = 0;
-      sentGroupsOrdered.forEach((group) => {
-        if (group.group === group1.group || maxSent === 1) {
-          return;
-        }
-        // stacks the groups
-        this.likeLineChart
-          .stack(group.group, group.likes, function (d) {
-          return d.value;
-        });
-        maxSent++;
-      });
-    this.likeLineChart.render();
   }
 
   isInDateRange(publishedAt: any, startDate: any, endDate: any) {
@@ -444,39 +386,4 @@ export class EngagementCommentsComponent implements OnInit {
     tooltip.style.top = (event.clientY - tooltip.offsetHeight) + 'px';
     tooltip.style.left = (event.clientX + 5) + 'px';
   }
-
-  switchView(button: string) {
-    if (button === 'aggrButton' && !this.aggrView) {
-      this.aggrView = true;
-      this.compView = false;
-      document.getElementsByClassName('hardAggr')[0].classList.toggle('active');
-      document.getElementsByClassName('hardComp')[0].classList.toggle('active');
-    } else if (button === 'compButton' && !this.compView) {
-      this.aggrView = false;
-      this.compView = true;
-      document.getElementsByClassName('hardAggr')[0].classList.toggle('active');
-      document.getElementsByClassName('hardComp')[0].classList.toggle('active');
-    }
-    this.setVisibilityofViews();
-  }
-
-  setVisibilityofViews() {
-    if (this.aggrView) {
-      document.getElementById('engChartLine').classList.remove('hide');
-      document.getElementById('engChart').classList.add('hide');
-    } else if (this.compView) {
-      document.getElementById('engChartLine').classList.add('hide');
-      document.getElementById('engChart').classList.remove('hide');
-    }
-  }
-
-  // cutTextForLabels(str: string, length: number, ending: string) {
-  //   if (str.length > length) {
-  //     let newString = str.substring(0, length - ending.length) + ending;
-  //     console.log('string: ', newString);
-  //     return {label: newString};
-  //   } else {
-  //     return {label: str};
-  //   }
-  // }
 }
