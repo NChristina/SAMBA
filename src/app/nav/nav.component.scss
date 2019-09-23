@@ -145,9 +145,10 @@
   font-size: 1.4em;
   display: flex;
   border: none;
-  margin: 0px 19px;
+  margin: 0px 30px;
   cursor: pointer;
   outline: none;
+  position: absolute;
 }
 
 .main_button:active{
@@ -171,8 +172,6 @@
   
 }
 .correctResetBtn {
-  margin-right: 34px;
-  margin-bottom: -25px;
   background-color: #fff;
   border-radius: 5px;
   box-shadow: 0px 0px 5px -1px rgba(0, 0, 0, 0.2);
@@ -182,6 +181,9 @@
   border: 1px solid #888;
   cursor: pointer;
   outline: none;
+  position: absolute;
+  top: 20px;
+  right: 70px;
 }
 
 .correctResetBtn:active {
@@ -204,4 +206,89 @@
   float:left;
   color: #888;
 }
+
+
+.mainMenu{
+  width: 680px;
+  margin: 0px auto;
+}
+
+.mainMenu button{
+  height: 79px;
+  width: 170px;
+  border-top: 0px;
+  border-bottom: 0px;
+  border-left: 0px;
+  border-right: 2px solid #ddd;
+  background: #ccc;
+  font-size: 17px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.mainMenu button.first{
+  border-left: 2px solid #ddd;
+}
+
+.mainMenu button img{
+  height: 20px;
+  margin: -2px 5px 0px 0px;
+}
+
+.mainMenu button:hover{
+  background: #aaa;
+}
+
+.mainMenu button.active:hover,
+.mainMenu button.active{
+  color: #fff;
+  background: #666;
+}
+
+.mainMenu button.active img {
+  -webkit-filter: invert(1);
+  filter: invert(1);
+}
+
+.logoSamba{
+  width: 150px;
+  position: absolute;
+  right: 30px;
+}
+
+/* ---------------------------------------------------------------- */
+.grid-container {
+  margin: 0px 20px;
+  /*position: relative;
+  top: -82px;*/
+}
+
+.dashboard-card {
+  position: absolute;
+  top: 15px;
+  left: 15px;
+  right: 15px;
+  bottom: 15px;
+}
+
+.more-button {
+  position: absolute;
+  top: 5px;
+  right: 10px;
+}
+
+.dashboard-card-content {
+  text-align: center;
+}
+
+.comment-section {
+  overflow-y: scroll;
+  background-color: #ededed;
+}
+
+.grid_title_overflow {
+  overflow: visible;
+}
+
+
 

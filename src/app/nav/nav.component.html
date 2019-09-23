@@ -1,13 +1,7 @@
 <div class="demo-content__drawer demo-content__drawer--persistent">
   <mdc-drawer #persistent drawer="persistent">
     <mdc-drawer-spacer>
-      <mdc-text-field
-        #searchText
-        [box]="false"
-        label="search for songs"
-        maxlength="30"
-        (change)="submitQuickSearch(searchText.value)"
-      >
+      <mdc-text-field #searchText [box]="false" label="search for songs" maxlength="30" (change)="submitQuickSearch(searchText.value)">
         <mdc-icon class="search_icon" trailing #searchicon [clickable]="true">search</mdc-icon>
       </mdc-text-field>
     </mdc-drawer-spacer>
@@ -54,26 +48,28 @@
       </div>
     </div>
   </mdc-drawer>
+
   <div>
     <mdc-toolbar>
       <mdc-toolbar-row>
-        <mdc-toolbar-section [alignStart]="true">
-            <button id="main_buttonAdd" class="main_button" (click)="persistent.open(); setOpen()">
-                <mdc-icon mdc-toolbar-menu-icon *ngIf="openDrawer">keyboard_arrow_left</mdc-icon>
-                <mdc-icon mdc-toolbar-menu-icon *ngIf="!openDrawer">keyboard_arrow_right</mdc-icon>
-                <h1>Add Video(s)</h1>
-            </button>
-        </mdc-toolbar-section>
-        <mdc-toolbar-section [alignEnd]="true" [shrinkToFit]="true">
-          <img
-            src="../../assets/Samba_Logo_rgb_transparent_cut.png"
-            alt="samba logo"
-            style="width:150px; margin-right: 15px;"
-          />
-        </mdc-toolbar-section>
+          <button id="main_buttonAdd" class="main_button" (click)="persistent.open(); setOpen()">
+            <mdc-icon mdc-toolbar-menu-icon *ngIf="openDrawer">keyboard_arrow_left</mdc-icon>
+            <mdc-icon mdc-toolbar-menu-icon *ngIf="!openDrawer">keyboard_arrow_right</mdc-icon>
+            <h1>Add Video(s)</h1>
+          </button>
+
+          <div class="mainMenu">
+              <button (click)="switchView('Comments');" [className]="showContent == 'Comments' ? 'active menu_Comments' : 'menu_Comments first'"><img height="24px" title="Comments" src="../../assets/menu_comment.svg">Comments</button>
+              <button (click)="switchView('Engagement');" [className]="showContent == 'Engagement' ? 'active menu_Engagement' : 'menu_Engagement'"><img height="24px" title="Engagement" src="../../assets/menu_engagement.svg">Engagement</button>
+              <button (click)="switchView('Language');" [className]="showContent == 'Language' ? 'active menu_Language' : 'menu_Language'"><img height="24px" title="Language" src="../../assets/menu_language.svg">Language</button>
+              <button (click)="switchView('Sentiment');" [className]="showContent == 'Sentiment' ? 'active menu_Sentiment' : 'menu_Sentiment'"><img height="24px" title="Sentiment" src="../../assets/menu_sentiment.svg">Sentiment</button>
+            </div>
+
+            <img class="logoSamba" src="../../assets/Samba_Logo_rgb_transparent_cut.png" alt="samba logo"/>
       </mdc-toolbar-row>
     </mdc-toolbar>
-    <mdc-chip-set #inputchipset [input]="true" style="margin-left: 20px;">
+
+    <!--<mdc-chip-set #inputchipset [input]="true" style="margin-left: 20px;">
       <mdc-chip
       [ngStyle]="{'background-color': element.isGroup ? '#DCDCDC' : '#C0D9D9'}"
         *ngFor="let element of labelsForChips; let i = index"
@@ -84,14 +80,59 @@
         <mdc-chip-icon *ngIf="element.isGroup" leading>group</mdc-chip-icon>
         <mdc-chip-icon trailing>cancel</mdc-chip-icon>
       </mdc-chip>
-    </mdc-chip-set>
+    </mdc-chip-set>-->
     
-    <div class="flexBtnContainer">
-      <span flex></span> 
-      <button class="correctResetBtn" (click)="resetFilters()"><p>Reset Filters</p> <mat-icon>refresh</mat-icon></button>
-    </div>
-    <div class="contentmargin" >
-      <app-dashboard (click)="changeFocus()"></app-dashboard>
+
+    <div class="contentmargin" (click)="changeFocus()">
+      <div class="grid-container">  
+        <mat-grid-list cols="3" rowHeight="200px">
+          <!-- Video Info -->
+          <mat-grid-tile [colspan]="1" [rowspan]="2">
+            <mat-card class="dashboard-card">
+              <mat-card-content>
+                <app-hardfacts></app-hardfacts>
+              </mat-card-content>
+            </mat-card>
+          </mat-grid-tile>
+          <!-- Time Vis -->
+          <mat-grid-tile [colspan]="2" [rowspan]="3">
+            <mat-card class="dashboard-card comment-section">
+              <mat-card-content class="dashboard-card-content">
+                  <button class="correctResetBtn" (click)="resetFilters()"><p>Reset Filters</p> <mat-icon>refresh</mat-icon></button>
+                  <app-mainvis id="mainVis"></app-mainvis>
+              </mat-card-content>
+            </mat-card>
+          </mat-grid-tile>
+          <!-- Overview -->
+          <mat-grid-tile [colspan]="1" [rowspan]="2">
+            <mat-card class="dashboard-card">
+              <mat-card-content>
+                <app-topic *ngIf="showContent == 'Comments'"></app-topic>
+                <app-engagement-comments *ngIf="showContent == 'Engagement'"></app-engagement-comments>
+                <app-language *ngIf="showContent == 'Language'"></app-language>
+                <app-sentiment *ngIf="showContent == 'Sentiment'"></app-sentiment>
+              </mat-card-content>
+            </mat-card>
+          </mat-grid-tile>
+          <!-- Comments -->
+          <mat-grid-tile [colspan]="2" [rowspan]="1">
+            <mat-card class="dashboard-card" style="overflow-y: scroll;">
+              <mat-card-content>
+                <h1>Comments...</h1>
+                <!--<app-comment></app-comment>-->
+              </mat-card-content>
+            </mat-card>
+          </mat-grid-tile>
+          <!-- Footer -->
+          <mat-grid-tile class="grid_title_overflow" [colspan]="3" [rowspan]="1">
+            <mat-card class="dashboard-card"><mat-card-content class="dashboard-card-content">
+              <a id="footlink" href="https://samba.fhstp.ac.at/" target="_blank" style="text-decoration: none; color:#888888; margin-top: -10px;">
+                Smart Data for Music Business Administration (SAMBA)
+              </a>
+            </mat-card-content></mat-card>
+          </mat-grid-tile>
+        </mat-grid-list>
+      </div>
     </div>
   </div>
 </div>

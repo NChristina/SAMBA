@@ -1,8 +1,8 @@
 import {Component, OnInit} from '@angular/core';
-import {ChartService} from '../services/chart.service';
+import {ChartService} from '../../services/chart.service';
 import {Options, LabelType} from 'ng5-slider';
-import {SliderComponent} from '../../../../../node_modules/ng5-slider/slider.component';
-import {MdcFab} from '../../../../../node_modules/@angular-mdc/web';
+import {SliderComponent} from '../../../../../../node_modules/ng5-slider/slider.component';
+import {MdcFab} from '../../../../../../node_modules/@angular-mdc/web';
 import * as crossfilter from 'crossfilter';
 import * as d3 from 'd3';
 import * as dc from 'dc';

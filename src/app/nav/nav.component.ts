@@ -24,6 +24,7 @@ export class NavComponent implements OnInit {
   openDrawer = false;
   idsForChild = [];
   totalCommentsForChild = 0;
+  showContent = 'Comments';
 
   constructor(private searcher: SearchService, private chartService: ChartService,
     private snackbar: MdcSnackbar, private dataService: DataService) {
@@ -280,6 +281,25 @@ export class NavComponent implements OnInit {
     this.searcher.songTopicsFromDb(this.idsForChild).then((topicRes) => {
       this.chartService.SetDataTopics(topicRes.body);
     });
+  }
+
+  switchView(op: string) {
+    if (op !== this.showContent) {
+      switch (op) {
+        case 'Comments':
+          this.showContent = 'Comments';
+          break;
+        case 'Engagement':
+          this.showContent = 'Engagement';
+          break;
+        case 'Language':
+          this.showContent = 'Language';
+          break;
+        case 'Sentiment':
+          this.showContent = 'Sentiment';
+          break;
+      }
+    }
   }
 }
 

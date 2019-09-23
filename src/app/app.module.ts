@@ -47,15 +47,19 @@ import { LoadingModalComponent } from './nav/loading-modal/loading-modal.compone
 import { LoadingSvgComponent } from './shared/loading-svg/loading-svg.component';
 import { AuthGuardService } from './shared/auth-guard.service';
 
+/* Main Components / Views */
 import { LoginComponent } from './login/login.component';
 import { DashboardComponent } from './nav/dashboard/dashboard.component';
 import { CommentComponent } from './nav/dashboard/comment/comment.component';
 import { HardfactsComponent } from './nav/dashboard/hardfacts/hardfacts.component';
-import { MainvisComponent } from './nav/dashboard/mainvis/mainvis.component';
 import { EngagementCommentsComponent } from './nav/dashboard/overview/engagement-comments/engagement-comments.component';
 import { LanguageComponent } from './nav/dashboard/overview/language/language.component';
 import { SentimentComponent } from './nav/dashboard/overview/sentiment/sentiment.component';
 import { TopicComponent } from './nav/dashboard/overview/topic/topic.component';
+import { MainvisComponent } from './nav/dashboard/time-view/mainvis/mainvis.component';
+import { TimeEngagementCommentsComponent } from './nav/dashboard/time-view/time-engagement-comments/time-engagement-comments.component';
+import { TimeLanguageComponent } from './nav/dashboard/time-view/time-language/time-language.component';
+import { TimeSentimentComponent } from './nav/dashboard/time-view/time-sentiment/time-sentiment.component';
 
 @NgModule({
   declarations: [
@@ -72,6 +76,9 @@ import { TopicComponent } from './nav/dashboard/overview/topic/topic.component';
     LoadingSvgComponent,
     LoginComponent,
     EngagementCommentsComponent,
+    TimeSentimentComponent,
+    TimeLanguageComponent,
+    TimeEngagementCommentsComponent,
   ],
   imports: [
     AppRoutingModule,

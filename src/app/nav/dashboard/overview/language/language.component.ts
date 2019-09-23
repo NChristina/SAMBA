@@ -85,6 +85,7 @@ export class LanguageComponent implements OnInit {
         }
 
         if (this.data && this.data.length > 0) {
+          this.langGroups = this.getLanguageGroups();
           this.countMainLang('', '', false);
           this.renderBarChart();
         }
