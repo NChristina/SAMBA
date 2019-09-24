@@ -194,7 +194,7 @@
 
 .correctResetBtn p{
   margin: 0;
-  padding: 2px 5px 0px 6px;
+  padding: 4px 5px 0px 6px;
 }
 
 .iconsVersions {
@@ -257,10 +257,16 @@
 }
 
 /* ---------------------------------------------------------------- */
-.grid-container {
-  margin: 0px 20px;
-  /*position: relative;
-  top: -82px;*/
+.grid-container.gridLeft{
+  margin: 0px 0px 0px 1%;
+  float:left;
+  width: 32%;
+}
+
+.grid-container.gridRight {
+  margin: 0px 1% 0px 0px;
+  float:right;
+  width: 66%;
 }
 
 .dashboard-card {
@@ -283,7 +289,7 @@
 
 .comment-section {
   overflow-y: scroll;
-  background-color: #ededed;
+  background-color: #f9f9f9;
 }
 
 .grid_title_overflow {

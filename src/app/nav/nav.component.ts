@@ -25,6 +25,8 @@ export class NavComponent implements OnInit {
   idsForChild = [];
   totalCommentsForChild = 0;
   showContent = 'Comments';
+  rowTimeSize = 3;
+  rowCommSize = 1;
 
   constructor(private searcher: SearchService, private chartService: ChartService,
     private snackbar: MdcSnackbar, private dataService: DataService) {
@@ -316,6 +318,16 @@ export class NavComponent implements OnInit {
     document.getElementById('timeView_Language').classList.add('hide');
     document.getElementById('timeView_Sentiment').classList.add('hide');
     document.getElementById('timeView_' + this.showContent).classList.remove('hide');
+  }
+
+  toggleComments() {
+    if (this.rowCommSize === 1) {
+      this.rowCommSize = 3;
+      this.rowTimeSize = 1;
+    } else {
+      this.rowCommSize = 1;
+      this.rowTimeSize = 3;
+    }
   }
 }
 

@@ -83,8 +83,8 @@
     </mdc-chip-set>-->    
 
     <div class="contentmargin" (click)="changeFocus()">
-      <div class="grid-container">  
-        <mat-grid-list cols="3" rowHeight="200px">
+      <div class="grid-container gridLeft">  
+        <mat-grid-list cols="1" rowHeight="200px">
           <!-- Video Info -->
           <mat-grid-tile [colspan]="1" [rowspan]="2">
             <mat-card class="dashboard-card">
@@ -93,18 +93,7 @@
               </mat-card-content>
             </mat-card>
           </mat-grid-tile>
-          <!-- Time Vis -->
-          <mat-grid-tile [colspan]="2" [rowspan]="3">
-            <mat-card class="dashboard-card comment-section">
-              <mat-card-content class="dashboard-card-content">
-                  <button class="correctResetBtn" (click)="resetFilters()"><p>Reset Filters</p> <mat-icon>refresh</mat-icon></button>
-                  <app-mainvis id="timeView_Comments" class="view"></app-mainvis>
-                  <app-time-engagement-comments class="view" id="timeView_Engagement"></app-time-engagement-comments>
-                  <app-time-language class="view" id="timeView_Language"></app-time-language>
-                  <app-time-sentiment class="view" id="timeView_Sentiment"></app-time-sentiment>
-              </mat-card-content>
-            </mat-card>
-          </mat-grid-tile>
+
           <!-- Overview -->
           <mat-grid-tile [colspan]="1" [rowspan]="2">
             <mat-card class="dashboard-card">
@@ -116,25 +105,45 @@
               </mat-card-content>
             </mat-card>
           </mat-grid-tile>
-          <!-- Comments -->
-          <mat-grid-tile [colspan]="2" [rowspan]="1">
-            <mat-card class="dashboard-card" style="overflow-y: scroll;">
-              <mat-card-content>
-                <h1>Comments...</h1>
-                <!--<app-comment></app-comment>-->
+        </mat-grid-list>
+      </div>
+
+      <div class="grid-container gridRight">  
+        <mat-grid-list cols="1" rowHeight="200px">
+          <!-- Time Vis -->
+          <mat-grid-tile [colspan]="1" [rowspan]=rowTimeSize>
+            <mat-card class="dashboard-card comment-section">
+              <mat-card-content class="dashboard-card-content">
+                  <button class="correctResetBtn" (click)="resetFilters()"><p>Reset Filters</p> <mat-icon>refresh</mat-icon></button>
+                  <app-mainvis id="timeView_Comments" class="view"></app-mainvis>
+                  <app-time-engagement-comments class="view" id="timeView_Engagement"></app-time-engagement-comments>
+                  <app-time-language class="view" id="timeView_Language"></app-time-language>
+                  <app-time-sentiment class="view" id="timeView_Sentiment"></app-time-sentiment>
               </mat-card-content>
             </mat-card>
           </mat-grid-tile>
-          <!-- Footer -->
-          <mat-grid-tile class="grid_title_overflow" [colspan]="3" [rowspan]="1">
-            <mat-card class="dashboard-card"><mat-card-content class="dashboard-card-content">
-              <a id="footlink" href="https://samba.fhstp.ac.at/" target="_blank" style="text-decoration: none; color:#888888; margin-top: -10px;">
-                Smart Data for Music Business Administration (SAMBA)
-              </a>
-            </mat-card-content></mat-card>
+
+          <!-- Comments -->
+          <mat-grid-tile [colspan]="1" [rowspan]=rowCommSize>
+            <mat-card class="dashboard-card" style="overflow-y: scroll;">
+              <mat-card-content (click)="toggleComments()">
+                <app-comment></app-comment>
+              </mat-card-content>
+            </mat-card>
           </mat-grid-tile>
         </mat-grid-list>
       </div>
+
+       <!-- Footer 
+       <div class="grid_title_overflow" style="width:98%;height:100px;margin:1%">
+          <mat-card class="dashboard-card"><mat-card-content class="dashboard-card-content">
+            <a id="footlink" href="https://samba.fhstp.ac.at/" target="_blank" style="text-decoration: none; color:#888888; margin-top: -10px;">
+              Smart Data for Music Business Administration (SAMBA)
+            </a>
+          </mat-card-content></mat-card>
+        </div>-->
+
+
     </div>
   </div>
 </div>

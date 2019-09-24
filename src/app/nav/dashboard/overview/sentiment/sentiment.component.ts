@@ -322,7 +322,7 @@ export class SentimentComponent implements OnInit {
       } else if (g.sent === 'Mix') {
         colorArray.push('#984ea3');
       } else if (g.sent === 'N/A') {
-        colorArray.push('#DDDDDD');
+        colorArray.push('#eeeeee');
       }
     });
 
@@ -346,7 +346,7 @@ export class SentimentComponent implements OnInit {
     this.sentimentBarChart
       .width(300)
       .height(200)
-      .ordinalColors(['#4daf4a', '#666666', '#ff7f00', '#984ea3', '#DDDDDD'])
+      .ordinalColors(['#4daf4a', '#666666', '#ff7f00', '#984ea3', '#eeeeee'])
       .useViewBoxResizing(true)
       .dimension(this.dimensionBar)
       .yAxisLabel('Sentiment (%)')
