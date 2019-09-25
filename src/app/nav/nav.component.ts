@@ -1,4 +1,4 @@
-import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
+import { Component, OnInit, ElementRef, ViewChild, NgZone} from '@angular/core';
 import { SearchService } from './services/search.service';
 import { MdcSnackbar, MdcSnackbarConfig } from '@angular-mdc/web';
 import { ChartService } from './dashboard/services/chart.service';
@@ -29,7 +29,7 @@ export class NavComponent implements OnInit {
   rowCommSize = 1;
 
   constructor(private searcher: SearchService, private chartService: ChartService,
-    private snackbar: MdcSnackbar, private dataService: DataService) {
+    private snackbar: MdcSnackbar, private dataService: DataService, private ngZone: NgZone) {
   }
 
   ngOnInit() {
@@ -321,13 +321,19 @@ export class NavComponent implements OnInit {
   }
 
   toggleComments() {
-    if (this.rowCommSize === 1) {
-      this.rowCommSize = 3;
-      this.rowTimeSize = 1;
-    } else {
-      this.rowCommSize = 1;
-      this.rowTimeSize = 3;
-    }
+    const elm: HTMLElement = document.getElementById('commentsCard') as HTMLElement;
+
+    this.ngZone.run(() => {
+      if (this.rowCommSize === 1) {
+        this.rowCommSize = 3;
+        this.rowTimeSize = 1;
+        if (elm) { elm.style.overflowY = 'overlay'; }
+      } else {
+        this.rowCommSize = 1;
+        this.rowTimeSize = 3;
+        if (elm) { elm.scrollTo(0, 0); elm.style.overflowY = 'hidden'; }
+      }
+    });
   }
 }
 
