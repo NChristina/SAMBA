@@ -15,6 +15,9 @@ export class ChartService {
   private chartTopicsSource = new BehaviorSubject([]);
   private currentChartTopics = this.chartTopicsSource.asObservable();
 
+  private chartModeSource = new BehaviorSubject([]);
+  private currentChartMode = this.chartModeSource.asObservable();
+
   private chartRangeSource = new BehaviorSubject([]);
   private currentChartRange = this.chartRangeSource.asObservable();
   private loggedIn = false;
@@ -66,6 +69,14 @@ export class ChartService {
 
   GetData(): Observable<any[]> {
     return this.currentChartData;
+  }
+
+  SetChartMode(mode: any) {
+    this.chartModeSource.next(mode);
+  }
+
+  GetChartMode(): Observable<any> {
+    return this.currentChartMode;
   }
 
   SetDataTopics(topicData: any) {

@@ -32,6 +32,7 @@ export class MainvisComponent implements OnInit {
   private chartRange1;
   private chartRange2;
   private initialValues;
+  chartHeight = 300;
   // total comments
   protected showTotalComments = false;
 
@@ -68,6 +69,18 @@ export class MainvisComponent implements OnInit {
         // console.log(this.songs);
         if (this.showTotalComments) {
           this.songs.push({ key: '-------', values: [{ key: 'Total Comments', values: this.data }]});
+        }
+      }
+    });
+
+    this.chartService.GetChartMode().subscribe(mode => {
+      if (this.data && this.data.length > 0) {
+        if (mode && mode === 'small') {
+          this.chartHeight = 85;
+          this.renderChart();
+        } else if (mode && mode === 'big') {
+          this.chartHeight = 300;
+          this.renderChart();
         }
       }
     });
@@ -125,13 +138,12 @@ export class MainvisComponent implements OnInit {
 
     this.compositeChart
       .width(900)
-      .height(300)
+      .height(this.chartHeight)
       .useViewBoxResizing(true)
       .dimension(this.dimension)
       .x(d3.scaleTime().domain([this.chartRange1, this.chartRange2]))
       .y(d3.scaleLinear().domain([0, d3.max(dateGroup.all(), (d: any) => d.value)]) )
-      .xAxisLabel('Date')
-      .yAxisLabel('Comment Amount')
+      .yAxisLabel('Comments')
       .shareTitle(true)
       .compose(this.lineCharts);
 
@@ -145,6 +157,9 @@ export class MainvisComponent implements OnInit {
       this.compositeChart.y(d3.scaleLinear().domain([0, this.maxGroupValue]));
       this.chartService.setChartRange({range: filter, chart: chart});
     });
+
+    (this.chartHeight < 300) ? this.compositeChart.yAxis().ticks(2) : this.compositeChart.yAxis().ticks(10);
+    (this.chartHeight < 300) ? this.compositeChart.xAxisLabel('') : this.compositeChart.xAxisLabel('Date');
     this.compositeChart.render();
   }
   addDaysToData (days: number, amount: number, from: Date, song: string = '') {

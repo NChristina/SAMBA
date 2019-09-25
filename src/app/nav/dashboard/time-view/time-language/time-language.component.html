@@ -14,7 +14,7 @@
 <p class="notDataWarn" *ngIf="this.notDataWarn">Not enough data to render chart.</p>
 
 <div class="wrapperLangCaption" >
-    <div *ngIf="showLangCaption"> 
+    <div *ngIf="showLangCaption && chartHeight > 100"> 
         <p  class="footerLang"> * {{langCaption}} </p>
     </div>
 </div>

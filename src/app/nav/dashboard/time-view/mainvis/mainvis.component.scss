@@ -16,10 +16,6 @@ $color-change-list: #7fc97f #cab2d6 #fb9a99 #9932CC #1f78b4 #e31a1c #bf5b17 #666
   font-size: 10px;
 }
 
-.fab_button:first-child {
-  margin-left: 10px;
-}
-
 .fab_button:last-child {
   margin-right: 10px;
 }
@@ -27,17 +23,15 @@ $color-change-list: #7fc97f #cab2d6 #fb9a99 #9932CC #1f78b4 #e31a1c #bf5b17 #666
 .fab_button {
   @include mdc-fab-accessible(#1565C0);
 }
+
 .selection_bar {
   height: 4em;
   margin: -20px auto;
   width: 100%;
-
 }
 
 #compositeChart {
   margin-top: 45px;
-  // background-color: #E0E0E0;
-
 }
 
 @mixin coloring {
@@ -48,6 +42,7 @@ $color-change-list: #7fc97f #cab2d6 #fb9a99 #9932CC #1f78b4 #e31a1c #bf5b17 #666
     }
   }
 }
+
 .legend {
   width: fit-content;
   height: fit-content;
@@ -56,9 +51,11 @@ $color-change-list: #7fc97f #cab2d6 #fb9a99 #9932CC #1f78b4 #e31a1c #bf5b17 #666
   top: 60px;
   right: 20px;
 }
+
 .legendElement {
   @include coloring();
 }
+
 .colorRect {
   width: 10px;
   height: 10px;
@@ -66,6 +63,7 @@ $color-change-list: #7fc97f #cab2d6 #fb9a99 #9932CC #1f78b4 #e31a1c #bf5b17 #666
   float: left;
   margin-top: 3px;
 }
+
 .legend .rectText {
   float: left;
   margin: 0 10px;
@@ -94,9 +92,6 @@ $color-change-list: #7fc97f #cab2d6 #fb9a99 #9932CC #1f78b4 #e31a1c #bf5b17 #666
   transition: opacity 0.3s;
   top: -30%;
   left: -20px;
-}
-.dashboard-card-content {
-  // background-color: #E0E0E0;
 }
 
 

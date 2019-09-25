@@ -24,6 +24,7 @@ export class TimeLanguageComponent implements OnInit {
   langCaption = '';
   showLangCaption = false;
   appliedFilter = false;
+  chartHeight = 300;
 
   constructor(private chartService: ChartService) { }
 
@@ -54,6 +55,18 @@ export class TimeLanguageComponent implements OnInit {
     });
     this.chartService.GetData().subscribe((data) => {
       this.data = data;
+    });
+
+    this.chartService.GetChartMode().subscribe(mode => {
+      if (this.data && this.data.length > 0) {
+        if (mode && mode === 'small') {
+          this.chartHeight = 85;
+          this.renderChart();
+        } else if (mode && mode === 'big') {
+          this.chartHeight = 300;
+          this.renderChart();
+        }
+      }
     });
 
     // gets the range through the chart service from the mainVis Component
@@ -257,37 +270,38 @@ export class TimeLanguageComponent implements OnInit {
     this.maxGroupValue = this.getMaxGroupValue();
     const group1 = this.langGroups[0];
     this.languageChart
-        .renderArea(true)
-        .width(900)
-        .height(300)
-        .ordinalColors(['#8c564b', '#bcbd22', '#e377c2', '#17becf', '#7f7f7f', '#9467bd', '#d62728', '#2ca02c', '#ff7f0e', '#1f77b4'])
-        .useViewBoxResizing(true)
-        .dimension(this.dimension)
-        .x(d3.scaleTime().domain([d3.min(this.data, (d: any) => new Date(d.publishedAt)),
-          d3.max(this.data, (d: any) => new Date(d. publishedAt))]))
-        .xAxisLabel('Date')
-        .y(d3.scaleLinear().domain([0, this.maxGroupValue]))
-        .yAxisLabel('Comment Amount')
-        .interpolate('monotone')
-        .legend(dc.legend().x(850).y(0).itemHeight(13).gap(5))
-        .brushOn(true)
-        .group(group1.group, group1.lang)
-        .valueAccessor(function (d) {
-            return d.value;
-        })
-        .xAxis().ticks(4);
-      let maxLang = 0;
-      this.langGroups.forEach((group) => {
-        if (group.group === group1.group || maxLang === 2) {
-          return;
-        }
-        // stacks the groups
-        this.languageChart
-          .stack(group.group, group.lang, function (d) {
+      .renderArea(true)
+      .width(900)
+      .height(this.chartHeight)
+      .ordinalColors(['#8c564b', '#bcbd22', '#e377c2', '#17becf', '#7f7f7f', '#9467bd', '#d62728', '#2ca02c', '#ff7f0e', '#1f77b4'])
+      .useViewBoxResizing(true)
+      .dimension(this.dimension)
+      .x(d3.scaleTime().domain([d3.min(this.data, (d: any) => new Date(d.publishedAt)),
+        d3.max(this.data, (d: any) => new Date(d. publishedAt))]))
+      .y(d3.scaleLinear().domain([0, this.maxGroupValue]))
+      .yAxisLabel('Comments')
+      .interpolate('monotone')
+      .legend(dc.legend().x(850).y(0).itemHeight(10).gap(5))
+      .brushOn(true)
+      .group(group1.group, group1.lang)
+      .valueAccessor(function (d) {
           return d.value;
-        });
-        maxLang++;
+      })
+      .xAxis().ticks(4);
+    let maxLang = 0;
+    this.langGroups.forEach((group) => {
+      if (group.group === group1.group || maxLang === 2) {
+        return;
+      }
+      // stacks the groups
+      this.languageChart
+        .stack(group.group, group.lang, function (d) {
+        return d.value;
       });
+      maxLang++;
+    });
+    (this.chartHeight < 300) ? this.languageChart.yAxis().ticks(2) : this.languageChart.yAxis().ticks(10);
+    (this.chartHeight < 300) ? this.languageChart.xAxisLabel('') : this.languageChart.xAxisLabel('Date');
     this.languageChart.render();
   }
 

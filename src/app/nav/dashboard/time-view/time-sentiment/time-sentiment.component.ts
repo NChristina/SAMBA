@@ -24,6 +24,7 @@ export class TimeSentimentComponent implements OnInit {
   notDataWarn = false;
   nbSongs = 0;
   appliedFilter = false;
+  chartHeight = 300;
 
   constructor(private chartService: ChartService, private _element: ElementRef) { }
 
@@ -48,6 +49,18 @@ export class TimeSentimentComponent implements OnInit {
           this.renderChart();
         } else {
           this.notDataWarn = true;
+        }
+      }
+    });
+
+    this.chartService.GetChartMode().subscribe(mode => {
+      if (this.data && this.data.length > 0) {
+        if (mode && mode === 'small') {
+          this.chartHeight = 85;
+          this.renderChart();
+        } else if (mode && mode === 'big') {
+          this.chartHeight = 300;
+          this.renderChart();
         }
       }
     });
@@ -318,17 +331,16 @@ export class TimeSentimentComponent implements OnInit {
     this.sentimentLineChart
       .renderArea(true)
       .width(900)
-      .height(300)
+      .height(this.chartHeight)
       .ordinalColors(chartColors)
       .useViewBoxResizing(true)
       .dimension(this.dimension)
       .x(d3.scaleTime().domain([d3.min(this.data, (d: any) => new Date(d.publishedAt)),
         d3.max(this.data, (d: any) => new Date(d. publishedAt))]))
-      .xAxisLabel('Date')
       .y(d3.scaleLinear().domain([0, this.maxGroupValue]))
-      .yAxisLabel('Comment Amount')
+      .yAxisLabel('Comments')
       .interpolate('monotone')
-      .legend(dc.legend().x(850).y(0).itemHeight(13).gap(5))
+      .legend(dc.legend().x(850).y(0).itemHeight(10).gap(5))
       .brushOn(true)
       .group(group1.group, group1.sent)
       .valueAccessor(function (d) {
@@ -349,6 +361,8 @@ export class TimeSentimentComponent implements OnInit {
         maxSent++;
       });
     }
+    (this.chartHeight < 300) ? this.sentimentLineChart.yAxis().ticks(2) : this.sentimentLineChart.yAxis().ticks(10);
+    (this.chartHeight < 300) ? this.sentimentLineChart.xAxisLabel('') : this.sentimentLineChart.xAxisLabel('Date');
     this.sentimentLineChart.render();
   }
 

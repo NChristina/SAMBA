@@ -321,17 +321,22 @@ export class NavComponent implements OnInit {
   }
 
   toggleComments() {
-    const elm: HTMLElement = document.getElementById('commentsCard') as HTMLElement;
+    const commCard: HTMLElement = document.getElementById('commentsCard') as HTMLElement;
+    const timeCard: HTMLElement = document.getElementById('timeCard') as HTMLElement;
 
     this.ngZone.run(() => {
       if (this.rowCommSize === 1) {
         this.rowCommSize = 3;
         this.rowTimeSize = 1;
-        if (elm) { elm.style.overflowY = 'overlay'; }
+        if (commCard) { commCard.style.overflowY = 'overlay'; }
+        if (timeCard) { timeCard.scrollTo(0, 0); timeCard.style.overflowY = 'hidden'; }
+        this.chartService.SetChartMode('small');
       } else {
         this.rowCommSize = 1;
         this.rowTimeSize = 3;
-        if (elm) { elm.scrollTo(0, 0); elm.style.overflowY = 'hidden'; }
+        if (timeCard) { timeCard.style.overflowY = 'overlay'; }
+        if (commCard) { commCard.scrollTo(0, 0); commCard.style.overflowY = 'hidden'; }
+        this.chartService.SetChartMode('big');
       }
     });
   }

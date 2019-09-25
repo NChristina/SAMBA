@@ -21,6 +21,7 @@ export class TimeEngagementCommentsComponent implements OnInit {
   engagementSumm = [];
   nbSongs = 0;
   appliedFilter = false;
+  chartHeight = 300;
 
   constructor(private chartService: ChartService, private _element: ElementRef) { }
 
@@ -43,6 +44,18 @@ export class TimeEngagementCommentsComponent implements OnInit {
           this.renderChart();
         } else {
           this.notDataWarn = true;
+        }
+      }
+    });
+
+    this.chartService.GetChartMode().subscribe(mode => {
+      if (this.data && this.data.length > 0) {
+        if (mode && mode === 'small') {
+          this.chartHeight = 85;
+          this.renderChart();
+        } else if (mode && mode === 'big') {
+          this.chartHeight = 300;
+          this.renderChart();
         }
       }
     });
@@ -177,17 +190,16 @@ export class TimeEngagementCommentsComponent implements OnInit {
     this.likeLineChart
         .renderArea(true)
         .width(900)
-        .height(300)
+        .height(this.chartHeight)
         .ordinalColors(chartColors)
         .useViewBoxResizing(true)
         .dimension(this.dimension)
         .x(d3.scaleTime().domain([d3.min(this.data, (d: any) => new Date(d.publishedAt)),
           d3.max(this.data, (d: any) => new Date(d. publishedAt))]))
-        .xAxisLabel('Date')
         .y(d3.scaleLinear().domain([0, this.maxGroupValue]))
-        .yAxisLabel('Comment Amount')
+        .yAxisLabel('Comments')
         .interpolate('monotone')
-        .legend(dc.legend().x(850).y(0).itemHeight(13).gap(5))
+        .legend(dc.legend().x(850).y(0).itemHeight(10).gap(5))
         .brushOn(true)
         .group(group1.group, group1.likes)
         .valueAccessor(function (d) {
@@ -206,6 +218,8 @@ export class TimeEngagementCommentsComponent implements OnInit {
         });
         maxSent++;
       });
+    (this.chartHeight < 300) ? this.likeLineChart.yAxis().ticks(2) : this.likeLineChart.yAxis().ticks(10);
+    (this.chartHeight < 300) ? this.likeLineChart.xAxisLabel('') : this.likeLineChart.xAxisLabel('Date');
     this.likeLineChart.render();
   }
 

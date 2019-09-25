@@ -105,7 +105,7 @@
       <div class="grid-container gridRight">  
         <mat-grid-list cols="1" rowHeight="200px">
           <mat-grid-tile [colspan]="1" [rowspan]=rowTimeSize>
-            <mat-card class="dashboard-card comment-section">
+            <mat-card id="timeCard" class="dashboard-card comment-section" style="overflow-y: overlay">
               <mat-card-content class="dashboard-card-content">
                   <button class="correctResetBtn" (click)="resetFilters()"><p>Reset Filters</p> <mat-icon>refresh</mat-icon></button>
                   <app-mainvis id="timeView_Comments" class="view"></app-mainvis>
