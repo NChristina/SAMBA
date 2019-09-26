@@ -157,12 +157,14 @@ body {
 }
 
 #languageBarGraph,
+#engChart,
 #sentimentChart,
 #likeChart{
   margin-top:15px;
 }
 
 #languageBarGraph svg g .y .tick text,
+#engChart svg g .y .tick text,
 #sentimentChart svg g .y .tick text,
 #likeChart svg g .barLabel,
 #likeChart svg g .y .tick text {
@@ -170,12 +172,14 @@ body {
 }
 
 #languageBarGraph svg g .axis .tick line,
+#engChart svg g .axis .tick line,
 #sentimentChart svg g .axis .tick line,
 #likeChart svg g .axis .tick line{
   display: none;
 }
 
 #languageBarGraph svg g .axis .domain,
+#engChart svg g .axis .domain,
 #sentimentChart svg g .axis .domain,
 #likeChart svg g .axis .domain {
   display: none;
