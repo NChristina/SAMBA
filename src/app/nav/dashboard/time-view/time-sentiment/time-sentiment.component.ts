@@ -346,7 +346,7 @@ export class TimeSentimentComponent implements OnInit {
       .valueAccessor(function (d) {
           return d.value;
       })
-      .xAxis().ticks(4);
+      .xAxis().ticks(7);
     let maxSent = 0;
     if (sentGroupsOrdered.length > 1) {
       sentGroupsOrdered.forEach((group) => {

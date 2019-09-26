@@ -287,7 +287,7 @@ export class TimeLanguageComponent implements OnInit {
       .valueAccessor(function (d) {
           return d.value;
       })
-      .xAxis().ticks(4);
+      .xAxis().ticks(7);
     let maxLang = 0;
     this.langGroups.forEach((group) => {
       if (group.group === group1.group || maxLang === 2) {

@@ -205,7 +205,7 @@ export class TimeEngagementCommentsComponent implements OnInit {
         .valueAccessor(function (d) {
             return d.value;
         })
-        .xAxis().ticks(4);
+        .xAxis().ticks(7);
       let maxSent = 0;
       sentGroupsOrdered.forEach((group) => {
         if (group.group === group1.group || maxSent === 1) {
