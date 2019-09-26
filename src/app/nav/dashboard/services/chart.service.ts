@@ -18,6 +18,9 @@ export class ChartService {
   private chartModeSource = new BehaviorSubject([]);
   private currentChartMode = this.chartModeSource.asObservable();
 
+  private removeItemSource = new BehaviorSubject([]);
+  private currentItemToRemove = this.removeItemSource.asObservable();
+
   private chartRangeSource = new BehaviorSubject([]);
   private currentChartRange = this.chartRangeSource.asObservable();
   private loggedIn = false;
@@ -69,6 +72,14 @@ export class ChartService {
 
   GetData(): Observable<any[]> {
     return this.currentChartData;
+  }
+
+  SetItemRemoval(index: any) {
+    this.removeItemSource.next(index);
+  }
+
+  GetItemRemoval(): Observable<any> {
+    return this.currentItemToRemove;
   }
 
   SetChartMode(mode: any) {
@@ -160,9 +171,9 @@ export class ChartService {
 
         songID = additionalInfo[index].id;
         songKey = additionalInfo[index]._key;
-        totalViews = additionalInfo[index].statistics.viewCount;
-        totalLikes =  additionalInfo[index].statistics.likeCount;
-        totalDislikes =  additionalInfo[index].statistics.dislikeCount;
+        totalViews = +(additionalInfo[index].statistics.viewCount);
+        totalLikes =  +(additionalInfo[index].statistics.likeCount);
+        totalDislikes =  +(additionalInfo[index].statistics.dislikeCount);
       } else {
 
         isGroup = true;
@@ -235,7 +246,8 @@ export class ChartService {
             videoLikes: totalLikes,     // *** likes of the video commented
             videoDislikes: totalDislikes, // *** dislikes of the video commented
             videoViews: totalViews,     // *** views of the video commented
-            replies: null               // *** replies of the comment
+            replies: null,               // *** replies of the comment
+            isGroup: isGroup
           });
 
           control++;

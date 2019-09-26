@@ -35,6 +35,10 @@ export class NavComponent implements OnInit {
   ngOnInit() {
     document.getElementById('sFimg').style.display = 'none'; // Spinner OFF default
     this.setVisibilityofViews();
+
+    this.chartService.GetItemRemoval().subscribe(element => {
+      if (element && element.length > 0) { this.removeSelectedSong(element); }
+    });
   }
 
   resetFilters() {
@@ -175,10 +179,24 @@ export class NavComponent implements OnInit {
     }
   }
 
+  // gets index from item in labelsForChips to delete
+  getIndex(title: any, id: any, group: any) {
+    let elmIndex = 0;
+    this.labelsForChips.forEach(function (chip, i) {
+      if (group === true) {
+        if (chip.isGroup === group && chip.title === title.toString()) { elmIndex = i; }
+      } else {
+        if (chip.isGroup === group && chip.id === id) { elmIndex = i; }
+      }
+    });
+    return elmIndex;
+  }
+
   // removes a song, which was already selected
-  // für die chips!!!
-  // das hakal von der checkbox in der suchleiste muss auch entfernt werden!!!
-  removeSelectedSong(element, index) {
+  removeSelectedSong(elementData) {
+    const element = elementData[0];
+    const index = this.getIndex(element.title, element.id, element.isGroup);
+
     this.loadedItems.splice(index, 1);
     this.labelsForChips.splice(index, 1);
     this.matchForAdditionalInfo.splice(index, 1);

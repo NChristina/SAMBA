@@ -3,7 +3,7 @@
   <mdc-drawer #persistent drawer="persistent">
     <!-- Search field -->
     <mdc-drawer-spacer>
-      <mdc-text-field #searchText [box]="false" label="search for songs" maxlength="30" (change)="submitQuickSearch(searchText.value)">
+      <mdc-text-field #searchText [box]="false" label="search for videos" maxlength="30" (change)="submitQuickSearch(searchText.value)">
         <mdc-icon class="search_icon" trailing #searchicon [clickable]="true">search</mdc-icon>
       </mdc-text-field>
     </mdc-drawer-spacer>
@@ -63,20 +63,7 @@
           </div>
           <img class="logoSamba" src="../../assets/Samba_Logo_rgb_transparent_cut.png" alt="samba logo"/>
       </mdc-toolbar-row>
-    </mdc-toolbar>
-
-    <!--<mdc-chip-set #inputchipset [input]="true" style="margin-left: 20px;">
-      <mdc-chip
-      [ngStyle]="{'background-color': element.isGroup ? '#DCDCDC' : '#C0D9D9'}"
-        *ngFor="let element of labelsForChips; let i = index"
-        (trailingIconInteraction)="removeSelectedSong(element, i)"
-        >
-        {{element.title}}
-        <mdc-chip-icon *ngIf="!element.isGroup" leading>person</mdc-chip-icon>
-        <mdc-chip-icon *ngIf="element.isGroup" leading>group</mdc-chip-icon>
-        <mdc-chip-icon trailing>cancel</mdc-chip-icon>
-      </mdc-chip>
-    </mdc-chip-set>-->    
+    </mdc-toolbar>  
 
     <!-- Dashboard -->
     <div class="contentmargin" (click)="changeFocus()">

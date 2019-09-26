@@ -66,7 +66,7 @@ export class HardfactsComponent implements OnInit {
         const mdlikes = this.shortValues(d.videoDislikes);
 
         videoSummAux.push({ song: d.song, songFull: d.songFull, artist: d.artist,
-          likes: mlikes, dislikes: mdlikes, views: mviews, video_key: d.song_id });
+          likes: mlikes, dislikes: mdlikes, views: mviews, video_key: d.song_id, group: d.isGroup });
       }
     });
 
@@ -393,6 +393,23 @@ export class HardfactsComponent implements OnInit {
     } else if (this.compView) {
       document.getElementById('summary').classList.add('hide');
       document.getElementById('likeChart').classList.remove('hide');
+    }
+  }
+
+  removeVideo(song: any, artist: any, id: any, isGroup: any) {
+    const title = song + ' - ' + artist;
+    const data = [{ title: title, id: id, isGroup: isGroup }];
+    this.chartService.SetItemRemoval(data);
+  }
+
+  groupIcon(isGroup: any) {
+    let result = 'nothing';
+    if (isGroup === 'true') {
+      result = 'truString';
+    } else if (isGroup === true) {
+      result = 'truBool';
+    } else {
+      result = 'false';
     }
   }
 }
