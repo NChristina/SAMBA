@@ -281,7 +281,7 @@ export class TimeLanguageComponent implements OnInit {
       .y(d3.scaleLinear().domain([0, this.maxGroupValue]))
       .yAxisLabel('Comments')
       .interpolate('monotone')
-      .legend(dc.legend().x(850).y(0).itemHeight(10).gap(5))
+      .legend(dc.legend().x(850).y(0).itemHeight(9).gap(5))
       .brushOn(true)
       .group(group1.group, group1.lang)
       .valueAccessor(function (d) {
