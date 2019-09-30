@@ -10,21 +10,20 @@ import * as dc from 'dc';
   styleUrls: ['./time-language.component.scss']
 })
 export class TimeLanguageComponent implements OnInit {
-  langSumm = [];
   cfilter: CrossFilter.CrossFilter<{}>;
   dimension: CrossFilter.Dimension<{}, Date>;
   dimensionBar: CrossFilter.Dimension<{}, number>;
   data: any[];
   languageChart: dc.LineChart;
   langGroups: { group: CrossFilter.Group<{}, Date, any>, lang: string}[];
-  private maxGroupValue;
   renderedChart = false;
   notDataWarn = false;
-  nbSongs = 0;
   langCaption = '';
   showLangCaption = false;
   appliedFilter = false;
   chartHeight = 300;
+  chartRange1;
+  chartRange2;
 
   constructor(private chartService: ChartService) { }
 
@@ -36,12 +35,10 @@ export class TimeLanguageComponent implements OnInit {
       this.setDimension();
       if (this.data && this.data.length > 0) {
         this.langGroups = this.getLanguageGroups();
-        this.countMainLang('', '', false);
 
         // If there is at least one language group:
         if (this.langGroups[0]) {
           this.notDataWarn = false;
-          this.countSongs();
           this.renderChart();
           this.showCaption();
           this.showLangCaption = true;
@@ -57,6 +54,7 @@ export class TimeLanguageComponent implements OnInit {
       this.data = data;
     });
 
+    // Collapsible view
     this.chartService.GetChartMode().subscribe(mode => {
       if (this.data && this.data.length > 0) {
         if (mode && mode === 'small') {
@@ -71,33 +69,38 @@ export class TimeLanguageComponent implements OnInit {
 
     // gets the range through the chart service from the mainVis Component
     this.chartService.getChartRange().subscribe((range) => {
-      if (this.data && range.range) {
-        (this.diff_months(range.range[0], range.range[1]) < 2) ? this.notDataWarn = true : this.notDataWarn = false;
-        this.languageChart
-          .x(d3.scaleTime().domain([range.range[0], range.range[1]]))
-          .y(d3.scaleLinear().domain([0, this.getMaxGroupValue()]))
-          .round(d3.timeMonth);
-
-        this.countMainLang(range.range[0].toString(), range.range[1].toString(), true);
-        this.languageChart.redraw();
-
-      } else {
-        if (!dc.chartRegistry.list().some((c) => c.hasFilter())) {
-          this.notDataWarn = false;
+      if (range.chart === null) {
+        if (this.data && range.range) {
+          (this.diff_months(range.range[0], range.range[1]) < 2) ? this.notDataWarn = true : this.notDataWarn = false;
           this.languageChart
-            .x(d3.scaleTime().domain([d3.min(this.data, (d: any) => new Date(d.publishedAt)),
-              d3.max(this.data, (d: any) => new Date(d.publishedAt))]))
-            .y(d3.scaleLinear().domain([0, this.maxGroupValue]));
-        }
+            .x(d3.scaleTime().domain([range.range[0], range.range[1]]))
+            .y(d3.scaleLinear().domain([0, this.getMaxGroupValue(range.range[0], range.range[1])]))
+            .round(d3.timeMonth);
+          this.languageChart.redraw();
 
-        if (this.data && this.data.length > 0) {
-          this.langGroups = this.getLanguageGroups();
-          this.countMainLang('', '', false);
+        } else {
+          if (!dc.chartRegistry.list().some((c) => c.hasFilter())) {
+            this.notDataWarn = false;
+            this.languageChart
+            .x(d3.scaleTime().domain([this.chartRange1, this.chartRange2]))
+            .y(d3.scaleLinear().domain([0, this.getMaxGroupValue(this.chartRange1, this.chartRange2)]));
+          }
+
+          if (this.data && this.data.length > 0) {
+            this.langGroups = this.getLanguageGroups();
+          }
         }
       }
     });
 
     this.renderedChart = false;
+  }
+
+  // sets the tooltip on mouseover
+  setTooltipInfo(event: MouseEvent, tooltip: HTMLSpanElement) {
+    tooltip.style.position = 'fixed';
+    tooltip.style.top = (event.clientY) + 'px';
+    tooltip.style.left = (event.clientX - tooltip.offsetWidth - 5) + 'px';
   }
 
   showCaption() {
@@ -138,24 +141,7 @@ export class TimeLanguageComponent implements OnInit {
     });
   }
 
-  isInDateRange(publishedAt: any, startDate: any, endDate: any) {
-    if (new Date(publishedAt) > new Date(startDate) && new Date(publishedAt) < new Date(endDate)) {
-      return true;
-    } else {
-      return false;
-    }
-  }
-
-  countSongs() {
-    const sentSummAux = [];
-    this.data.forEach((d) => {
-        let inList = false;
-        let countedSongidx = 0;
-        sentSummAux.forEach((sent) => { if (inList === false) { (sent.song === d.song) ? inList = true : countedSongidx++; } });
-        if (!inList) { sentSummAux.push({ song: d.song }); }
-    });
-    this.nbSongs = sentSummAux.length;
-  }
+  // Time-based Stacked Chart /////////////////////////////////////////////////////////////////////////////////////////
 
   // returns a crossfilter-group for each language x
   private getLanguageGroups(): { group: CrossFilter.Group<{}, Date, any>, lang: string}[] {
@@ -204,70 +190,10 @@ export class TimeLanguageComponent implements OnInit {
     return groups;
   }
 
-  countMainLang(startDate: any, endDate: any, isFiltered: boolean) {
-    let includeItem = true;
-    const langSummAux = [];
-
-    this.data.forEach((d) => {
-      if (isFiltered) {
-        this.isInDateRange(d.publishedAt, startDate, endDate) ? includeItem = true : includeItem = false;
-        this.appliedFilter = true;
-      } else {
-        this.appliedFilter = false;
-      }
-
-      if (d.analysis && d.analysis.mainLanguage && includeItem) {
-        let inList = false;
-        let countedSongidx = 0;
-
-        // Is the song already in the list?
-        langSummAux.forEach((lang) => {
-          if (inList === false) {
-            if (lang.song === d.song) { inList = true; } else { countedSongidx++; }
-          }
-        });
-
-        // Get values for each language
-        if (inList) {
-          if (d.analysis.mainLanguage === this.langGroups[0].lang) {
-            langSummAux[countedSongidx].firstLang++;
-          } else if (d.analysis.mainLanguage === this.langGroups[1].lang) {
-            langSummAux[countedSongidx].secondLang++;
-          } else if (d.analysis.mainLanguage === this.langGroups[2].lang) {
-            langSummAux[countedSongidx].thirdLang++;
-          } else {
-            langSummAux[countedSongidx].otherLang++;
-          }
-        } else {
-          if (d.analysis.mainLanguage === this.langGroups[0].lang) {
-            langSummAux.push({ song: d.song, firstLang: 1, secondLang: 0, thirdLang: 0, otherLang: 0 });
-          } else if (d.analysis.mainLanguage === this.langGroups[1].lang) {
-            langSummAux.push({ song: d.song, firstLang: 0, secondLang: 1, thirdLang: 0, otherLang: 0 });
-          } else if (d.analysis.mainLanguage === this.langGroups[2].lang) {
-            langSummAux.push({ song: d.song, firstLang: 0, secondLang: 0, thirdLang: 1, otherLang: 0 });
-          } else {
-            langSummAux.push({ song: d.song, firstLang: 0, secondLang: 0, thirdLang: 0, otherLang: 1 });
-          }
-        }
-
-      }
-    });
-
-    this.langSumm = langSummAux;
-  }
-
-  // returns the max value for the domain of the chart
-  getMaxGroupValue(): number {
-    let m = 0;
-    this.dimension.group().all().forEach((date: any) => {
-      if (date.value > m) { m = date.value; }
-    });
-    return m;
-  }
-
   // renders the chart
   renderChart () {
-    this.maxGroupValue = this.getMaxGroupValue();
+    this.chartRange1 = d3.min(this.data, (d: any) => new Date(d.publishedAt));
+    this.chartRange2 = d3.max(this.data, (d: any) => new Date(d.publishedAt));
     const group1 = this.langGroups[0];
     this.languageChart
       .renderArea(true)
@@ -276,9 +202,8 @@ export class TimeLanguageComponent implements OnInit {
       .ordinalColors(['#8c564b', '#bcbd22', '#e377c2', '#17becf', '#7f7f7f', '#9467bd', '#d62728', '#2ca02c', '#ff7f0e', '#1f77b4'])
       .useViewBoxResizing(true)
       .dimension(this.dimension)
-      .x(d3.scaleTime().domain([d3.min(this.data, (d: any) => new Date(d.publishedAt)),
-        d3.max(this.data, (d: any) => new Date(d. publishedAt))]))
-      .y(d3.scaleLinear().domain([0, this.maxGroupValue]))
+      .x(d3.scaleTime().domain([this.chartRange1, this.chartRange2]))
+      .y(d3.scaleLinear().domain([0, this.getMaxGroupValue(this.chartRange1, this.chartRange2)]))
       .yAxisLabel('Comments')
       .interpolate('monotone')
       .legend(dc.legend().x(850).y(0).itemHeight(9).gap(5))
@@ -300,62 +225,37 @@ export class TimeLanguageComponent implements OnInit {
       });
       maxLang++;
     });
+
+    // Filter: get range and send it to the other charts on brush-filtering
+    this.languageChart.on('filtered', (chart, filter) => {
+      if (filter) {
+        this.languageChart.y(d3.scaleLinear().domain([0, this.getMaxGroupValue(filter[0], filter[1])]));
+      } else {
+        this.languageChart.y(d3.scaleLinear().domain([0, this.getMaxGroupValue(this.chartRange1, this.chartRange2)]));
+      }
+      this.chartService.setChartRange({range: filter, chart: chart});
+    });
+
+    // Adapt chart for smaller view
     (this.chartHeight < 300) ? this.languageChart.yAxis().ticks(2) : this.languageChart.yAxis().ticks(10);
     (this.chartHeight < 300) ? this.languageChart.xAxisLabel('') : this.languageChart.xAxisLabel('Date');
     this.languageChart.render();
   }
 
-  // Get summed values for the bar chart
-  getPercentLang (id: any, lang: string) {
-    let groupedValue = 0;
-    let countedSongidx = 0;
-    let inList = false;
-    let sumAll = 0;
+  // Returns the max value for the domain of the chart
+  getMaxGroupValue(begin, end): number {
+    let m = 0;
+    const currentFilterValues = [];
+    const allDimension = this.dimension.group().all();
 
-    this.langSumm.forEach((sent) => {
-      if (inList === false) {
-        if (sent.song === id) { inList = true; } else { countedSongidx++; }
+    allDimension.forEach( d => {
+      if (d['key'] <= end && d['key'] >= begin) {
+        currentFilterValues.push(d);
       }
     });
-
-    if (inList) { // song: d.song, firstLang: 0, secondLang: 0, thirdLang: 0, otherLang
-      const langOne = this.langSumm[countedSongidx].firstLang;
-      const langTwo = this.langSumm[countedSongidx].secondLang;
-      const langThree = this.langSumm[countedSongidx].thirdLang;
-      const langOthers = this.langSumm[countedSongidx].otherLang;
-      sumAll = langOne + langTwo + langThree + langOthers;
-
-      if (this.langGroups[0] && lang === this.langGroups[0].lang) {
-        groupedValue = (langOne * 100) / sumAll;
-      } else if (this.langGroups[1] && lang === this.langGroups[1].lang) {
-        groupedValue = (langTwo * 100) / sumAll;
-      } else if (this.langGroups[2] && lang === this.langGroups[2].lang) {
-        groupedValue = (langThree * 100) / sumAll;
-      } else if (lang === 'RemainingLang') {
-        groupedValue = (langOthers * 100) / sumAll;
-      } else if (lang !== 'NA') { console.log('lang' + lang + ' does not exist'); }
-    } else {
-      if (lang === 'NA') { return 100; }
-    }
-
-    return groupedValue;
-  }
-
-  defineChartColors() {
-    switch (Object.keys(this.langGroups).length) {
-      case 1:
-        return ['#8c564b', '#EEEEEE'];
-      case 2:
-        return ['#8c564b', '#bcbd22', '#EEEEEE'];
-      default:
-        return ['#8c564b', '#bcbd22', '#e377c2', '#EEEEEE'];
-    }
-  }
-
-  // sets the tooltip on mouseover
-  setTooltipInfo(event: MouseEvent, tooltip: HTMLSpanElement) {
-    tooltip.style.position = 'fixed';
-    tooltip.style.top = (event.clientY) + 'px';
-    tooltip.style.left = (event.clientX - tooltip.offsetWidth - 5) + 'px';
+    currentFilterValues.forEach((date: any) => {
+      if (date.value > m) { m = date.value; }
+    });
+    return m / 100 * 110;
   }
 }

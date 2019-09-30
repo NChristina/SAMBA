@@ -18,7 +18,6 @@ export class SentimentComponent implements OnInit {
   dimensionBar: CrossFilter.Dimension<{}, number>;
   sentGroups: { group: CrossFilter.Group<{}, Date, any>, sent: string}[];
   sentimentBarChart: dc.BarChart;
-  private maxGroupValue;
   sentSumm = [];
   renderedChart = false;
   notDataWarn = false;
@@ -75,10 +74,11 @@ export class SentimentComponent implements OnInit {
     this.renderedChart = false;
   }
 
-  diff_months(dt2, dt1) {
-    let diff = (dt2.getTime() - dt1.getTime()) / 1000;
-    diff /= (60 * 60 * 24 * 7 * 4);
-    return Math.abs(Math.round(diff));
+  // sets the tooltip on mouseover
+  setTooltipInfo(event: MouseEvent, tooltip: HTMLSpanElement) {
+    tooltip.style.position = 'fixed';
+    tooltip.style.top = (event.clientY - tooltip.offsetHeight) + 'px';
+    tooltip.style.left = (event.clientX + 5) + 'px';
   }
 
   toggleNA() {
@@ -99,6 +99,23 @@ export class SentimentComponent implements OnInit {
       return false;
     }
   }
+
+  // sets the crossfilter dimension
+  setDimension() {
+    this.dimension = this.cfilter.dimension((d: any) => {
+      const splitted = d.publishedAt.split('-');
+      return new Date(splitted[0] + '-' + splitted[1]);
+    });
+  }
+
+  // sets the dimension based on the songs
+  setBarDimension() {
+    this.dimensionBar = this.cfilter.dimension(function (d: any) {
+      return d.song;
+    });
+  }
+
+  // Bar Chart ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
   // summarizes the sentiment for positive, neutral, and negative scores
   countSentiment(startDate: any, endDate: any, isFiltered: boolean) {
@@ -149,39 +166,11 @@ export class SentimentComponent implements OnInit {
             sentSummAux.push({ song: d.song, countPositive: 0, countNeutral: 0, countNegative: 0, countMixed: 0, countNA: 1 });
           }
         }
-      } else {
-        // console.log("No analysis");
       }
     });
 
     this.nbSongs = sentSummAux.length;
     this.sentSumm = sentSummAux;
-  }
-
-  private isIconsistent (sentValues: any) {
-    let countPos = 0;
-    let countNeg = 0;
-
-    sentValues.forEach((value) => {
-      if (value > 0) { countPos++; } else if (value < 0) { countNeg++; }
-    });
-
-    if (countPos > 0 && countNeg > 0) { return true; } else { return false; }
-  }
-
-  // sets the crossfilter dimension
-  setDimension() {
-    this.dimension = this.cfilter.dimension((d: any) => {
-      const splitted = d.publishedAt.split('-');
-      return new Date(splitted[0] + '-' + splitted[1]);
-    });
-  }
-
-  // sets the dimension based on the songs
-  setBarDimension() {
-    this.dimensionBar = this.cfilter.dimension(function (d: any) {
-      return d.song;
-    });
   }
 
   getGroupedSentiment (id: any, sentiment: string) {
@@ -223,20 +212,9 @@ export class SentimentComponent implements OnInit {
           return 0;
         }
       } else { console.log('Sentiment' + sentiment + ' does not exist'); }
-    } /* else {
-      if (sentiment === 'NA') { return 100; }
-    }*/
+    }
 
     return groupedValue;
-  }
-
-  // returns the max value for the domain of the chart
-  getMaxGroupValue(): number {
-    let m = 0;
-    this.dimension.group().all().forEach((date: any) => {
-      if (date.value > m) { m = date.value; }
-    });
-    return m;
   }
 
   // returns a crossfilter-group for each sentiment x
@@ -286,47 +264,6 @@ export class SentimentComponent implements OnInit {
     });
 
     return groups;
-  }
-
-  reorderGroups() {
-    const groups: { group: CrossFilter.Group<{}, Date, any>, sent: string}[] = [];
-
-    this.sentGroups.forEach((g) => {
-      if (g.sent === 'Pos') {
-        groups[0] = g;
-      } else if (g.sent === 'Neu') {
-        groups[1] = g;
-      } else if (g.sent === 'Neg') {
-        groups[2] = g;
-      } else if (g.sent === 'Mix') {
-        groups[3] = g;
-      } else if (g.sent === 'N/A') {
-        groups[4] = g;
-      }
-    });
-
-    return groups;
-  }
-
-  defineChartColors() {
-    const colorArray = [];
-    const sentGroupsOrdered = this.reorderGroups();
-
-    sentGroupsOrdered.forEach((g) => {
-      if (g.sent === 'Pos') {
-        colorArray.push('#4daf4a');
-      } else if (g.sent === 'Neu') {
-        colorArray.push('#666666');
-      } else if (g.sent === 'Neg') {
-        colorArray.push('#ff7f00');
-      } else if (g.sent === 'Mix') {
-        colorArray.push('#984ea3');
-      } else if (g.sent === 'N/A') {
-        colorArray.push('#eeeeee');
-      }
-    });
-
-    return colorArray;
   }
 
   // renders bar chart (comparison)
@@ -443,10 +380,9 @@ export class SentimentComponent implements OnInit {
     });
   }
 
-  // sets the tooltip on mouseover
-  setTooltipInfo(event: MouseEvent, tooltip: HTMLSpanElement) {
-    tooltip.style.position = 'fixed';
-    tooltip.style.top = (event.clientY - tooltip.offsetHeight) + 'px';
-    tooltip.style.left = (event.clientX + 5) + 'px';
+  diff_months(dt2, dt1) {
+    let diff = (dt2.getTime() - dt1.getTime()) / 1000;
+    diff /= (60 * 60 * 24 * 7 * 4);
+    return Math.abs(Math.round(diff));
   }
 }

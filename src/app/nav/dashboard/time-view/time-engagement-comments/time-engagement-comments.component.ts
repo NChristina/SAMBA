@@ -15,13 +15,12 @@ export class TimeEngagementCommentsComponent implements OnInit {
   dimensionBar: CrossFilter.Dimension<{}, number>;
   likeGroups: { group: CrossFilter.Group<{}, Date, any>, likes: string}[];
   likeLineChart: dc.LineChart;
-  private maxGroupValue;
   renderedChart = false;
   notDataWarn = false;
-  engagementSumm = [];
-  nbSongs = 0;
   appliedFilter = false;
   chartHeight = 300;
+  chartRange1;
+  chartRange2;
 
   constructor(private chartService: ChartService, private _element: ElementRef) { }
 
@@ -40,7 +39,6 @@ export class TimeEngagementCommentsComponent implements OnInit {
         // If there is at least one like group:
         if (this.likeGroups[0]) {
           this.notDataWarn = false;
-          this.countEngagement('', '', false);
           this.renderChart();
         } else {
           this.notDataWarn = true;
@@ -48,6 +46,7 @@ export class TimeEngagementCommentsComponent implements OnInit {
       }
     });
 
+    // Collapsible view
     this.chartService.GetChartMode().subscribe(mode => {
       if (this.data && this.data.length > 0) {
         if (mode && mode === 'small') {
@@ -62,26 +61,21 @@ export class TimeEngagementCommentsComponent implements OnInit {
 
     // gets the range through the chart service from the mainVis Component
     this.chartService.getChartRange().subscribe((range) => {
-      if (this.data && range.range) {
-        (this.diff_months(range.range[0], range.range[1]) < 2) ? this.notDataWarn = true : this.notDataWarn = false;
-        this.likeLineChart
-          .x(d3.scaleTime().domain([range.range[0], range.range[1]]))
-          .y(d3.scaleLinear().domain([0, this.getMaxGroupValue()]))
-          .round(d3.timeMonth);
-
-        this.countEngagement(range.range[0].toString(), range.range[1].toString(), true);
-        this.likeLineChart.redraw();
-      } else {
-        if (!dc.chartRegistry.list().some((c) => c.hasFilter())) {
-          this.notDataWarn = false;
+      if (range.chart === null) {
+        if (this.data && range.range) {
+          (this.diff_months(range.range[0], range.range[1]) < 2) ? this.notDataWarn = true : this.notDataWarn = false;
           this.likeLineChart
-            .x(d3.scaleTime().domain([d3.min(this.data, (d: any) => new Date(d.publishedAt)),
-              d3.max(this.data, (d: any) => new Date(d.publishedAt))]))
-            .y(d3.scaleLinear().domain([0, this.maxGroupValue]));
-        }
-
-        if (this.data && this.data.length > 0) {
-          this.countEngagement('', '', false);
+            .x(d3.scaleTime().domain([range.range[0], range.range[1]]))
+            .y(d3.scaleLinear().domain([0, this.getMaxGroupValue(range.range[0], range.range[1])]))
+            .round(d3.timeMonth);
+          this.likeLineChart.redraw();
+        } else {
+          if (!dc.chartRegistry.list().some((c) => c.hasFilter())) {
+            this.notDataWarn = false;
+            this.likeLineChart
+              .x(d3.scaleTime().domain([this.chartRange1, this.chartRange2]))
+              .y(d3.scaleLinear().domain([0, this.getMaxGroupValue(this.chartRange1, this.chartRange2)]));
+          }
         }
       }
     });
@@ -103,17 +97,21 @@ export class TimeEngagementCommentsComponent implements OnInit {
     });
   }
 
-  // used to set the domain
-  getMaxLikesAndDislikes () {
-    let m = 0;
-    this.data.forEach((d) => {
-      const n = parseInt(d.videoLikes, 10) + parseInt(d.videoDislikes, 10);
-      if (m < n) {
-        m = n;
-      }
-    });
-    return m;
+  // sets the tooltip on mouseover
+  setTooltip(event: MouseEvent, tooltip: HTMLSpanElement) {
+    tooltip.style.position = 'fixed';
+    tooltip.style.top = (event.clientY - tooltip.offsetHeight - 20) + 'px';
+    tooltip.style.left = (event.clientX - tooltip.offsetWidth / 2) + 'px';
   }
+
+  // sets the tooltip on mouseover
+  setTooltipInfo(event: MouseEvent, tooltip: HTMLSpanElement) {
+    tooltip.style.position = 'fixed';
+    tooltip.style.top = event.clientY + 'px';
+    tooltip.style.left = (event.clientX - tooltip.offsetWidth - 5) + 'px';
+  }
+
+  // Time-based Stacked Chart /////////////////////////////////////////////////////////////////////////////////////////
 
   // returns a crossfilter-group for each language x
   private getLikeGroups(): { group: CrossFilter.Group<{}, Date, any>, likes: string}[] {
@@ -141,49 +139,10 @@ export class TimeEngagementCommentsComponent implements OnInit {
     return groups;
   }
 
-  // Reorder groups by category: liked comments and other comments
-  reorderGroups() {
-    let groups: { group: CrossFilter.Group<{}, Date, any>, likes: string}[] = [];
-
-    if (Object.keys(this.likeGroups).length > 1) {
-      this.likeGroups.forEach((g) => {
-        if (g.likes === 'Liked') {
-          groups[0] = g;
-        } else if (g.likes === 'All') {
-          groups[1] = g;
-        }
-      });
-    } else {
-      groups = this.likeGroups;
-    }
-
-    return groups;
-  }
-
-  // returns the max value for the domain of the chart
-  getMaxGroupValue(): number {
-    let m = 0;
-    this.dimension.group().all().forEach((date: any) => {
-      if (date.value > m) { m = date.value; }
-    });
-    // console.log('hardfacts maxVal: ', m);
-    return m;
-  }
-
-  defineChartColors() {
-    switch (Object.keys(this.likeGroups).length) {
-      case 1:
-        return ['#a8a8a8'];
-      case 2:
-        return ['#377eb8', '#a8a8a8'];
-      case 3:
-          return ['#377eb8', '#a8a8a8', '#ff0000'];
-    }
-  }
-
   // Renders line chart (aggregation)
   renderChart () {
-    this.maxGroupValue = this.getMaxGroupValue();
+    this.chartRange1 = d3.min(this.data, (d: any) => new Date(d.publishedAt));
+    this.chartRange2 = d3.max(this.data, (d: any) => new Date(d.publishedAt));
     const sentGroupsOrdered = this.reorderGroups();
     const chartColors = this.defineChartColors();
     const group1 = sentGroupsOrdered[0];
@@ -194,9 +153,8 @@ export class TimeEngagementCommentsComponent implements OnInit {
         .ordinalColors(chartColors)
         .useViewBoxResizing(true)
         .dimension(this.dimension)
-        .x(d3.scaleTime().domain([d3.min(this.data, (d: any) => new Date(d.publishedAt)),
-          d3.max(this.data, (d: any) => new Date(d. publishedAt))]))
-        .y(d3.scaleLinear().domain([0, this.maxGroupValue]))
+        .x(d3.scaleTime().domain([this.chartRange1, this.chartRange2]))
+        .y(d3.scaleLinear().domain([0, this.getMaxGroupValue(this.chartRange1, this.chartRange2)]))
         .yAxisLabel('Comments')
         .interpolate('monotone')
         .legend(dc.legend().x(850).y(0).itemHeight(9).gap(5))
@@ -218,154 +176,67 @@ export class TimeEngagementCommentsComponent implements OnInit {
         });
         maxSent++;
       });
+
+      // Filter: get range and send it to the other charts on brush-filtering
+    this.likeLineChart.on('filtered', (chart, filter) => {
+      if (filter) {
+        this.likeLineChart.y(d3.scaleLinear().domain([0, this.getMaxGroupValue(filter[0], filter[1])]));
+      } else {
+        this.likeLineChart.y(d3.scaleLinear().domain([0, this.getMaxGroupValue(this.chartRange1, this.chartRange2)]));
+      }
+      this.chartService.setChartRange({range: filter, chart: chart});
+    });
+
+    // Adapt chart for smaller view
     (this.chartHeight < 300) ? this.likeLineChart.yAxis().ticks(2) : this.likeLineChart.yAxis().ticks(10);
     (this.chartHeight < 300) ? this.likeLineChart.xAxisLabel('') : this.likeLineChart.xAxisLabel('Date');
     this.likeLineChart.render();
   }
 
-  isInDateRange(publishedAt: any, startDate: any, endDate: any) {
-    if (new Date(publishedAt) > new Date(startDate) && new Date(publishedAt) < new Date(endDate)) {
-      return true;
-    } else {
-      return false;
+  defineChartColors() {
+    switch (Object.keys(this.likeGroups).length) {
+      case 1:
+        return ['#a8a8a8'];
+      case 2:
+        return ['#377eb8', '#a8a8a8'];
+      case 3:
+          return ['#377eb8', '#a8a8a8', '#ff0000'];
     }
   }
 
-  // summarizes the sentiment for positive, neutral, and negative scores
-  countEngagement(startDate: any, endDate: any, isFiltered: boolean) {
-    let includeItem = true;
-    const engagementSummAux = [];
+  // Reorder groups by category: liked comments and other comments
+  reorderGroups() {
+    let groups: { group: CrossFilter.Group<{}, Date, any>, likes: string}[] = [];
 
-    this.data.forEach((d) => {
-      if (isFiltered) {
-        this.isInDateRange(d.publishedAt, startDate, endDate) ? includeItem = true : includeItem = false;
-        this.appliedFilter = true;
-      } else {
-        this.appliedFilter = false;
-      }
-
-      if (includeItem) {
-        let inList = false;
-        let countedSongidx = 0;
-
-        // Is the song already in the list?
-        engagementSummAux.forEach((sent) => {
-          if (inList === false) {
-            if (sent.song === d.song) { inList = true; } else { countedSongidx++; }
-          }
-        });
-
-        if (inList) {
-          if (d.likeCount && d.likeCount > 0) {
-            engagementSummAux[countedSongidx].countLike++;
-          }
-          engagementSummAux[countedSongidx].countComments++;
-        } else {
-          if (d.likeCount && d.likeCount > 0) {
-              engagementSummAux.push({ song: d.song, countComments: 1, countLike: 1 });
-          } else {
-            engagementSummAux.push({ song: d.song, countComments: 1, countLike: 0 });
-          }
+    if (Object.keys(this.likeGroups).length > 1) {
+      this.likeGroups.forEach((g) => {
+        if (g.likes === 'Liked') {
+          groups[0] = g;
+        } else if (g.likes === 'All') {
+          groups[1] = g;
         }
-      }
-    });
-
-    this.nbSongs = engagementSummAux.length;
-    this.engagementSumm = engagementSummAux;
-  }
-
-  getGroupedEngagement (id: any, engagement: string) {
-    let groupedValue = 0;
-    let countedSongidx = 0;
-    let inList = false;
-
-    this.engagementSumm.forEach((eng) => {
-      if (inList === false) {
-        if (eng.song === id) { inList = true; } else { countedSongidx++; }
-      }
-    });
-
-    if (inList) {
-      const engagementSummAll = this.engagementSumm[countedSongidx].countComments;
-      const engagementSummLikes = this.engagementSumm[countedSongidx].countLike;
-      const engagementSummOther = engagementSummAll - engagementSummLikes;
-
-      if (engagement === 'Liked') {
-        groupedValue = (engagementSummLikes * 100) / engagementSummAll;
-      } else if (engagement === 'Comments') {
-        groupedValue = (engagementSummOther * 100) / engagementSummAll;
-      } else { console.log('Engagement' + engagement + ' does not exist'); }
+      });
+    } else {
+      groups = this.likeGroups;
     }
 
-    return groupedValue;
+    return groups;
   }
 
-  // Summary of likes and dislikes for tooltips in the chart bar
-  getLikesandDislikes() {
-    const nest = d3.nest().key((d: any) => d.song).entries(this.data);
-    const likesDislikes = [];
+  // Returns the max value for the domain of the chart
+  getMaxGroupValue(begin, end): number {
+    let m = 0;
+    const currentFilterValues = [];
+    const allDimension = this.dimension.group().all();
 
-    nest.forEach((d) => {
-      likesDislikes.push({
-        name: d.key,
-        likes: d.values[0].videoLikes,
-        dislikes: d.values[0].videoDislikes
-      });
+    allDimension.forEach( d => {
+      if (d['key'] <= end && d['key'] >= begin) {
+        currentFilterValues.push(d);
+      }
     });
-
-    return likesDislikes;
-  }
-
-  // returns the views and song name for each song (tooltip)
-  getSongsAndViews(): any[] {
-    const nest = d3.nest()
-      .key((d: any) => d.song)
-      .entries(this.data);
-    const returner = [];
-    nest.forEach((d) => {
-      returner.push(
-        { name: d.key, views: d.values[0].videoViews}
-      );
+    currentFilterValues.forEach((date: any) => {
+      if (date.value > m) { m = date.value; }
     });
-    return returner;
-  }
-
-  // returns the amount of comments and the song for the tooltip
-  getSongsAndComments(): any[] {
-    const nest = d3.nest()
-      .key((d: any) => d.song)
-      .entries(this.data);
-    const returner = [];
-    nest.forEach((d) => {
-      returner.push(
-        { name: d.key, comments: d.values.length}
-      );
-    });
-    return returner;
-  }
-  // returns the total views
-  getTotalViews () {
-    let views = 0;
-    const nest = d3.nest()
-      .key((d: any) => d.song)
-      .entries(this.data);
-    nest.forEach((d) => {
-      views += parseInt(d.values[0].videoViews, 10);
-    });
-    return views;
-  }
-
-  // sets the tooltip on mouseover
-  setTooltip(event: MouseEvent, tooltip: HTMLSpanElement) {
-    tooltip.style.position = 'fixed';
-    tooltip.style.top = (event.clientY - tooltip.offsetHeight - 20) + 'px';
-    tooltip.style.left = (event.clientX - tooltip.offsetWidth / 2) + 'px';
-  }
-
-  // sets the tooltip on mouseover
-  setTooltipInfo(event: MouseEvent, tooltip: HTMLSpanElement) {
-    tooltip.style.position = 'fixed';
-    tooltip.style.top = event.clientY + 'px';
-    tooltip.style.left = (event.clientX - tooltip.offsetWidth - 5) + 'px';
+    return m / 100 * 110;
   }
 }
