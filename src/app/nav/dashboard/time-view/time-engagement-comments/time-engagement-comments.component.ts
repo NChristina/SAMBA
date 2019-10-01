@@ -21,6 +21,8 @@ export class TimeEngagementCommentsComponent implements OnInit {
   chartHeight = 300;
   chartRange1;
   chartRange2;
+  chartRangeFilter1;
+  chartRangeFilter2;
 
   constructor(private chartService: ChartService, private _element: ElementRef) { }
 
@@ -62,9 +64,11 @@ export class TimeEngagementCommentsComponent implements OnInit {
       if (range.chart === null) {
         if (this.data && range.range) {
           (this.diff_months(range.range[0], range.range[1]) < 2) ? this.notDataWarn = true : this.notDataWarn = false;
+          this.chartRangeFilter1 = range.range[0];
+          this.chartRangeFilter2 = range.range[1];
           this.likeLineChart
-            .x(d3.scaleTime().domain([range.range[0], range.range[1]]))
-            .y(d3.scaleLinear().domain([0, this.getMaxGroupValue(range.range[0], range.range[1])]))
+            .x(d3.scaleTime().domain([this.chartRangeFilter1, this.chartRangeFilter2]))
+            .y(d3.scaleLinear().domain([0, this.getMaxGroupValue(this.chartRangeFilter1, this.chartRangeFilter2)]))
             .round(d3.timeMonth);
           this.appliedFilter = true;
           this.likeLineChart.redraw();
@@ -147,37 +151,42 @@ export class TimeEngagementCommentsComponent implements OnInit {
     const chartColors = this.defineChartColors();
     const group1 = sentGroupsOrdered[0];
     this.likeLineChart
-        .renderArea(true)
-        .width(900)
-        .height(this.chartHeight)
-        .ordinalColors(chartColors)
-        .useViewBoxResizing(true)
-        .dimension(this.dimension)
-        .x(d3.scaleTime().domain([this.chartRange1, this.chartRange2]))
-        .y(d3.scaleLinear().domain([0, this.getMaxGroupValue(this.chartRange1, this.chartRange2)]))
-        .yAxisLabel('Comments')
-        .interpolate('monotone')
-        .legend(dc.legend().x(850).y(0).itemHeight(9).gap(5))
-        .brushOn(true)
-        .group(group1.group, group1.likes)
-        .valueAccessor(function (d) {
-            return d.value;
-        })
-        .xAxis().ticks(7);
-      let maxSent = 0;
-      sentGroupsOrdered.forEach((group) => {
-        if (group.group === group1.group || maxSent === 1) {
-          return;
-        }
-        // stacks the groups
-        this.likeLineChart
-          .stack(group.group, group.likes, function (d) {
+      .renderArea(true)
+      .width(900)
+      .height(this.chartHeight)
+      .ordinalColors(chartColors)
+      .useViewBoxResizing(true)
+      .dimension(this.dimension)
+      .x(d3.scaleTime().domain([this.chartRange1, this.chartRange2]))
+      .y(d3.scaleLinear().domain([0, this.getMaxGroupValue(this.chartRange1, this.chartRange2)]))
+      .yAxisLabel('Comments')
+      .interpolate('monotone')
+      .legend(dc.legend().x(850).y(0).itemHeight(9).gap(5))
+      .brushOn(true)
+      .group(group1.group, group1.likes)
+      .valueAccessor(function (d) {
           return d.value;
-        });
-        maxSent++;
+      })
+      .xAxis().ticks(7);
+    let maxSent = 0;
+    sentGroupsOrdered.forEach((group) => {
+      if (group.group === group1.group || maxSent === 1) {
+        return;
+      }
+      // stacks the groups
+      this.likeLineChart
+        .stack(group.group, group.likes, function (d) {
+        return d.value;
       });
+      maxSent++;
+    });
 
-      // Filter: get range and send it to the other charts on brush-filtering
+    // When filter is applied before refreshing the chart
+    if (this.appliedFilter) {
+      this.likeLineChart.x(d3.scaleTime().domain([this.chartRangeFilter1, this.chartRangeFilter2]));
+    }
+
+    // Brush: get range and send it to the other charts on brush-filtering
     this.likeLineChart.on('filtered', (chart, filter) => {
       if (filter) {
         this.likeLineChart.y(d3.scaleLinear().domain([0, this.getMaxGroupValue(filter[0], filter[1])]));

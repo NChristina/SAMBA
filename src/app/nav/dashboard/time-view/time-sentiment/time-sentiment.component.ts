@@ -23,6 +23,8 @@ export class TimeSentimentComponent implements OnInit {
   chartHeight = 300;
   chartRange1;
   chartRange2;
+  chartRangeFilter1;
+  chartRangeFilter2;
 
   constructor(private chartService: ChartService, private _element: ElementRef) { }
 
@@ -64,9 +66,11 @@ export class TimeSentimentComponent implements OnInit {
       if (range.chart === null) {
         if (this.data && range.range) {
           (this.diff_months(range.range[0], range.range[1]) < 2) ? this.notDataWarn = true : this.notDataWarn = false;
+          this.chartRangeFilter1 = range.range[0];
+          this.chartRangeFilter2 = range.range[1];
           this.sentimentLineChart
-            .x(d3.scaleTime().domain([range.range[0], range.range[1]]))
-            .y(d3.scaleLinear().domain([0, this.getMaxGroupValue(range.range[0], range.range[1])]))
+            .x(d3.scaleTime().domain([this.chartRangeFilter1, this.chartRangeFilter2]))
+            .y(d3.scaleLinear().domain([0, this.getMaxGroupValue(this.chartRangeFilter1, this.chartRangeFilter2)]))
             .round(d3.timeMonth);
           this.appliedFilter = true;
           this.sentimentLineChart.redraw();
@@ -195,7 +199,12 @@ export class TimeSentimentComponent implements OnInit {
       });
     }
 
-    // Filter: get range and send it to the other charts on brush-filtering
+    // When filter is applied before refreshing the chart
+    if (this.appliedFilter) {
+      this.sentimentLineChart.x(d3.scaleTime().domain([this.chartRangeFilter1, this.chartRangeFilter2]));
+    }
+
+    // Brush: get range and send it to the other charts on brush-filtering
     this.sentimentLineChart.on('filtered', (chart, filter) => {
       if (filter) {
         this.sentimentLineChart.y(d3.scaleLinear().domain([0, this.getMaxGroupValue(filter[0], filter[1])]));

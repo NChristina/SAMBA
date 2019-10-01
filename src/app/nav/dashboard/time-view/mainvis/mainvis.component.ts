@@ -22,6 +22,8 @@ export class MainvisComponent implements OnInit {
   rowtip;
   chartRange1;
   chartRange2;
+  chartRangeFilter1;
+  chartRangeFilter2;
   currentFilterValues = [];
   private initialValues;
   chartHeight = 300;
@@ -73,9 +75,11 @@ export class MainvisComponent implements OnInit {
     this.chartService.getChartRange().subscribe((range) => {
       if (range.chart === null) {
         if (this.data && range.range) {
+          this.chartRangeFilter1 = range.range[0];
+          this.chartRangeFilter2 = range.range[1];
           this.compositeChart
-            .x(d3.scaleTime().domain([range.range[0], range.range[1]]))
-            .y(d3.scaleLinear().domain([0, this.getMaxGroupValue(range.range[0], range.range[1])]))
+            .x(d3.scaleTime().domain([this.chartRangeFilter1, this.chartRangeFilter2]))
+            .y(d3.scaleLinear().domain([0, this.getMaxGroupValue(this.chartRangeFilter1, this.chartRangeFilter2)]))
             .round(d3.timeMonth);
           this.appliedFilter = true;
           this.compositeChart.redraw();
@@ -184,8 +188,14 @@ export class MainvisComponent implements OnInit {
       .shareTitle(true)
       .compose(this.lineCharts);
 
-    // Filter: get range and send it to the other charts on brush-filtering
+    // When filter is applied before refreshing the chart
+    if (this.appliedFilter) {
+      this.compositeChart.x(d3.scaleTime().domain([this.chartRangeFilter1, this.chartRangeFilter2]));
+    }
+
+    // Brush: get range and send it to the other charts on brush-filtering
     this.compositeChart.on('filtered', (chart, filter) => {
+      console.log('filtered');
       if (filter) {
         this.compositeChart.y(d3.scaleLinear().domain([0, this.getMaxGroupValue(filter[0], filter[1])]));
       } else {
