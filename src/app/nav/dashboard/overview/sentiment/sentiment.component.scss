@@ -31,4 +31,21 @@
 .tooltipLink{
   color: #CCC;
 }
+
+p.footerSentiments{
+  margin: 0;
+  padding: 0;
+  font-size: 13px;
+  color: #666;
+}
+
+.wrappersentiment{
+  float: left;
+  bottom: 5px;
+  position: absolute;
+}
+
+.wrapper.sentiment .tooltInfo_text {
+  width: fit-content;
+}
   

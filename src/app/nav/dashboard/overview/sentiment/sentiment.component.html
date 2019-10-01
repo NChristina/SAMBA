@@ -31,3 +31,12 @@
         <input id="slider" type="checkbox" checked><span class="slider round"></span>
     </label>
 </div>
+
+<div class="wrappersentiment" >
+    <div *ngIf="this.data && this.data.length" class="wrapper sentiment" (mouseover)="setTooltipInfo($event, tooltipinfo);" class="tooltInfo"> 
+        <p  class="footerSentiments"> *N/A: Non-Assessed </p>
+        <span #tooltipinfo class="tooltInfo_text">
+            <p><img height="13px" src="../../assets/000-info.svg"> Only comments written in English are assessed for sentiment.</p>
+        </span>
+    </div>
+</div>
