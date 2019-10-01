@@ -191,10 +191,7 @@ export class MainvisComponent implements OnInit {
       } else {
         this.compositeChart.y(d3.scaleLinear().domain([0, this.getMaxGroupValue(this.chartRange1, this.chartRange2)]));
       }
-      // DO IT ONLY IN CASE OF ZOOM: this.chartService.setChartRange({range: filter, chart: chart});
     });
-
-    // d3.selectAll(".brush").call(brush.clear());
 
     // Adapt chart for smaller view
     (this.chartHeight < 300) ? this.compositeChart.yAxis().ticks(2) : this.compositeChart.yAxis().ticks(10);
