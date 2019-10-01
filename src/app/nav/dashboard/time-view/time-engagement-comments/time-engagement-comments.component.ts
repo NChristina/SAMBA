@@ -25,20 +25,18 @@ export class TimeEngagementCommentsComponent implements OnInit {
   constructor(private chartService: ChartService, private _element: ElementRef) { }
 
   ngOnInit() {
-    // initialization of the chart
     this.likeLineChart = dc.lineChart('#engChartLine');
-    this.chartService.GetData().subscribe((data) => {
-      this.data = data;
-    });
+    this.chartService.GetData().subscribe((data) => { this.data = data; });
+
+    // Crossfilter
     this.chartService.getCrossfilter().subscribe((filter) => {
       this.cfilter = filter;
       this.setDimension();
       if (this.data && this.data.length > 0) {
         this.likeGroups = this.getLikeGroups();
-
-        // If there is at least one like group:
         if (this.likeGroups[0]) {
           this.notDataWarn = false;
+          this.appliedFilter = false;
           this.renderChart();
         } else {
           this.notDataWarn = true;
@@ -68,6 +66,7 @@ export class TimeEngagementCommentsComponent implements OnInit {
             .x(d3.scaleTime().domain([range.range[0], range.range[1]]))
             .y(d3.scaleLinear().domain([0, this.getMaxGroupValue(range.range[0], range.range[1])]))
             .round(d3.timeMonth);
+          this.appliedFilter = true;
           this.likeLineChart.redraw();
         } else {
           if (!dc.chartRegistry.list().some((c) => c.hasFilter())) {
@@ -75,6 +74,7 @@ export class TimeEngagementCommentsComponent implements OnInit {
             this.likeLineChart
               .x(d3.scaleTime().domain([this.chartRange1, this.chartRange2]))
               .y(d3.scaleLinear().domain([0, this.getMaxGroupValue(this.chartRange1, this.chartRange2)]));
+            this.appliedFilter = false;
           }
         }
       }

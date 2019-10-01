@@ -26,6 +26,7 @@ export class MainvisComponent implements OnInit {
   private initialValues;
   chartHeight = 300;
   protected showTotalComments = false;
+  appliedFilter = false;
 
   constructor(private chartService: ChartService) {}
 
@@ -39,6 +40,7 @@ export class MainvisComponent implements OnInit {
       this.setDimension();
       if (this.data !== undefined) {
         this.lineCharts = this.getLineCharts();
+        this.appliedFilter = false;
         this.renderChart();
       }
     });
@@ -75,12 +77,14 @@ export class MainvisComponent implements OnInit {
             .x(d3.scaleTime().domain([range.range[0], range.range[1]]))
             .y(d3.scaleLinear().domain([0, this.getMaxGroupValue(range.range[0], range.range[1])]))
             .round(d3.timeMonth);
+          this.appliedFilter = true;
           this.compositeChart.redraw();
         } else {
           if (!dc.chartRegistry.list().some((c) => c.hasFilter())) {
             this.compositeChart
               .x(d3.scaleTime().domain([this.chartRange1, this.chartRange2]))
               .y(d3.scaleLinear().domain([0, this.getMaxGroupValue(this.chartRange1, this.chartRange2)]));
+            this.appliedFilter = false;
           }
         }
       }

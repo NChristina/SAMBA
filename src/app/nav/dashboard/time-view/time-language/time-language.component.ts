@@ -28,17 +28,18 @@ export class TimeLanguageComponent implements OnInit {
   constructor(private chartService: ChartService) { }
 
   ngOnInit() {
-    // initialization of the chart
     this.languageChart = dc.lineChart('#languageGraph');
+    this.chartService.GetData().subscribe((data) => { this.data = data; });
+
+    // Crossfilter
     this.chartService.getCrossfilter().subscribe((filter) => {
       this.cfilter = filter;
       this.setDimension();
       if (this.data && this.data.length > 0) {
         this.langGroups = this.getLanguageGroups();
-
-        // If there is at least one language group:
         if (this.langGroups[0]) {
           this.notDataWarn = false;
+          this.appliedFilter = false;
           this.renderChart();
           this.showCaption();
           this.showLangCaption = true;
@@ -49,9 +50,6 @@ export class TimeLanguageComponent implements OnInit {
       } else {
         this.showLangCaption = false;
       }
-    });
-    this.chartService.GetData().subscribe((data) => {
-      this.data = data;
     });
 
     // Collapsible view
@@ -76,6 +74,7 @@ export class TimeLanguageComponent implements OnInit {
             .x(d3.scaleTime().domain([range.range[0], range.range[1]]))
             .y(d3.scaleLinear().domain([0, this.getMaxGroupValue(range.range[0], range.range[1])]))
             .round(d3.timeMonth);
+          this.appliedFilter = true;
           this.languageChart.redraw();
 
         } else {
@@ -84,6 +83,7 @@ export class TimeLanguageComponent implements OnInit {
             this.languageChart
             .x(d3.scaleTime().domain([this.chartRange1, this.chartRange2]))
             .y(d3.scaleLinear().domain([0, this.getMaxGroupValue(this.chartRange1, this.chartRange2)]));
+          this.appliedFilter = false;
           }
 
           if (this.data && this.data.length > 0) {

@@ -8,6 +8,7 @@
         <p><img height="15px" src="../../assets/000-barchart.svg"> For the comparison view, each bar of the chart shows the number of likes on comments for each song/video. By hovering over the bar you see the proportion of liked comments.</p>
         </span>
     </div>
+    <span class="filterWarning" *ngIf="appliedFilter"><mat-icon class="timeFilterIcon" title="Applied Time Filter">date_range</mat-icon> Data filtered by time</span> 
 </div>
   
 <div id="engChartLine" class="maxSize aggregationView"></div>

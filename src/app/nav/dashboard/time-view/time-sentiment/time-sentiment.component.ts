@@ -38,6 +38,7 @@ export class TimeSentimentComponent implements OnInit {
         this.sentGroups = this.getSentGroups();
         if (this.sentGroups[0]) {
           this.notDataWarn = false;
+          this.appliedFilter = false;
           this.renderChart();
         } else {
           this.notDataWarn = true;
@@ -67,6 +68,7 @@ export class TimeSentimentComponent implements OnInit {
             .x(d3.scaleTime().domain([range.range[0], range.range[1]]))
             .y(d3.scaleLinear().domain([0, this.getMaxGroupValue(range.range[0], range.range[1])]))
             .round(d3.timeMonth);
+          this.appliedFilter = true;
           this.sentimentLineChart.redraw();
         } else {
           if (!dc.chartRegistry.list().some((c) => c.hasFilter())) {
@@ -74,6 +76,7 @@ export class TimeSentimentComponent implements OnInit {
             this.sentimentLineChart
               .x(d3.scaleTime().domain([this.chartRange1, this.chartRange2]))
               .y(d3.scaleLinear().domain([0, this.getMaxGroupValue(this.chartRange1, this.chartRange2)]));
+            this.appliedFilter = false;
           }
         }
       }
