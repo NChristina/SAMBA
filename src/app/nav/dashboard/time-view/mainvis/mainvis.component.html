@@ -6,8 +6,8 @@
   <div class="wrapper" (mouseover)="setTooltipInfo($event, tooltipinfo);" style="float:right;margin:15px 0 0 25px;" class="tooltInfo">
       <img height="30px" style="float:right" src="../../assets/000-info.svg">
       <span #tooltipinfo class="tooltInfo_text">
-        <p>In this chart you see the number of comments of the selected videos for each song over time. </p>
-        <p>If you select different videos of one song the numbers are summarized and are represented as one line in the chart. Each line has its own color, that you can distinguish between the selected song in the chart. Below you see a range slider. You can interact with the slider by click and holding the handle elements and moving to the right and the left. As you can see the time is changing based on your interactions.</p>
+        <p>In this chart you see the number of comments of the selected videos/groups of videos over time. </p>
+        <p>If you select different videos the numbers are summarized and are represented as one line in the chart. Each line has its own color, that you can distinguish between the selected song in the chart. Below you see a range slider. You can interact with the slider by click and holding the handle elements and moving to the right and the left. The time selection changes based on your interactions.</p>
       </span>
   </div>
   <span class="filterWarning" *ngIf="appliedFilter"><mat-icon class="timeFilterIcon" title="Applied Time Filter">date_range</mat-icon> Data filtered by time</span> 

@@ -3,8 +3,7 @@
         <div class="wrapper" (mouseover)="setTooltipInfo($event, tooltipinfo);" style="float:right" class="tooltInfo">
             <img height="24px" style="float:right" src="../../assets/000-info.svg">
             <span #tooltipinfo class="tooltInfo_text">
-                    <p><img height="15px" src="../../assets/000-chart.svg"> In this chart you see the top three languages in which the comments are written. The numbers are aggregated per month and show the overall amount of comments per language.</p>
-                    <p><img height="15px" src="../../assets/000-barchart.svg"> For the comparison view, each bar of the chart shows the percentage of comments per language in the videos selected for each song.</p>
+                <p><img height="15px" src="../../assets/000-barchart.svg"> Each bar of the chart shows the percentage of comments per language in the selected videos.</p>
             </span>
         </div>
         <mat-icon *ngIf="appliedFilter" class="timeFilterIcon" title="Applied Time Filter">date_range</mat-icon>
