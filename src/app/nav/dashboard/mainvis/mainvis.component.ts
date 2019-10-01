@@ -70,7 +70,6 @@ export class MainvisComponent implements OnInit {
           .key((d: any) => d.song_key)
           .key((d: any) => d.song)
           .entries(this.data);
-        // console.log(this.songs);
         if (this.showTotalComments) {
           this.songs.push({ key: '-------', values: [{ key: 'Total Comments', values: this.data }]});
         }
@@ -94,12 +93,8 @@ export class MainvisComponent implements OnInit {
       .nest()
       .key((comment: any) => comment.song)
       .entries(this.data);
-    console.log('how many times does that actually happen?');
     for (let idx = 0; idx <= nestedData.length; idx++) {
-      console.log('first value of idx: ', idx);
       if (idx === 0) {
-        console.log('i should be the total view: ', idx);
-        console.log('length of nestedData: ', nestedData.length);
         const lineChart = dc.lineChart(this.compositeChart)
         .dashStyle([5, 5]);
 
@@ -118,29 +113,13 @@ export class MainvisComponent implements OnInit {
           }
         });
         const group = this.dimension.group().reduceSum((d: any) => {
-          return d.song === nestedData[idx-1].key;
+          return d.song === nestedData[idx - 1].key;
         });
         lineChart.group(group);
         charts.push(lineChart);
       }
     }
-    // nestedData.forEach(song => {
-    //   console.log('so this happens two times too?');
-    //   const lineChart = dc.lineChart(this.compositeChart)
-    //   .ordinalColors(['red', 'green', 'blue'])
-    //   .colorAccessor(function(d, i) {
-    //     if (i % 2 === 0) {
-    //       return 0;
-    //     } else {
-    //       return 1;
-    //     }
-    //   });
-    //   const group = this.dimension.group().reduceSum((d: any) => {
-    //     return d.song === song.key;
-    //   });
-    //   lineChart.group(group);
-    //   charts.push(lineChart);
-    // });
+
     if (this.showTotalComments) {
       charts.push(dc.lineChart(this.compositeChart).group(this.dimension.group()).renderDataPoints(true).colors('red'));
     }
@@ -165,7 +144,6 @@ export class MainvisComponent implements OnInit {
       .shareTitle(true)
       .compose(this.lineCharts);
 
-
     // sends data to the language chart component on brush-filtering //
     this.compositeChart.on('filtered', (chart, filter) => {
       if (filter) {
@@ -173,15 +151,10 @@ export class MainvisComponent implements OnInit {
       } else {
         this.maxGroupValue = this.getMaxGroupValue(this.chartRange1, this.chartRange2);
       }
-      // console.log('value of maxGroupValue: ', this.maxGroupValue);
       this.compositeChart.y(d3.scaleLinear().domain([0, this.maxGroupValue]));
-      // console.log('filter: ', filter);
-      // console.log('chart: ', chart);
       this.chartService.setChartRange({range: filter, chart: chart});
     });
     this.compositeChart.render();
-    // this.compositeChart.svg().append('path').attr('d', this.path);
-
   }
   addDaysToData (days: number, amount: number, from: Date, song: string = '') {
     if (days === 0) {
@@ -333,10 +306,8 @@ export class MainvisComponent implements OnInit {
       }
     });
     this.currentFilterValues.forEach((date: any) => {
-      // console.log('dv:', date);
       if (date.value > m) { m = date.value; }
     });
-    // console.log('m: ', m);
     return m / 100 * 110; // 10% padding oben drauf
   }
 

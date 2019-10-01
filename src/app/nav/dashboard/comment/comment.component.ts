@@ -254,11 +254,9 @@ export class CommentComponent implements OnInit {
 
   // converts the published date into a viewable format (looks better :))
   private dateTimeParser (publishedDate: string) {
-    // console.log('yyyy: ', publishedDate);
     const date = publishedDate.split('T')[0];
     const time = publishedDate.split('T')[1].split('.')[0];
     return date + ' ' + time;
-    // return publishedDate;
   }
 
   // // sets the tooltip on mouseover

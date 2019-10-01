@@ -14,12 +14,13 @@
   </div>
 </div>
 
-<div class="legend" [mdcElevation]="2" *ngIf="this.songs && this.songs.length > 0">
+<div class="legend" *ngIf="this.songs && this.songs.length > 0">
   <div class="legendElement" *ngFor="let song of this.songs; let i = index">
     <div class="colorRect" ></div>
     <p class="rectText">{{ song.values[0].key }}</p>
     <br>
   </div>
+  <div *ngIf="this.songs && this.songs.length > 1"><div class="summRect"><p>--</p></div><p class="rectText">All Comments</p><br></div>
 </div>
 <div id="compositeChart" class="maxSize">
 </div>

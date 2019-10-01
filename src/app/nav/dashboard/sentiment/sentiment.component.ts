@@ -163,8 +163,6 @@ export class SentimentComponent implements OnInit {
             sentSummAux.push({ song: d.song, countPositive: 0, countNeutral: 0, countNegative: 0, countMixed: 0, countNA: 1 });
           }
         }
-      } else {
-        // console.log("No analysis");
       }
     });
 
@@ -237,9 +235,7 @@ export class SentimentComponent implements OnInit {
           return 0;
         }
       } else { console.log('Sentiment' + sentiment + ' does not exist'); }
-    } /* else {
-      if (sentiment === 'NA') { return 100; }
-    }*/
+    }
 
     return groupedValue;
   }

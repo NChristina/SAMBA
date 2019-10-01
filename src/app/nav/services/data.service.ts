@@ -31,18 +31,6 @@ export class DataService {
     this.requestService = this.db.route('quickSearch', {  });
   }
 
-  // setVideoIds(ids) {
-    // this.videoIds = ids;
-    // console.log('ids in data service: ', ids);
-    // ids.forEach(element => {
-    //   element.videoIds.forEach(version => {
-    //     this.videoIds.push(version);
-
-    //   });
-    // });
-    // console.log('???: ', this.videoIds);
-  // }
-
   search(value: string): Promise<any> {
     const search = value.replace(' ', '%20');
     return this.service.get('search/' + search);
@@ -50,7 +38,6 @@ export class DataService {
 
   quickSearch(value: string): Promise<any> {
     const search = value.replace(' ', '%20');
-    console.log('quickSearch triggered, or nah? ', search);
     return this.requestService.get('quickSearch/' + search);
     // return this.httpClient.get( this.baseURL + this.dbName + this.serviceName + 'quickSearch/' + search);
     // return this.httpClient.get( 'https://jukebox.fhstp.ac.at:8531/_db/ForTunesV0_1/quickSearch/quickSearch/'  + search);

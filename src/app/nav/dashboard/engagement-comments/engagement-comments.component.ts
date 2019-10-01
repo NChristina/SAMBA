@@ -168,7 +168,6 @@ export class EngagementCommentsComponent implements OnInit {
     this.dimension.group().all().forEach((date: any) => {
       if (date.value > m) { m = date.value; }
     });
-    // console.log('hardfacts maxVal: ', m);
     return m;
   }
 
@@ -469,14 +468,4 @@ export class EngagementCommentsComponent implements OnInit {
       document.getElementById('engChart').classList.remove('hide');
     }
   }
-
-  // cutTextForLabels(str: string, length: number, ending: string) {
-  //   if (str.length > length) {
-  //     let newString = str.substring(0, length - ending.length) + ending;
-  //     console.log('string: ', newString);
-  //     return {label: newString};
-  //   } else {
-  //     return {label: str};
-  //   }
-  // }
 }
