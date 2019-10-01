@@ -165,23 +165,23 @@ body {
 
 #languageBarGraph svg g .y .tick text,
 #engChart svg g .y .tick text,
-#sentimentChart svg g .y .tick text,
-#likeChart svg g .barLabel,
-#likeChart svg g .y .tick text {
-  display: none;
+#sentimentChart svg g .y .tick text {
+  fill:#333;
 }
 
 #languageBarGraph svg g .axis .tick line,
 #engChart svg g .axis .tick line,
-#sentimentChart svg g .axis .tick line,
-#likeChart svg g .axis .tick line{
-  display: none;
+#sentimentChart svg g .axis .tick line{
+  stroke:#888;
 }
 
 #languageBarGraph svg g .axis .domain,
 #engChart svg g .axis .domain,
 #sentimentChart svg g .axis .domain,
-#likeChart svg g .axis .domain {
+#likeChart svg g .axis .domain,
+#likeChart svg g .barLabel,
+#likeChart svg g .y .tick text,
+#likeChart svg g .axis .tick line {
   display: none;
 }
 
