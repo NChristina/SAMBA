@@ -1,6 +1,5 @@
 <div class="selection_bar" >
-  <button #fab1 mdc-fab class="fab_button" (click)="setShowOption(2)" [ngStyle]="{'background-color': this.chartShowOption === 2 ? '#009688' : '#1976D2'}" [extended]="true" label="yearly">
-  </button>
+  <button #fab1 mdc-fab class="fab_button" (click)="setShowOption(2)" [ngStyle]="{'background-color': this.chartShowOption === 2 ? '#009688' : '#1976D2'}" [extended]="true" label="yearly"></button>
   <button #fab2 mdc-fab class="fab_button" (click)="setShowOption(1)" [ngStyle]="{'background-color': this.chartShowOption === 1 ? '#009688' : '#1976D2'}" [extended]="true" label="monthly"></button>
   <button #fab3 mdc-fab class="fab_button" (click)="setShowOption(0)" [ngStyle]="{'background-color': this.chartShowOption === 0 ? '#009688' : '#1976D2'}" [extended]="true" label="weekly"></button>
 
@@ -22,4 +21,3 @@
 </div>
 <div id="compositeChart" class="maxSize">
 </div>
-<ng5-slider #slider *ngIf="this.data && this.data.length > 0" [options]="this.options" [(value)]="this.value" [(highValue)]="this.value2" (valueChange)="setMinRangeValue($event)" (highValueChange)="setMaxRangeValue($event)"></ng5-slider>

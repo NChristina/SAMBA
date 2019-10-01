@@ -100,7 +100,9 @@
                   <app-time-language class="view" id="timeView_Language"></app-time-language>
                   <app-time-sentiment class="view" id="timeView_Sentiment"></app-time-sentiment>
               </mat-card-content>
+              <ng5-slider #slider *ngIf="this.data && this.data.length > 0" [options]="this.options" [(value)]="this.minValue" [(highValue)]="this.maxValue" (valueChange)="setMinRangeValue($event)" (highValueChange)="setMaxRangeValue($event)"></ng5-slider>
             </mat-card>
+            
           </mat-grid-tile>
           <mat-grid-tile [colspan]="1" [rowspan]=rowCommSize>
             <button class="expandCommentsBtn" (click)="toggleComments()">

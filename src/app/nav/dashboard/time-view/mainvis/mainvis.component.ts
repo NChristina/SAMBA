@@ -1,7 +1,5 @@
 import {Component, OnInit} from '@angular/core';
 import {ChartService} from '../../services/chart.service';
-import {Options, LabelType} from 'ng5-slider';
-import {SliderComponent} from '../../../../../../node_modules/ng5-slider/slider.component';
 import {MdcFab} from '../../../../../../node_modules/@angular-mdc/web';
 import * as crossfilter from 'crossfilter';
 import * as d3 from 'd3';
@@ -20,14 +18,11 @@ export class MainvisComponent implements OnInit {
   dimension: CrossFilter.Dimension<{}, Date>;
   data: any[];
   protected songs = [];
-  chartShowOption = 2;
+  chartShowOption = 1;
   rowtip;
   chartRange1;
   chartRange2;
   currentFilterValues = [];
-  protected value: number;
-  protected value2: number;
-  protected options: Options;
   private initialValues;
   chartHeight = 300;
   protected showTotalComments = false;
@@ -45,7 +40,6 @@ export class MainvisComponent implements OnInit {
       if (this.data !== undefined) {
         this.lineCharts = this.getLineCharts();
         this.renderChart();
-        this.setSliderValues();
       }
     });
 
@@ -72,6 +66,25 @@ export class MainvisComponent implements OnInit {
         }
       }
     });
+
+    // Gets the current range
+    this.chartService.getChartRange().subscribe((range) => {
+      if (range.chart === null) {
+        if (this.data && range.range) {
+          this.compositeChart
+            .x(d3.scaleTime().domain([range.range[0], range.range[1]]))
+            .y(d3.scaleLinear().domain([0, this.getMaxGroupValue(range.range[0], range.range[1])]))
+            .round(d3.timeMonth);
+          this.compositeChart.redraw();
+        } else {
+          if (!dc.chartRegistry.list().some((c) => c.hasFilter())) {
+            this.compositeChart
+              .x(d3.scaleTime().domain([this.chartRange1, this.chartRange2]))
+              .y(d3.scaleLinear().domain([0, this.getMaxGroupValue(this.chartRange1, this.chartRange2)]));
+          }
+        }
+      }
+    });
   }
 
   // Buttons and Front-End ////////////////////////////////////////////////////////////////////////////////////////////
@@ -91,7 +104,6 @@ export class MainvisComponent implements OnInit {
       this.setDimension();
       this.lineCharts = this.getLineCharts();
       this.renderChart();
-      this.setSliderValues();
     }
   }
 
@@ -118,66 +130,6 @@ export class MainvisComponent implements OnInit {
         case 3:
         return (date.split('T')[0]); // daily
     }
-  }
-
-  // Slider methods: sets the additional values for the slider
-  setSliderValues() {
-    if (this.data && this.data.length < 1) { return; }
-
-    const dates = d3.nest().key((d: any) => {
-        return this.getDateStringByShowOption(d.publishedAt);
-      }).entries(this.data);
-    dates.sort((a, b) => {
-      return new Date(a.key) < new Date(b.key) ? -1 : 1;
-    });
-    if (dates.length < 1) { return; }
-
-    // scales the slider to the last week or the last 2 datapoints on daily-view
-    this.value2 = new Date(dates[dates.length - 1].key).getTime();
-    if (this.chartShowOption === 0) {
-      let weeks = 604800000; // one week
-      const diff = this.value2 - new Date(dates[dates.length - 2].key).getTime();
-      while (weeks <= diff) { weeks += weeks; }
-      this.value = new Date(this.value2 - weeks).getTime();
-      this.setMinRangeValue(this.value);
-    } else {
-      this.value = new Date(dates[0].key).getTime();
-    }
-
-    this.options = {
-      floor: new Date(dates[0].key).getTime(),
-      translate: (value: number, label: LabelType): string => {
-        switch (this.chartShowOption) {
-          default:
-          case 0:
-            return new Date(value).toDateString();
-          case 1:
-            const gapDate = new Date(value).toDateString().split(' ');
-            return gapDate[1] + ' ' + gapDate[3];
-          case 2:
-            return new Date(value).getFullYear() + '';
-        }
-      },
-    };
-  }
-
-  // Slider methods: sets the first displayed date of the x-axis
-  setMinRangeValue(value) {
-    const date = new Date(value);
-    this.chartRange1 = date;
-    this.compositeChart.x(d3.scaleTime().domain([this.chartRange1, this.chartRange2]));
-    this.compositeChart.y(d3.scaleLinear().domain([0, this.getMaxGroupValue(this.chartRange1, this.chartRange2)]));
-    this.chartService.setChartRange({range: [this.chartRange1, this.chartRange2], chart: null});
-    this.compositeChart.redraw();
-  }
-
-  // Slider methods: sets the last displayed date of the x-axis
-  setMaxRangeValue(value) {
-    const date = new Date(value);
-    this.chartRange2 = date;
-    this.compositeChart.x(d3.scaleTime().domain([this.chartRange1, this.chartRange2]));
-    this.compositeChart.y(d3.scaleLinear().domain([0, this.getMaxGroupValue(this.chartRange1, this.chartRange2)]));
-    this.compositeChart.redraw();
   }
 
   // Time-based Line Chart ////////////////////////////////////////////////////////////////////////////////////////////

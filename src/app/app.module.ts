@@ -49,7 +49,6 @@ import { AuthGuardService } from './shared/auth-guard.service';
 
 /* Main Components / Views */
 import { LoginComponent } from './login/login.component';
-import { DashboardComponent } from './nav/dashboard/dashboard.component';
 import { CommentComponent } from './nav/dashboard/comment/comment.component';
 import { HardfactsComponent } from './nav/dashboard/hardfacts/hardfacts.component';
 import { EngagementCommentsComponent } from './nav/dashboard/overview/engagement-comments/engagement-comments.component';
@@ -65,7 +64,6 @@ import { TimeSentimentComponent } from './nav/dashboard/time-view/time-sentiment
   declarations: [
     AppComponent,
     NavComponent,
-    DashboardComponent,
     HardfactsComponent,
     LanguageComponent,
     CommentComponent,
