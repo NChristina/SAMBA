@@ -144,6 +144,11 @@ export class NavComponent implements OnInit {
 
   // Selection and Removal of Videos //////////////////////////////////////////////////////////////////////////////////
 
+  triggerSelection(x: number, y: number) {
+    const checkbox = document.getElementById('panel_' + x).getElementsByClassName('slc' + x + '_' + y)[0] as HTMLInputElement;
+    if (checkbox) { checkbox.click(); }
+  }
+
   // is called when the user selects a song
   // it checks if the user has already selected the song
   // it also updates the data for all charts via the chartService

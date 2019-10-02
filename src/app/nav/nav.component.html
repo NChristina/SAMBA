@@ -14,23 +14,23 @@
         <p id="sFtext">No results were found for this search.</p>
       </div>
       <div id="{{'accordion_' + ix}}" class="accordion song_list_item list-group-item list-group-item-action flex-column align-items-start" *ngFor="let match of searchMatchList; let ix = index">
-        <div class="d-flex w-100 justify-content-between">
-          <b class="mb-1">{{ match.artist }} - {{ match.title }}</b>
+        <div class="videoGroup d-flex w-100 justify-content-between">
+          <b class="mb-1" (click)="toggleAccordion(ix, $event)">{{ match.artist }} - {{ match.title }}</b>
           <div class="checkbox" #checkbox1 (change)="selectSong(ix, null, $event)">
-            <label><input type="checkbox" id="{{ 'checkbox_' + ix }}" value=""/></label>
+            <label><input type="checkbox" id="{{ 'checkbox_' + ix }}" value="" title="Add all videos in this group"/></label>
           </div>
         </div>
-        <div class="d-flex w-100 justify-content-between">
+        <div (click)="toggleAccordion(ix, $event)" class="expandAccordion d-flex w-100 justify-content-between">
           <small *ngIf="match.versions.length > 1">{{ match.versions.length }} Videos matching</small>
           <small *ngIf="match.versions.length === 1">{{ match.versions.length }} Video matching</small>
-          <img (click)="toggleAccordion(ix, $event)" id="{{'img_' + ix}}" height ="10px" src="../../assets/chevron_down.svg">
+          <img id="{{'img_' + ix}}" height ="10px" src="../../assets/chevron_down.svg">
         </div>
         <div class="panel list-group "  id="{{'panel_' + ix}}">
           <div class="list-group-item flex-column align-items-start" *ngFor="let version of match.versions, let iy = index">
-            <div class="d-flex w-100 justify-content-between">
-              <b>{{ version.snippet.title }}</b>
+            <div class="videoName d-flex w-100 justify-content-between">
+              <b (click)="triggerSelection(ix, iy)">{{ version.snippet.title }}</b>
               <div class="checkbox" (change)="selectSong(ix, iy, $event)">
-                <label><input type="checkbox" id="{{ 'subcheckbox_' + iy }}" value=""/></label>
+                <label><input type="checkbox" class="{{ 'slc' + ix +'_'+ iy }}" id="{{ 'subcheckbox_' + iy }}" value="" title="Add video"/></label>
               </div>
             </div>
             <div class="d-flex w-100 justify-content-between" style="margin-top:7px">
