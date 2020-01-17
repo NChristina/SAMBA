@@ -13,7 +13,7 @@
                 Non-English comments are not assessed by the tools and are shown as N/A (not available).</p>
         </span>
     </div>
-    <mat-icon *ngIf="appliedFilter" class="timeFilterIcon" title="Applied Time Filter">date_range</mat-icon>  
+    <span class="filterWarning" *ngIf="appliedFilter"><mat-icon class="timeFilterIcon" title="Applied Time Filter">date_range</mat-icon> filtered by time</span> 
     
     <h2 class="cardTitleBox">Sentiment</h2>
     <mat-icon class="cardTitleIcon" title="Sentiment">insert_emoticon</mat-icon>

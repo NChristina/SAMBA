@@ -6,7 +6,7 @@
               <p><img height="15px" src="../../assets/000-barchart.svg"> Each bar of the chart shows the number of likes on comments for each video/group of videos. By hovering over the bar you see the proportion of liked comments.</p>
             </span>
         </div>
-        <mat-icon *ngIf="appliedFilter" class="timeFilterIcon" title="Applied Time Filter">date_range</mat-icon>
+        <span class="filterWarning" *ngIf="appliedFilter"><mat-icon class="timeFilterIcon" title="Applied Time Filter">date_range</mat-icon> filtered by time</span>
   
         <h2 class="cardTitleBox">Comment Engagement</h2>    
         <mat-icon class="cardTitleIcon" title="Comment Engagement">forum</mat-icon>    

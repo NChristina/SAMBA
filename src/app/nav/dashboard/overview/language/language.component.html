@@ -6,7 +6,7 @@
                 <p><img height="15px" src="../../assets/000-barchart.svg"> Each bar of the chart shows the percentage of comments per language in the selected videos.</p>
             </span>
         </div>
-        <mat-icon *ngIf="appliedFilter" class="timeFilterIcon" title="Applied Time Filter">date_range</mat-icon>
+        <span class="filterWarning" *ngIf="appliedFilter"><mat-icon class="timeFilterIcon" title="Applied Time Filter">date_range</mat-icon> filtered by time</span>
 
         <h2 class="cardTitleBox">Language</h2>
         <mat-icon class="cardTitleIcon" title="Language">language</mat-icon>
