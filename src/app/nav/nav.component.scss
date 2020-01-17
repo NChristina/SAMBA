@@ -254,23 +254,30 @@
 .mainMenu{
   width: 680px;
   margin: 0px auto;
+  border-radius: 10px;
+  box-shadow: 0px 3px 5px -1px rgba(0, 0, 0, 0.2);
 }
 
 .mainMenu button{
-  height: 79px;
-  width: 170px;
+  height: 50px;
+  width: 160px;
   border-top: 0px;
   border-bottom: 0px;
   border-left: 0px;
-  border-right: 2px solid #ddd;
-  background: #ccc;
-  font-size: 17px;
-  font-weight: bold;
+  border-right: 2px solid #ccc;
+  background-color: #dcdcdc;
+  font-size: 15px;
   cursor: pointer;
 }
 
 .mainMenu button.first{
-  border-left: 2px solid #ddd;
+  width: 200px;
+  border-radius: 10px 0px 0px 10px;
+}
+
+.mainMenu button.last{
+  border-right: 0px solid #ddd;
+  border-radius: 0px 10px 10px 0px;
 }
 
 .mainMenu button img{
@@ -279,22 +286,17 @@
 }
 
 .mainMenu button:hover{
-  background: #aaa;
+  background: #e6e6e6;
 }
 
 .mainMenu button.active:hover,
 .mainMenu button.active{
-  color: #fff;
-  background: #666;
-}
-
-.mainMenu button.active img {
-  -webkit-filter: invert(1);
-  filter: invert(1);
+  font-weight: 500;
+  background: #eee;
 }
 
 .logoSamba{
-  width: 150px;
+  width: 130px;
   position: absolute;
   right: 30px;
 }

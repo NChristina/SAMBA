@@ -56,10 +56,10 @@
             <h1>Add Video(s)</h1>
           </button>
           <div class="mainMenu">
-            <button (click)="switchView('Comments');" [className]="showContent == 'Comments' ? 'active menu_Comments' : 'menu_Comments first'"><img height="24px" title="Comments" src="../../assets/menu_comment.svg">Comments</button>
+            <button (click)="switchView('Comments');" [className]="showContent == 'Comments' ? 'active menu_Comments first' : 'menu_Comments first'"><img height="24px" title="Comments" src="../../assets/menu_comment.svg">Overview & Topics</button>
             <button (click)="switchView('Sentiment');" [className]="showContent == 'Sentiment' ? 'active menu_Sentiment' : 'menu_Sentiment'"><img height="24px" title="Sentiment" src="../../assets/menu_sentiment.svg">Sentiment</button>
             <button (click)="switchView('Engagement');" [className]="showContent == 'Engagement' ? 'active menu_Engagement' : 'menu_Engagement'"><img height="24px" title="Engagement" src="../../assets/menu_engagement.svg">Engagement</button>
-            <button (click)="switchView('Language');" [className]="showContent == 'Language' ? 'active menu_Language' : 'menu_Language'"><img height="24px" title="Language" src="../../assets/menu_language.svg">Language</button>
+            <button (click)="switchView('Language');" [className]="showContent == 'Language' ? 'active menu_Language last' : 'menu_Language last'"><img height="24px" title="Language" src="../../assets/menu_language.svg">Language</button>
           </div>
           <img class="logoSamba" src="../../assets/Samba_Logo_rgb_transparent_cut.png" alt="samba logo"/>
       </mdc-toolbar-row>
