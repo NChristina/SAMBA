@@ -18,6 +18,14 @@
 </div>
 <hr />
 
+<div class="legend" *ngIf="this.data && this.data.length > 0">
+  <div>
+    <div class="colorRect pos"></div><p class="rectText">Pos</p><br>
+    <div class="colorRect neu"></div><p class="rectText">Neu</p><br>
+    <div class="colorRect neg"></div><p class="rectText">Neg</p><br>
+  </div>
+</div>
+
 <div (window:resize)="reDraw()" class="aggregationView" id="topiccloudTag">
   <angular-tag-cloud *ngIf="dataCloud"
     [data]="dataCloud"

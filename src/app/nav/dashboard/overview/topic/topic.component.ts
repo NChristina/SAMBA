@@ -72,7 +72,6 @@ export class TopicComponent implements OnInit {
       div.appendChild(b);
       div.style.cssFloat = 'left';
       div.style.width = size + '%';
-      div.style.borderRight = '1px solid #eeeeee';
       div.style.wordWrap = 'break-word';
       div.style.textAlign = 'center';
 

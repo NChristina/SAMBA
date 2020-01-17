@@ -57,5 +57,38 @@ p.footerTopics{
   font-style: italic;
 }
 
+.legend {
+  width: fit-content;
+  height: fit-content;
+  padding: 5px;
+  position: absolute;
+  top: 100px;
+  right: 15px;
+}
+
+.colorRect {
+  width: 10px;
+  height: 10px;
+  margin: 0;
+  float: left;
+  margin-top: 3px;
+}
+
+.legend .rectText {
+  float: left;
+  margin: 0 10px;
+}
+
+.colorRect.pos {
+  background: #4daf4a;
+}
+
+.colorRect.neu {
+  background: #cccccc;
+}
+
+.colorRect.neg {
+  background: #ff7f00;
+}
   
 
