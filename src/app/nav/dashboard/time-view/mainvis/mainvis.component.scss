@@ -7,6 +7,11 @@ $color-change-list: #7fc97f #cab2d6 #fb9a99 #9932CC #1f78b4 #e31a1c #bf5b17 #666
   max-height: 550px;
 }
 
+circle.dot {
+  fill: #9932CC !important;
+  fill-opacity: 1 !important;
+  }
+
 .fab_button {
   float: left !important;
   height: 34px !important;

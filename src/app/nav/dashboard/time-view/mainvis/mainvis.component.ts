@@ -186,6 +186,7 @@ export class MainvisComponent implements OnInit {
       .y(d3.scaleLinear().domain([0, this.getMaxGroupValue(this.chartRange1, this.chartRange2)]))
       .yAxisLabel('Comments')
       .shareTitle(true)
+      .brushOn(false)
       .compose(this.lineCharts);
 
     // When filter is applied before refreshing the chart
@@ -195,12 +196,16 @@ export class MainvisComponent implements OnInit {
 
     // Brush: get range and send it to the other charts on brush-filtering
     this.compositeChart.on('filtered', (chart, filter) => {
-      console.log('filtered');
       if (filter) {
         this.compositeChart.y(d3.scaleLinear().domain([0, this.getMaxGroupValue(filter[0], filter[1])]));
       } else {
         this.compositeChart.y(d3.scaleLinear().domain([0, this.getMaxGroupValue(this.chartRange1, this.chartRange2)]));
       }
+    });
+
+    // Change color of dots during line hover
+    this.compositeChart.on('renderlet', (chart) => {
+      chart.selectAll('circle.dot').attr('fill', '#999').attr('stroke', '#999');
     });
 
     // Adapt chart for smaller view
