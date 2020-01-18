@@ -162,7 +162,7 @@ export class TimeEngagementCommentsComponent implements OnInit {
       .yAxisLabel('Comments')
       .interpolate('monotone')
       .legend(dc.legend().x(850).y(0).itemHeight(9).gap(5))
-      .brushOn(true)
+      .brushOn(false)
       .group(group1.group, group1.likes)
       .valueAccessor(function (d) {
           return d.value;

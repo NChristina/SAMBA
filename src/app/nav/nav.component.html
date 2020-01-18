@@ -3,7 +3,7 @@
   <mdc-drawer #persistent drawer="persistent">
     <!-- Search field -->
     <mdc-drawer-spacer>
-      <mdc-text-field #searchText [box]="false" class="search_box" label="search for videos by artist or song name" maxlength="30" (change)="submitQuickSearch(searchText.value)">
+      <mdc-text-field #searchText [box]="false" class="search_box" label="search by artist or song name" maxlength="30" (change)="submitQuickSearch(searchText.value)">
         <mdc-icon class="search_icon" trailing #searchicon [clickable]="true">search</mdc-icon>
       </mdc-text-field>
     </mdc-drawer-spacer>
