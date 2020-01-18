@@ -338,6 +338,15 @@ export class NavComponent implements OnInit {
     }
   }
 
+  reduceString(value: String) {
+    if (value.length > 20) {
+      value = value.substring(0, 17);
+      value = value + '...';
+    }
+
+    return value;
+  }
+
   switchView(op: string) {
     if (op !== this.showContent) {
       switch (op) {

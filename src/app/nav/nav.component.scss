@@ -33,6 +33,10 @@
   }
 }
 
+.search_box{
+  width: 360px;
+}
+
 .search_icon {
   position: relative;
   top: 0.01mm;
@@ -57,6 +61,12 @@
 
 .song_link {
   cursor: pointer;
+  font-size: 12px;
+  color: #444;
+}
+
+.song_link img{
+  margin: 0px 0px 0px 5px;
 }
 
 .search-list {
