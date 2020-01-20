@@ -3,14 +3,13 @@
 
   <div class="grid-container headerComp">
     <p *ngIf="totalComments > 0">{{totalComments}} comments from the selected video(s)</p>
+    <mat-icon *ngIf="appliedFilter" class="timeFilterIcon" style="float:right;margin:10px" title="Applied Time Filter">date_range</mat-icon>
     <h2 class="cardTitle">Comments</h2>
   </div>
   <hr />
 
   <div class="grid-container">
     <div class="filterComp">
-      <mat-icon *ngIf="appliedFilter" class="timeFilterIcon" style="float:left;margin:15px" title="Applied Time Filter">date_range</mat-icon>
-
       <form ngForm [formGroup]="myFormGroup" style="display:inline; margin-right: 1px">
           <label>Showing&nbsp;</label>
           <input #box id="showCommentsAmmount" formControlName="nbComments" [(value)]="nbComments" type="number" required="" (keydown.enter)="textareaEnterPressed($event)" />

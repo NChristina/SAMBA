@@ -70,6 +70,15 @@ export class CommentComponent implements OnInit {
         this.nbComments = 25;
       }
     });
+
+    // Collapsible view
+    this.chartService.GetChartMode().subscribe(mode => {
+      if (this.data && this.data.length > 0) {
+        if (mode && mode === 'small' && this.isNewTime(this.dateStart, this.dateEnd)) {
+          this.runFetchComments();
+        }
+      }
+    });
   }
 
   countFilteredData(startDate: any, endDate: any) {
@@ -122,6 +131,15 @@ export class CommentComponent implements OnInit {
         }
       });
     }
+  }
+
+  isNewTime(startDate: any, endDate: any) {
+    if (this.prevDateStart !== startDate ||
+        this.prevDateEnd !== endDate) {
+          return true;
+        } else {
+          return false;
+        }
   }
 
   isNewRequest(nbComments: number, order: string, ids: string[], startDate: any, endDate: any) {
