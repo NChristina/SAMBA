@@ -187,7 +187,8 @@ export class MainvisComponent implements OnInit {
       .yAxisLabel('Comments')
       .shareTitle(true)
       .brushOn(false)
-      .compose(this.lineCharts);
+      .compose(this.lineCharts)
+      .xAxis().ticks(7);
 
     // When filter is applied before refreshing the chart
     if (this.appliedFilter) {
