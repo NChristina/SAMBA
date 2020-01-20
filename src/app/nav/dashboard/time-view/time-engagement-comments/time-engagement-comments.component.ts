@@ -199,6 +199,9 @@ export class TimeEngagementCommentsComponent implements OnInit {
     // Adapt chart for smaller view
     (this.chartHeight < 300) ? this.likeLineChart.yAxis().ticks(2) : this.likeLineChart.yAxis().ticks(10);
     (this.chartHeight < 300) ? this.likeLineChart.xAxisLabel('') : this.likeLineChart.xAxisLabel('Date');
+
+    this.likeLineChart.xAxis().tickFormat(d3.timeFormat('%b %Y')); // month
+
     this.likeLineChart.render();
   }
 

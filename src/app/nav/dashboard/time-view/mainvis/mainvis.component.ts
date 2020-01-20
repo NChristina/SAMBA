@@ -211,6 +211,14 @@ export class MainvisComponent implements OnInit {
     // Adapt chart for smaller view
     (this.chartHeight < 300) ? this.compositeChart.yAxis().ticks(2) : this.compositeChart.yAxis().ticks(10);
     (this.chartHeight < 300) ? this.compositeChart.xAxisLabel('') : this.compositeChart.xAxisLabel('Date');
+
+    switch (this.chartShowOption) {
+      case 0:
+      case 3: this.compositeChart.xAxis().tickFormat(d3.timeFormat('%b %e %Y')); break; // week / day
+      case 1: this.compositeChart.xAxis().tickFormat(d3.timeFormat('%b %Y')); break; // month
+      case 2: this.compositeChart.xAxis().tickFormat(d3.timeFormat('%Y')); break; // year
+    }
+
     this.compositeChart.render();
   }
 

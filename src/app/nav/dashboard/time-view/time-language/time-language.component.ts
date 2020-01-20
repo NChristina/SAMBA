@@ -248,6 +248,9 @@ export class TimeLanguageComponent implements OnInit {
     // Adapt chart for smaller view
     (this.chartHeight < 300) ? this.languageChart.yAxis().ticks(2) : this.languageChart.yAxis().ticks(10);
     (this.chartHeight < 300) ? this.languageChart.xAxisLabel('') : this.languageChart.xAxisLabel('Date');
+
+    this.languageChart.xAxis().tickFormat(d3.timeFormat('%b %Y')); // month
+
     this.languageChart.render();
   }
 

@@ -217,6 +217,9 @@ export class TimeSentimentComponent implements OnInit {
     // Adapt chart for smaller view
     (this.chartHeight < 300) ? this.sentimentLineChart.yAxis().ticks(2) : this.sentimentLineChart.yAxis().ticks(10);
     (this.chartHeight < 300) ? this.sentimentLineChart.xAxisLabel('') : this.sentimentLineChart.xAxisLabel('Date');
+
+    this.sentimentLineChart.xAxis().tickFormat(d3.timeFormat('%b %Y')); // month
+
     this.sentimentLineChart.render();
   }
 
