@@ -293,7 +293,7 @@
 
 .mainMenu button img{
   height: 20px;
-  margin: -2px 5px 0px 0px;
+  margin: -2px 0px 0px 0px;
 }
 
 .mainMenu button:hover{
@@ -358,4 +358,15 @@
   float: left;
   width: inherit;
   margin: 15px 0px 0px 0px;
+}
+
+@media (max-width: 1200px) {
+  .mainMenu{
+    width: 200px;
+  }
+  
+  .mainMenu button,
+  .mainMenu button.first{
+    width: 50px;
+  }
 }
