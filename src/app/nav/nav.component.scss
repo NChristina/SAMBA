@@ -217,11 +217,11 @@
 }
 
 .expandCommentsBtn img.upBtn {
-  margin: -2px 0px 0px -6.5px;
+  margin: -1px 0px 0px -6.5px;
 }
 
 .expandCommentsBtn img.downBtn {
-  margin: -1px 0px 0px -6.5px;
+  margin: -2px 0px 0px -6.5px;
 }
 
 .correctResetBtn {
@@ -278,6 +278,7 @@
   background-color: #dcdcdc;
   font-size: 15px;
   cursor: pointer;
+  color: #333;
 }
 
 .mainMenu button.first{
@@ -303,6 +304,7 @@
 .mainMenu button.active{
   font-weight: 500;
   background: #eee;
+  color: #000;
 }
 
 .logoSamba{

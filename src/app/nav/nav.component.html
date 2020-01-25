@@ -106,8 +106,8 @@
           </mat-grid-tile>
           <mat-grid-tile [colspan]="1" [rowspan]=rowCommSize>
             <button class="expandCommentsBtn" (click)="toggleComments()">
-              <img class="upBtn" *ngIf="rowCommSize == 1" height="24px" title="expand" src="../../assets/010-up.svg">
-              <img class="downBtn" *ngIf="rowCommSize == 3" height="24px" title="collapse" src="../../assets/010-down.svg">
+              <img class="upBtn" *ngIf="rowCommSize == 1" height="24px" title="expand" src="../../assets/010-down.svg">
+              <img class="downBtn" *ngIf="rowCommSize == 3" height="24px" title="collapse" src="../../assets/010-up.svg">
             </button>
             <mat-card id="commentsCard" class="dashboard-card" style="overflow-y: hidden">
               <mat-card-content>
