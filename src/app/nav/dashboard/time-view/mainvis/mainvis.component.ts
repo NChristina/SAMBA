@@ -78,8 +78,8 @@ export class MainvisComponent implements OnInit {
           this.chartRangeFilter1 = range.range[0];
           this.chartRangeFilter2 = range.range[1];
           this.compositeChart
-            .x(d3.scaleTime().domain([this.chartRangeFilter1, this.chartRangeFilter2]))
-            .y(d3.scaleLinear().domain([0, this.getMaxGroupValue(this.chartRangeFilter1, this.chartRangeFilter2)]))
+            .x(d3.scaleTime().domain([this.getStartDate(this.chartRangeFilter1), this.chartRangeFilter2]))
+            .y(d3.scaleLinear().domain([0, this.getMaxGroupValue(this.getStartDate(this.chartRangeFilter1), this.chartRangeFilter2)]))
             .round(d3.timeMonth);
           this.appliedFilter = true;
           this.compositeChart.redraw();
@@ -172,9 +172,23 @@ export class MainvisComponent implements OnInit {
     return charts;
   }
 
+  getStartDate(previousDate) {
+    const date = new Date(previousDate);
+
+    // Set start date. If monthly: set to the first day / If yearly: set to first day of the first month
+    if (this.chartShowOption === 1) {
+      date.setDate(1);
+    } else if (this.chartShowOption === 2) {
+      date.setMonth(0); date.setDate(1);
+    }
+
+    return date;
+  }
+
   // Renders the chart
   renderChart() {
     this.chartRange1 = d3.min(this.data, (d: any) => new Date(d.publishedAt));
+    this.chartRange1 = this.getStartDate(this.chartRange1);
     this.chartRange2 = d3.max(this.data, (d: any) => new Date(d.publishedAt));
 
     this.compositeChart
@@ -192,7 +206,7 @@ export class MainvisComponent implements OnInit {
 
     // When filter is applied before refreshing the chart
     if (this.appliedFilter) {
-      this.compositeChart.x(d3.scaleTime().domain([this.chartRangeFilter1, this.chartRangeFilter2]));
+      this.compositeChart.x(d3.scaleTime().domain([this.getStartDate(this.chartRangeFilter1), this.chartRangeFilter2]));
     }
 
     // Brush: get range and send it to the other charts on brush-filtering
