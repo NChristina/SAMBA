@@ -13,11 +13,8 @@ export class HardfactsComponent implements OnInit {
   compView = false;
   data: any[];
   cfilter: CrossFilter.CrossFilter<{}>;
-  dimension: CrossFilter.Dimension<{}, Date>;
   dimensionBar: CrossFilter.Dimension<{}, number>;
-  likeGroups: { group: CrossFilter.Group<{}, Date, any>, likes: string}[];
   likeBarChart: dc.BarChart;
-  private maxGroupValue;
   renderedChart = false;
   notDataWarn = false;
   nbSongs = 0;
@@ -31,21 +28,13 @@ export class HardfactsComponent implements OnInit {
     this.chartService.GetData().subscribe((data) => {
       this.data = data;
     });
+
     this.chartService.getCrossfilter().subscribe((filter) => {
       this.cfilter = filter;
-      this.setDimension();
       this.setBarDimension();
       if (this.data && this.data.length > 0) {
-        this.likeGroups = this.getLikeGroups();
-
-        // If there is at least one like group:
-        if (this.likeGroups[0]) {
-          this.notDataWarn = false;
-          this.countSongs();
-          this.renderBarChart();
-        } else {
-          this.notDataWarn = true;
-        }
+        this.countSongs();
+        this.renderBarChart();
       }
     });
 
@@ -53,19 +42,20 @@ export class HardfactsComponent implements OnInit {
     this.setVisibilityofViews();
   }
 
+  // For summary of selected videos
   countSongs() {
     const videoSummAux = [];
 
     this.data.forEach((d) => {
       let inList = false;
       let countedSongidx = 0;
-      videoSummAux.forEach((sent) => { if (inList === false) { (sent.song === d.song) ? inList = true : countedSongidx++; } });
+      videoSummAux.forEach((video) => { if (inList === false) { (video.song_id === d.song_id) ? inList = true : countedSongidx++; } });
       if (!inList) {
         const mlikes = this.shortValues(d.videoLikes);
         const mviews = this.shortValues(d.videoViews);
         const mdlikes = this.shortValues(d.videoDislikes);
 
-        videoSummAux.push({ song: d.song, songFull: d.songFull, artist: d.artist,
+        videoSummAux.push({ song_id: d.song_id, song: d.song, songFull: d.songFull, artist: d.artist,
           likes: mlikes, dislikes: mdlikes, views: mviews, video_key: d.song_id, group: d.isGroup });
       }
     });
@@ -132,18 +122,10 @@ export class HardfactsComponent implements OnInit {
     return count;
   }
 
-  // sets the crossfilter dimension
-  setDimension() {
-    this.dimension = this.cfilter.dimension((d: any) => {
-      const splitted = d.publishedAt.split('-');
-      return new Date(splitted[0] + '-' + splitted[1]);
-    });
-  }
-
   // sets the dimension based on the songs
   setBarDimension() {
     this.dimensionBar = this.cfilter.dimension(function (d: any) {
-      return d.song;
+      return d.songFull;
     });
   }
   // used to set the domain
@@ -158,84 +140,19 @@ export class HardfactsComponent implements OnInit {
     return m;
   }
 
-  // returns a crossfilter-group for each language x
-  private getLikeGroups(): { group: CrossFilter.Group<{}, Date, any>, likes: string}[] {
-    if (this.data && this.data.length < 0) { return; }
-    const groups: { group: CrossFilter.Group<{}, Date, any>, likes: string}[] = [];
-
-    // group by likes
-    const nested = d3.nest().key((d: any) => {
-      if (d.likeCount > 0) {
-        return 'Liked';
-      } else {
-        return 'Others';
-      }
-    })
-    .entries(this.data);
-    nested.forEach((like) => {
-      const g = this.dimension.group().reduceSum((d: any) => {
-        let catg = '';
-        if (d.likeCount > 0) { catg = 'Liked'; } else { catg = 'Others'; }
-        return catg === like.key;
-      });
-      groups.push({group: g, likes: like.key });
-    });
-
-    return groups;
-  }
-
-  // Reorder groups by category: liked comments and other comments
-  reorderGroups() {
-    let groups: { group: CrossFilter.Group<{}, Date, any>, likes: string}[] = [];
-
-    if (Object.keys(this.likeGroups).length > 1) {
-      this.likeGroups.forEach((g) => {
-        if (g.likes === 'Liked') {
-          groups[0] = g;
-        } else if (g.likes === 'Others') {
-          groups[1] = g;
-        }
-      });
-    } else {
-      groups = this.likeGroups;
-    }
-
-    return groups;
-  }
-
-  // returns the max value for the domain of the chart
-  getMaxGroupValue(): number {
-    let m = 0;
-    this.dimension.group().all().forEach((date: any) => {
-      if (date.value > m) { m = date.value; }
-    });
-    // console.log('hardfacts maxVal: ', m);
-    return m;
-  }
-
-  defineChartColors() {
-    switch (Object.keys(this.likeGroups).length) {
-      case 1:
-        return ['#a8a8a8'];
-      case 2:
-        return ['#377eb8', '#a8a8a8'];
-      case 3:
-          return ['#377eb8', '#a8a8a8', '#ff0000'];
-    }
-  }
-
   // renders the chart
   renderBarChart() {
     const checklist = [];
     const barOrder = [];
+    let bigLabel = false;
 
     // Get values for first group (Likes)
     const group = this.dimensionBar.group().reduceSum((d: any) => {
       let returning = false;
       const value = parseInt(d.videoLikes, 10);
-      checklist.forEach((e) => { if (e.song === d.song && e.value === value) { returning = true; } });
+      checklist.forEach((e) => { if (e.songFull === d.songFull && e.value === value) { returning = true; } });
       if (returning) { return 0; }
-      checklist.push({ song: d.song, value: value });
+      checklist.push({ songFull: d.songFull, value: value });
       return value;
     });
 
@@ -262,16 +179,20 @@ export class HardfactsComponent implements OnInit {
       .stack(this.dimensionBar.group().reduceSum((d: any) => {
         let returning = false;
         const value = (parseInt(d.videoDislikes, 10));
-        checklist.forEach((e) => { if (e.song === d.song && e.value === value) { returning = true; } });
+        checklist.forEach((e) => { if (e.songFull === d.songFull && e.value === value) { returning = true; } });
         if (returning) { return 0; }
-        checklist.push({ song: d.song, value: value });
+        checklist.push({ songFull: d.songFull, value: value });
         return value;
       }), 'Dislikes');
 
     this.likeBarChart.margins().right = 80;
     this.likeBarChart.margins().left = 50;
     this.likeBarChart.margins().bottom = 30;
-    this.likeBarChart.renderLabel(true).label(function (d) { barOrder.push({label: d.data.key.toString()}); return d.data.key; });
+    this.likeBarChart.renderLabel(true).label((d) => {
+      if (d.data.key.toString().length > 20) { bigLabel = true; }
+      barOrder.push({label: d.data.key.toString()});
+      return d.data.key;
+    });
     this.likeBarChart.legend(dc.legend().gap(5).x(220).y(10));
     this.likeBarChart.render();
     this.renderedChart = true;
@@ -287,7 +208,7 @@ export class HardfactsComponent implements OnInit {
           if (AllLikesDeslikes && barOrder[e]) {
             let currBar;
             AllLikesDeslikes.forEach((song) => {
-              if (song.name === barOrder[e].label) { currBar = song; }
+              if (song.label === barOrder[e].label) { currBar = song; }
             });
             tooltipBar.html(currBar.name + '<br/>' + 'Likes: ' + currBar.likes + '<br/>' + 'Dislikes: ' + currBar.dislikes)
               .style('left', ((<any>d3).event.pageX) - 10 + 'px')
@@ -296,7 +217,7 @@ export class HardfactsComponent implements OnInit {
         })
         .on('mouseout.samba', (d) => { tooltipBar.transition().duration(350).style('opacity', 0); });
         const test = chart.selectAll('g.x text');
-        if (this.nbSongs > 2) {
+        if (this.nbSongs > 2 || (this.nbSongs > 1 && bigLabel)) {
           test.attr('transform', 'translate(-10,-10) rotate(315)');
         }
     });
@@ -304,12 +225,13 @@ export class HardfactsComponent implements OnInit {
 
   // Summary of likes and dislikes for tooltips in the chart bar
   getLikesandDislikes() {
-    const nest = d3.nest().key((d: any) => d.song).entries(this.data);
+    const nest = d3.nest().key((d: any) => d.song_id).entries(this.data);
     const likesDislikes = [];
 
     nest.forEach((d) => {
       likesDislikes.push({
-        name: d.key,
+        label: d.values[0].songFull,
+        name: d.values[0].song,
         likes: d.values[0].videoLikes,
         dislikes: d.values[0].videoDislikes
       });
@@ -321,7 +243,7 @@ export class HardfactsComponent implements OnInit {
   // returns the views and song name for each song (tooltip)
   getSongsAndViews(): any[] {
     const nest = d3.nest()
-      .key((d: any) => d.song)
+      .key((d: any) => d.song_id)
       .entries(this.data);
     const returner = [];
     nest.forEach((d) => {
@@ -335,7 +257,7 @@ export class HardfactsComponent implements OnInit {
   // returns the amount of comments and the song for the tooltip
   getSongsAndComments(): any[] {
     const nest = d3.nest()
-      .key((d: any) => d.song)
+      .key((d: any) => d.song_id)
       .entries(this.data);
     const returner = [];
     nest.forEach((d) => {
@@ -349,7 +271,7 @@ export class HardfactsComponent implements OnInit {
   getTotalViews () {
     let views = 0;
     const nest = d3.nest()
-      .key((d: any) => d.song)
+      .key((d: any) => d.song_id)
       .entries(this.data);
     nest.forEach((d) => {
       views += parseInt(d.values[0].videoViews, 10);

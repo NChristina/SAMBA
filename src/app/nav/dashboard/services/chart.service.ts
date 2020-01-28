@@ -224,10 +224,7 @@ export class ChartService {
           if (currentNbCommentsLanguage === 0) { lidx += 1; }
           if (currentNbCommentsSent === 0) { sentx += 1; }
 
-          let songShort = '';
-          if (title !== undefined) {
-              (title.length > 15) ? songShort = title.substr(0, 12) + '...' : songShort = title;
-          }
+          const songShort = this.getShortTitle(title);
 
           dataPoints.push({
             _key: control,              // where the comment key was
@@ -261,6 +258,14 @@ export class ChartService {
     });
 
     return dataPoints;
+  }
+
+  getShortTitle(title: string) {
+    let songShort = '';
+    if (title !== undefined) {
+        (title.length > 15) ? songShort = title.substr(0, 12) + '...' : songShort = title;
+    }
+    return songShort;
   }
 
   fixSentimentData(data: any) {
