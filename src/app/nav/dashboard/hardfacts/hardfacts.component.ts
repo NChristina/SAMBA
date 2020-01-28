@@ -125,7 +125,7 @@ export class HardfactsComponent implements OnInit {
   // sets the dimension based on the songs
   setBarDimension() {
     this.dimensionBar = this.cfilter.dimension(function (d: any) {
-      return d.songFull;
+      return d.song;
     });
   }
   // used to set the domain
@@ -144,15 +144,14 @@ export class HardfactsComponent implements OnInit {
   renderBarChart() {
     const checklist = [];
     const barOrder = [];
-    let bigLabel = false;
 
     // Get values for first group (Likes)
     const group = this.dimensionBar.group().reduceSum((d: any) => {
       let returning = false;
       const value = parseInt(d.videoLikes, 10);
-      checklist.forEach((e) => { if (e.songFull === d.songFull && e.value === value) { returning = true; } });
+      checklist.forEach((e) => { if (e.song === d.song && e.value === value) { returning = true; } });
       if (returning) { return 0; }
-      checklist.push({ songFull: d.songFull, value: value });
+      checklist.push({ song: d.song, value: value });
       return value;
     });
 
@@ -179,20 +178,16 @@ export class HardfactsComponent implements OnInit {
       .stack(this.dimensionBar.group().reduceSum((d: any) => {
         let returning = false;
         const value = (parseInt(d.videoDislikes, 10));
-        checklist.forEach((e) => { if (e.songFull === d.songFull && e.value === value) { returning = true; } });
+        checklist.forEach((e) => { if (e.song === d.song && e.value === value) { returning = true; } });
         if (returning) { return 0; }
-        checklist.push({ songFull: d.songFull, value: value });
+        checklist.push({ song: d.song, value: value });
         return value;
       }), 'Dislikes');
 
     this.likeBarChart.margins().right = 80;
     this.likeBarChart.margins().left = 50;
     this.likeBarChart.margins().bottom = 30;
-    this.likeBarChart.renderLabel(true).label((d) => {
-      if (d.data.key.toString().length > 20) { bigLabel = true; }
-      barOrder.push({label: d.data.key.toString()});
-      return d.data.key;
-    });
+    this.likeBarChart.renderLabel(true).label((d) => { barOrder.push({label: d.data.key.toString()}); return d.data.key; });
     this.likeBarChart.legend(dc.legend().gap(5).x(220).y(10));
     this.likeBarChart.render();
     this.renderedChart = true;
@@ -208,7 +203,7 @@ export class HardfactsComponent implements OnInit {
           if (AllLikesDeslikes && barOrder[e]) {
             let currBar;
             AllLikesDeslikes.forEach((song) => {
-              if (song.label === barOrder[e].label) { currBar = song; }
+              if (song.name === barOrder[e].label) { currBar = song; }
             });
             tooltipBar.html(currBar.name + '<br/>' + 'Likes: ' + currBar.likes + '<br/>' + 'Dislikes: ' + currBar.dislikes)
               .style('left', ((<any>d3).event.pageX) - 10 + 'px')
@@ -217,7 +212,7 @@ export class HardfactsComponent implements OnInit {
         })
         .on('mouseout.samba', (d) => { tooltipBar.transition().duration(350).style('opacity', 0); });
         const test = chart.selectAll('g.x text');
-        if (this.nbSongs > 2 || (this.nbSongs > 1 && bigLabel)) {
+        if (this.nbSongs > 2) {
           test.attr('transform', 'translate(-10,-10) rotate(315)');
         }
     });
@@ -243,7 +238,7 @@ export class HardfactsComponent implements OnInit {
   // returns the views and song name for each song (tooltip)
   getSongsAndViews(): any[] {
     const nest = d3.nest()
-      .key((d: any) => d.song_id)
+      .key((d: any) => d.song)
       .entries(this.data);
     const returner = [];
     nest.forEach((d) => {
@@ -257,7 +252,7 @@ export class HardfactsComponent implements OnInit {
   // returns the amount of comments and the song for the tooltip
   getSongsAndComments(): any[] {
     const nest = d3.nest()
-      .key((d: any) => d.song_id)
+      .key((d: any) => d.song)
       .entries(this.data);
     const returner = [];
     nest.forEach((d) => {
@@ -271,7 +266,7 @@ export class HardfactsComponent implements OnInit {
   getTotalViews () {
     let views = 0;
     const nest = d3.nest()
-      .key((d: any) => d.song_id)
+      .key((d: any) => d.song)
       .entries(this.data);
     nest.forEach((d) => {
       views += parseInt(d.values[0].videoViews, 10);

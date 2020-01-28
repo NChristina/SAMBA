@@ -263,7 +263,7 @@ export class ChartService {
   getShortTitle(title: string) {
     let songShort = '';
     if (title !== undefined) {
-        (title.length > 15) ? songShort = title.substr(0, 12) + '...' : songShort = title;
+        (title.length > 20) ? songShort = title.substr(0, 17) + '...' : songShort = title;
     }
     return songShort;
   }
