@@ -1,6 +1,11 @@
 .login-container{
   max-width: 400px;
-  margin: 60px auto 0;
+  margin: 15px auto 0;
+}
+
+h1{
+  margin: 25px 5%;
+  color: #3f51b5;
 }
 
 .error{
@@ -13,4 +18,40 @@
   position: relative;
   top: 0.01mm;
   right: 20px;
+}
+
+.dashboard-card{
+  height: 70px;
+  padding: 15px 0px;
+}
+
+.form-card{
+  width: 200px;
+  float: right;
+  margin: 25px 5% 0px 0px;
+}
+
+.logoSamba{
+  float: left;
+  margin-left: 5%; 
+}
+
+.logoFH img,
+.logoSamba img{
+  width: 130px;
+}
+
+.logoFH{
+  float: right;
+  margin-right: 5%; 
+}
+
+.container .sambavis,
+.container p{
+  margin-left: 5%;
+  width: 50%;
+}
+
+.container .sambavis{
+  margin-top: 15px; 
 }
