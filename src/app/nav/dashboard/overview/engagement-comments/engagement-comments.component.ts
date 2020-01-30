@@ -299,6 +299,7 @@ export class EngagementCommentsComponent implements OnInit {
     this.likeBarChart.renderlet((chart) => {
       chart.selectAll('.bar')
         .on('mouseover.samba', (d, e) => {
+          e = e % barOrder.length;
           tooltipBar.transition().duration(150).style('opacity', .9);
           if (barOrder[e]) {
             // this.getGroupedEngagement(d.song, 'Mixed');
@@ -306,7 +307,7 @@ export class EngagementCommentsComponent implements OnInit {
             const tlNu = 'Non Liked: ' + this.getGroupedEngagement(barOrder[e].label, 'Comments').toFixed(1);
             tooltipBar.html(barOrder[e].label + '<br/>' + tlPs + '%<br/>' + tlNu + '%')
               .style('left', ((<any>d3).event.pageX) - 10 + 'px')
-              .style('top', ((<any>d3).event.pageY) + 'px');
+              .style('top', ((<any>d3).event.pageY) + 20 + 'px');
             }
         })
         .on('mouseout.samba', (d) => { tooltipBar.transition().duration(350).style('opacity', 0); });

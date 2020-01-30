@@ -379,6 +379,7 @@ export class LanguageComponent implements OnInit {
       this.barChart.renderlet((chart) => {
         chart.selectAll('.bar')
           .on('mouseover.samba', (d, e) => {
+            e = e % barOrder.length;
             tooltipBar.transition().duration(150).style('opacity', .9);
             if (barOrder[e]) {
               // First language info
@@ -403,7 +404,7 @@ export class LanguageComponent implements OnInit {
               const OthLang = 'others: ' + this.getPercentLang(barOrder[e].label, 'RemainingLang').toFixed(1);
               tooltipBar.html(barOrder[e].label + '<br/>' + FirstLang + '' + SecLang + '' + ThrLang + '' + OthLang + '%')
                 .style('left', ((<any>d3).event.pageX) - 10 + 'px')
-                .style('top', ((<any>d3).event.pageY) + 'px');
+                .style('top', ((<any>d3).event.pageY) + 20 + 'px');
               }
           })
           .on('mouseout.samba', (d) => { tooltipBar.transition().duration(350).style('opacity', 0); });

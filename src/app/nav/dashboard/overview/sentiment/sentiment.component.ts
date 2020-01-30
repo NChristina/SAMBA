@@ -358,6 +358,7 @@ export class SentimentComponent implements OnInit {
     this.sentimentBarChart.renderlet((chart) => {
       chart.selectAll('.bar')
         .on('mouseover.samba', (d, e) => {
+          e = e % barOrder.length;
           tooltipBar.transition().duration(150).style('opacity', .9);
           if (barOrder[e]) {
             // this.getGroupedSentiment(d.song, 'Mixed');
@@ -368,7 +369,7 @@ export class SentimentComponent implements OnInit {
             const tNA = 'N/A: ' + this.getGroupedSentiment(barOrder[e].label, 'NA').toFixed(1);
             tooltipBar.html(barOrder[e].label + '<br/>' + tlPs + '%<br/>' + tlNu + '%<br/>' + tlNg + '%<br/>' + tlMx + '%<br/>' + tNA + '%')
               .style('left', ((<any>d3).event.pageX) - 10 + 'px')
-              .style('top', ((<any>d3).event.pageY) + 'px');
+              .style('top', ((<any>d3).event.pageY) + 20 + 'px');
             }
         })
         .on('mouseout.samba', (d) => { tooltipBar.transition().duration(350).style('opacity', 0); });
