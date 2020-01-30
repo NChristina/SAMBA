@@ -21,8 +21,18 @@
     height: 4em;
     margin: -20px auto;
     width: 100%;
-  
   }
+
+  .selection_bar h1{
+    float: left;
+    margin: 15px 20px;
+    font-size: 1.5em;
+    font-weight: 100;
+  }
+
+.selection_bar button{
+  margin-top: 10px;
+}
   
   .tooltInfo:hover .tooltInfo_text {
     visibility: visible;
@@ -64,5 +74,11 @@
   
   .filterWarning mat-icon{
     margin: -4px;
+  }
+
+  @media (max-width: 1550px) {
+    .selection_bar h1{
+      display: none;
+    }
   }
     

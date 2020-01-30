@@ -3,6 +3,7 @@
   <button #fab2 mdc-fab class="fab_button" (click)="setShowOption(1)" [ngStyle]="{'background-color': this.chartShowOption === 1 ? '#009688' : '#1976D2'}" [extended]="true" label="monthly"></button>
   <button #fab3 mdc-fab class="fab_button" (click)="setShowOption(0)" [ngStyle]="{'background-color': this.chartShowOption === 0 ? '#009688' : '#1976D2'}" [extended]="true" label="daily"></button>
 
+  <h1>Comments per Video</h1>
   <div class="wrapper" (mouseover)="setTooltipInfo($event, tooltipinfo);" style="float:right;margin:15px 0 0 25px;" class="tooltInfo">
       <img height="30px" style="float:right" src="../../assets/000-info.svg">
       <span #tooltipinfo class="tooltInfo_text">

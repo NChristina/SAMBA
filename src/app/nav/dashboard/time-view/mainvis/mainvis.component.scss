@@ -35,6 +35,17 @@ circle.dot {
   width: 100%;
 }
 
+.selection_bar button{
+  margin-top: 10px;
+}
+
+.selection_bar h1{
+  float: left;
+  margin: 15px 20px;
+  font-size: 1.5em;
+  font-weight: 100;
+}
+
 #compositeChart {
   margin-top: 45px;
 }
@@ -124,6 +135,12 @@ circle.dot {
 .summRect p{
   float: left;
   margin: -5px 0px;
+}
+
+@media (max-width: 1550px) {
+  .selection_bar h1{
+    display: none;
+  }
 }
 
 
