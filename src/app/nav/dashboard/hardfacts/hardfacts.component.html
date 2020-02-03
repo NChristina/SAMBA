@@ -3,15 +3,15 @@
       <div class="wrapper" (mouseover)="setTooltipInfo($event, tooltipinfo);" style="float:right" class="tooltInfo"> 
           <img height="24px" style="float:right" src="../../assets/000-info.svg"> 
           <span #tooltipinfo class="tooltInfo_text">
-            <p><img height="15px" src="../../assets/000-list.svg"> The summary view shows general information and KPIs about the selected videos .</p> 
+            <p><img height="15px" src="../../assets/000-list.svg"> The summary view shows general information and key performance indexes (KPIs) from the selected videos.</p> 
             <p><img height="15px" src="../../assets/000-barchart.svg"> For the comparison view, each bar of the chart shows the number of likes and dislikes on the videos selected for each song. By hovering over the bar you see the absolute value of likes and dislikes. At the bottom you see the total amount of comments and total amount of views for the whole selected set.</p>
           </span>
       </div>
       <button (click)="switchView('compButton');" class="hardComp compButton" style="float:right"><img height="24px" title="Comparison View" src="../../assets/000-barchart.svg"> </button>
       <button (click)="switchView('aggrButton');" class="hardAggr aggrButton active" style="float:right"><img height="24px" title="Summary View" src="../../assets/000-list.svg"> </button>
 
-      <h2 class="cardTitleBox">Video Performance</h2>
-      <mat-icon class="cardTitleIcon" title="Video Performance">thumbs_up_down</mat-icon>
+      <h2 class="cardTitleBox">Selected Videos</h2>
+      <img class="cardTitleIcon" height="24px" title="Video Performance" src="../../assets/video.svg"> 
   </mat-grid-list>
 </div>
 <hr />
@@ -20,15 +20,19 @@
     
   <table id="videoTable" *ngIf="this.data && this.data.length">
     <tr>
-      <th>Music - Singer</th>
+      <th><mat-icon style="font-size:13px;height:13px;width:13px">play_arrow</mat-icon> Video - Artist</th>
       <th class="center"><mat-icon style="font-size: 13px; height: 13px">thumb_up</mat-icon></th> 
       <th class="center"><mat-icon style="font-size: 13px; height: 13px">thumb_down</mat-icon></th> 
       <th class="center"><mat-icon style="font-size: 13px; height: 13px">visibility</mat-icon></th> 
-      <th class="center">Video</th>
+      <th class="center"><mat-icon style="font-size: 13px; height: 13px">ondemand_video</mat-icon></th>
+      <th class="center"></th>
     </tr>
-    <ng-container  *ngFor="let video of videoSummary" >
+    <ng-container  *ngFor="let video of videoSummary; let i = index" >
       <tr>
-        <td>{{video.song}} - {{video.artist}}</td>
+        <td>
+          <mat-icon *ngIf="video.group" style="font-size:13px;height:13px;width:13px" title="Group of Videos">video_library</mat-icon> 
+          <mat-icon *ngIf="!video.group" style="font-size:13px;height:13px;width:13px" title="Video">play_arrow</mat-icon> {{video.song}} - {{video.artist}}
+        </td>
         <td class="center">{{video.likes}}</td>
         <td class="center">{{video.dislikes}}</td>
         <td class="center">{{video.views}}</td>
@@ -37,6 +41,7 @@
             <img height="20px" title="Open '{{video.songFull}}' on YouTube" src="https://img.youtube.com/vi/{{video.video_key}}/default.jpg" />
           </a>
         </td>
+        <td class="center"><mat-icon (click)="removeVideo(video.songFull,video.artist,video.video_key,video.group);" style="font-size:18px;height:13px;color:#999;cursor:pointer">cancel</mat-icon></td>
       </tr>
     </ng-container>
   </table>

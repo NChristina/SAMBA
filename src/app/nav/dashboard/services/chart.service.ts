@@ -15,6 +15,12 @@ export class ChartService {
   private chartTopicsSource = new BehaviorSubject([]);
   private currentChartTopics = this.chartTopicsSource.asObservable();
 
+  private chartModeSource = new BehaviorSubject([]);
+  private currentChartMode = this.chartModeSource.asObservable();
+
+  private removeItemSource = new BehaviorSubject([]);
+  private currentItemToRemove = this.removeItemSource.asObservable();
+
   private chartRangeSource = new BehaviorSubject([]);
   private currentChartRange = this.chartRangeSource.asObservable();
   private loggedIn = false;
@@ -66,6 +72,22 @@ export class ChartService {
 
   GetData(): Observable<any[]> {
     return this.currentChartData;
+  }
+
+  SetItemRemoval(index: any) {
+    this.removeItemSource.next(index);
+  }
+
+  GetItemRemoval(): Observable<any> {
+    return this.currentItemToRemove;
+  }
+
+  SetChartMode(mode: any) {
+    this.chartModeSource.next(mode);
+  }
+
+  GetChartMode(): Observable<any> {
+    return this.currentChartMode;
   }
 
   SetDataTopics(topicData: any) {
@@ -120,37 +142,25 @@ export class ChartService {
     let totalViews: number;
     let totalLikes: number;
     let totalDislikes: number;
-
     let artist = '';
     let title = '';
     let songID = '';
     let songKey = '';
-
-
     this.videoIds = [];
-    data.forEach((song, index) => {
 
+    data.forEach((song, index) => {
       totalViews = 0;
       totalLikes = 0;
       totalDislikes = 0;
-
       let control = 0;
       // unterscheidung zw 1 version oder 1. gruppe für additionalInfo!!!
       if ('etag' in additionalInfo[index]) {
-        // console.log('I AM ONLY ONE VERSION');
-
-        //bauuuustellleee höhöhöhö
         isGroup = false;
         const words = additionalInfo[index].snippet.title.split('-');
-        // console.log('words[0]: ', words[0]);
-        // console.log('words[1]: ', words[1]);
-        // console.log('words[2]: ', words[2]);
         artist = words[0];
         title = words[1];
 
         if (words[1] === undefined) {
-          // console.log('HEYYYYYY title is empty');
-          // console.log('artist: ', additionalInfo[index]);
           artist =  additionalInfo[index].artist;
           title = words[0];
         }
@@ -161,12 +171,10 @@ export class ChartService {
 
         songID = additionalInfo[index].id;
         songKey = additionalInfo[index]._key;
-
-        totalViews = additionalInfo[index].statistics.viewCount;
-        totalLikes =  additionalInfo[index].statistics.likeCount;
-        totalDislikes =  additionalInfo[index].statistics.dislikeCount;
+        totalViews = +(additionalInfo[index].statistics.viewCount);
+        totalLikes =  +(additionalInfo[index].statistics.likeCount);
+        totalDislikes =  +(additionalInfo[index].statistics.dislikeCount);
       } else {
-        // console.log('a group was added');
 
         isGroup = true;
         artist = additionalInfo[index].artist;
@@ -192,7 +200,6 @@ export class ChartService {
 
       tmp_song.aggregations.forEach( date => {
         const mSentiment = this.fixSentimentData(date.sentimentDistribution[0]);
-
         let lidx = 0;
         let sentx = 0;
         let currentNbCommentsLanguage = date.languageDistribution[lidx].nbComments;
@@ -217,10 +224,7 @@ export class ChartService {
           if (currentNbCommentsLanguage === 0) { lidx += 1; }
           if (currentNbCommentsSent === 0) { sentx += 1; }
 
-          let songShort = '';
-          if (title !== undefined) {
-              (title.length > 15) ? songShort = title.substr(0, 12) + '...' : songShort = title;
-          }
+          const songShort = this.getShortTitle(title);
 
           dataPoints.push({
             _key: control,              // where the comment key was
@@ -239,7 +243,8 @@ export class ChartService {
             videoLikes: totalLikes,     // *** likes of the video commented
             videoDislikes: totalDislikes, // *** dislikes of the video commented
             videoViews: totalViews,     // *** views of the video commented
-            replies: null               // *** replies of the comment
+            replies: null,               // *** replies of the comment
+            isGroup: isGroup
           });
 
           control++;
@@ -253,6 +258,14 @@ export class ChartService {
     });
 
     return dataPoints;
+  }
+
+  getShortTitle(title: string) {
+    let songShort = '';
+    if (title !== undefined) {
+        (title.length > 20) ? songShort = title.substr(0, 17) + '...' : songShort = title;
+    }
+    return songShort;
   }
 
   fixSentimentData(data: any) {

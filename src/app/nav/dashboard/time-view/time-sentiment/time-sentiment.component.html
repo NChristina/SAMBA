@@ -1,0 +1,23 @@
+<div class="selection_bar" >
+    <button #fab2 mdc-fab class="fab_button" style="background-color:#009688" [extended]="true" label="monthly" disabled></button>
+
+    <h1>Sentiment from Comments (sum of all selected videos)</h1>
+    <div class="wrapper" (mouseover)="setTooltipInfo($event, tooltipinfo);" style="float:right;margin:15px 0 0 25px;" class="tooltInfo">
+        <img height="30px" style="float:right" src="../../assets/000-info.svg">
+        <span #tooltipinfo class="tooltInfo_text">
+            <p><img height="15px" src="../../assets/000-chart.svg"> The chart shows the comments of all selected videos/groups of videos. It also shows the polarity/sentiment extracted from these comments.</p>
+            <p>Sentiment scores are calculated with three sentiment analysis tools 
+                (<a class="tooltipLink" href="https://github.com/fnielsen/afinn">AFINN</a>, <a class="tooltipLink" href="http://www.nltk.org/">NLTK</a>, 
+                and <a class="tooltipLink" href="https://github.com/sloria/TextBlob/blob/dev/textblob/_text.py">TextBlob</a>). Each tool returns a polarity 
+                value when the input text is evaluated as showing positive or negative sentiment. They return neutral
+                when the text contains no sentiment bearing word or when negative and positive words are perfectly balanced.
+                "Mixed sentiment" means that one comment was detected as both positive and negative by different tools.
+                Non-English comments are not assessed by the tools and are shown as N/A (not available).</p>
+    </span>
+    </div>
+    <span class="filterWarning" *ngIf="appliedFilter"><mat-icon class="timeFilterIcon" title="Applied Time Filter">date_range</mat-icon> Data filtered by time</span> 
+</div>
+
+<div id="sentimentChartLine" class="maxSize aggregationView"></div>
+<p class="notDataWarn" *ngIf="this.notDataWarn">Not enough data to render chart.</p>
+    

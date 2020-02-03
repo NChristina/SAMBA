@@ -42,25 +42,28 @@ import { MdcDrawerModule,
         MdcSelectModule
         } from '@angular-mdc/web';
 import { TagCloudModule } from 'angular-tag-cloud-module';
-import { DashboardComponent } from './nav/dashboard/dashboard.component';
-import { HardfactsComponent } from './nav/dashboard/hardfacts/hardfacts.component';
-import { LanguageComponent } from './nav/dashboard/language/language.component';
-import { CommentComponent } from './nav/dashboard/comment/comment.component';
-import { MainvisComponent } from './nav/dashboard/mainvis/mainvis.component';
-import { SentimentComponent } from './nav/dashboard/sentiment/sentiment.component';
 import { Ng5SliderModule } from 'ng5-slider';
-import { TopicComponent } from './nav/dashboard/topic/topic.component';
 import { LoadingModalComponent } from './nav/loading-modal/loading-modal.component';
 import { LoadingSvgComponent } from './shared/loading-svg/loading-svg.component';
-import { LoginComponent } from './login/login.component';
 import { AuthGuardService } from './shared/auth-guard.service';
-import { EngagementCommentsComponent } from './nav/dashboard/engagement-comments/engagement-comments.component';
+
+/* Main Components / Views */
+import { LoginComponent } from './login/login.component';
+import { CommentComponent } from './nav/dashboard/comment/comment.component';
+import { HardfactsComponent } from './nav/dashboard/hardfacts/hardfacts.component';
+import { EngagementCommentsComponent } from './nav/dashboard/overview/engagement-comments/engagement-comments.component';
+import { LanguageComponent } from './nav/dashboard/overview/language/language.component';
+import { SentimentComponent } from './nav/dashboard/overview/sentiment/sentiment.component';
+import { TopicComponent } from './nav/dashboard/overview/topic/topic.component';
+import { MainvisComponent } from './nav/dashboard/time-view/mainvis/mainvis.component';
+import { TimeEngagementCommentsComponent } from './nav/dashboard/time-view/time-engagement-comments/time-engagement-comments.component';
+import { TimeLanguageComponent } from './nav/dashboard/time-view/time-language/time-language.component';
+import { TimeSentimentComponent } from './nav/dashboard/time-view/time-sentiment/time-sentiment.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     NavComponent,
-    DashboardComponent,
     HardfactsComponent,
     LanguageComponent,
     CommentComponent,
@@ -71,9 +74,11 @@ import { EngagementCommentsComponent } from './nav/dashboard/engagement-comments
     LoadingSvgComponent,
     LoginComponent,
     EngagementCommentsComponent,
+    TimeSentimentComponent,
+    TimeLanguageComponent,
+    TimeEngagementCommentsComponent,
   ],
   imports: [
-
     AppRoutingModule,
     BrowserModule,
     BrowserAnimationsModule,

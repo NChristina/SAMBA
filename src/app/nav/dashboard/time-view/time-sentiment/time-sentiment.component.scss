@@ -1,0 +1,84 @@
+.maxSize {
+    max-width: 1250px;
+    max-height: 550px;
+    margin-top: 45px;
+  }
+  
+  .fab_button {
+    float: left !important;
+    height: 34px !important;
+    margin-right: 2px;
+    margin-top: 8px;
+    margin-left: 2px;
+    font-size: 10px;
+  }
+  
+  .fab_button:last-child {
+    margin-right: 10px;
+  }
+  
+  .selection_bar {
+    height: 4em;
+    margin: -20px auto;
+    width: 100%;
+  }
+
+  .selection_bar h1{
+    float: left;
+    margin: 15px 20px;
+    font-size: 1.5em;
+    font-weight: 100;
+  }
+
+.selection_bar button{
+  margin-top: 10px;
+}
+  
+  .tooltInfo:hover .tooltInfo_text {
+    visibility: visible;
+    opacity: 1; 
+  }
+  
+  .tooltInfo_text {
+    text-align: left;
+    visibility: hidden;
+    opacity: 0.7;
+    width: 500px;
+    height: fit-content;
+    background-color: #444;
+    color: white;
+    border-radius: 6px;
+    padding: 5px 5px;
+    position: absolute;
+    z-index: 1;
+    top: 0%;
+    margin-left: 0;
+    opacity: 0;
+    transition: opacity 0.3s;
+    top: -30%;
+    left: -20px;
+  }
+  
+  .tooltipLink{
+    color: #CCC;
+  }
+
+  .filterWarning{
+    width: 12em;
+    float: right;
+    margin: 16px 140px 0px 0px;
+    padding: 5px;
+    color: #FF6700;
+    font-style: italic;
+  }
+  
+  .filterWarning mat-icon{
+    margin: -4px;
+  }
+
+  @media (max-width: 1550px) {
+    .selection_bar h1{
+      display: none;
+    }
+  }
+    

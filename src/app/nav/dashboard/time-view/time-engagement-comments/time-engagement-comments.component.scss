@@ -5,19 +5,39 @@
 // }
 
 .maxSize {
-  max-width: 350px;
-  max-height: 250px;
-  margin: 0 auto;
+  max-width: 1250px;
+  max-height: 550px;
+  margin-top: 45px;
 }
 
-
 .fab_button {
-  overflow: visible;
-  height: 35px;
-  width: fit-content;
-  padding: 5px;
-  margin: auto;
-  margin-top: -30px;
+  float: left !important;
+  height: 34px !important;
+  margin-right: 2px;
+  margin-top: 8px;
+  margin-left: 2px;
+  font-size: 10px;
+}
+
+.fab_button:last-child {
+  margin-right: 10px;
+}
+
+.selection_bar {
+  height: 4em;
+  margin: -20px auto;
+  width: 100%;
+}
+
+.selection_bar h1{
+  float: left;
+  margin: 15px 20px;
+  font-size: 1.5em;
+  font-weight: 100;
+}
+
+.selection_bar button{
+  margin-top: 10px;
 }
 
 .tooltip_text {
@@ -28,26 +48,25 @@
   background-color: #234;
   color: white;
   border-radius: 6px;
-    padding: 5px 5px;
-    position: absolute;
-    z-index: 1;
-    top: 0%;
-    margin-left: 0;
-    opacity: 0;
-    transition: opacity 0.3s;
-    top: -30%;
-    left: -20px;
+  padding: 5px 5px;
+  position: absolute;
+  z-index: 1;
+  top: 0%;
+  margin-left: 0;
+  opacity: 0;
+  transition: opacity 0.3s;
+  top: -30%;
+  left: -20px;
 }
-
+  
 .tooltip_text table {
   width: 100%;
 }
-
+  
 .fab_button .tooltip_text::after {
   content: "";
   position: absolute;
   top: 100%;
-  /*right: 100%;*/
   margin-left: -5px;
   border-width: 5px;
   border-style: solid;
@@ -72,7 +91,7 @@
   border-style: solid;
   border-color: transparent transparent white transparent;
 }
-
+  
 .song_line {
   width: 100%;
   height: 10px;
@@ -101,7 +120,7 @@
 }
 
 .wrapper{
-  text-align: center;
+  text-align: left;
   margin-top: 15px;
   font-size: 0.9em;
   font-weight: bold;
@@ -114,6 +133,7 @@
 }
 
 .tooltInfo_text {
+  text-align: left;
   visibility: hidden;
   opacity: 0.7;
   width: 500px;
@@ -131,56 +151,22 @@
   top: -30%;
   left: -20px;
 }
-
-.videoCard{
-  height: 20px;
-  background: red;
-  margin: 5px 0px;
+  
+.filterWarning{
+  width: 12em;
+  float: right;
+  margin: 16px 140px 0px 0px;
+  padding: 5px;
+  color: #FF6700;
+  font-style: italic;
 }
 
-.videoCard p{
-  margin: 0px;
+.filterWarning mat-icon{
+  margin: -4px;
 }
 
-#summary{
-  max-width: none;
-}
-
-#videoTable {
-  font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
-  border-collapse: collapse;
-  width: 100%;
-  font-size: 0.9em;
-}
-
-#videoTable a{
-  display: table;
-  width: 100%;
-}
-
-#videoTable a img{
-  display: inherit;
-  margin: 0 auto;
-}
-
-#videoTable td, #videoTable th {
-  border: 1px solid #ddd;
-  padding: 2px;
-}
-
-#videoTable tr:nth-child(even){background-color: #f2f2f2;}
-
-#videoTable tr:hover {background-color: #e0eaea;}
-
-#videoTable th {
-  padding-top: 5px;
-  padding-bottom: 5px;
-  text-align: left;
-  background-color: #ddd;
-  color: #000;
-}
-
-#videoTable td.center,
-#videoTable th.center {
-  text-align: center;
+@media (max-width: 1550px) {
+  .selection_bar h1{
+    display: none;
+  }
 }

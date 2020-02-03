@@ -1,0 +1,64 @@
+.maxSize {
+  max-width: 350px;
+  max-height: 250px;
+  margin: 0 auto;
+}
+
+.tooltInfo:hover .tooltInfo_text {
+  visibility: visible;
+  opacity: 1; 
+}
+
+.tooltInfo_text {
+  visibility: hidden;
+  opacity: 0.7;
+  width: 500px;
+  height: fit-content;
+  background-color: #444;
+  color: white;
+  border-radius: 6px;
+  padding: 5px 5px;
+  position: absolute;
+  z-index: 5;
+  top: 0%;
+  margin-left: 0;
+  opacity: 0;
+  transition: opacity 0.3s;
+  top: -30%;
+  left: -20px;
+}
+
+.tooltipLink{
+  color: #CCC;
+}
+
+p.footerSentiments{
+  margin: 0;
+  padding: 0;
+  font-size: 13px;
+  color: #666;
+}
+
+.wrappersentiment{
+  float: left;
+  bottom: 5px;
+  position: absolute;
+}
+
+.wrapper.sentiment .tooltInfo_text {
+  width: fit-content;
+}
+
+.filterWarning{
+  width: 8.5em;
+  float: right;
+  margin: -1px 15px 0px 0px;
+  padding: 5px;
+  color: #FF6700;
+  font-style: italic;
+}
+
+.filterWarning mat-icon{
+  margin: -4px;
+}
+  
