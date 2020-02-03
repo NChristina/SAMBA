@@ -1,0 +1,72 @@
+.footer,
+.container{
+  min-width: 800px;
+}
+
+.login-container{
+  max-width: 400px;
+  margin: 15px auto 0;
+}
+
+h1{
+  margin: 25px 5%;
+  color: #555;
+}
+
+.error{
+  color: tomato;
+  font-size: 12px;
+  padding-top: 4px
+}
+
+.iconFix {
+  position: relative;
+  top: 0.01mm;
+  right: 20px;
+}
+
+.dashboard-card{
+  height: 70px;
+  padding: 15px 0px;
+}
+
+.form-card{
+  width: 200px;
+  float: right;
+  margin: 25px 5% 0px 0px;
+}
+
+.logoSamba{
+  float: left;
+  margin-left: 5%; 
+}
+
+.logoFH img,
+.logoSamba img{
+  height: 70px;
+}
+
+.logoFH{
+  float: right;
+  margin-right: 5%; 
+}
+
+.container .sambavis,
+.container p{
+  margin-left: 5%;
+  width: 50%;
+}
+
+.container .sambavis{
+  margin-top: 15px; 
+}
+
+.footer{
+  text-align: center;
+  border-top: 1px dashed #ccc;
+  margin: 5% 0px;
+}
+
+.footer p{
+  margin: 15px auto;
+}

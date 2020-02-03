@@ -1,23 +1,55 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { DataService } from './data.service';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable()
 export class SearchService {
   private data: any[];
-  private searchResultSource = new BehaviorSubject([]);
-  private currentSearchResult = this.searchResultSource.asObservable();
+  private mockData: any[];
+  // private searchResultSource = new BehaviorSubject([]);
+  // private currentSearchResult = this.searchResultSource.asObservable();
 
-  constructor(private dataService: DataService) {
-    // subscribes to the data from the data service
-    dataService.getData().subscribe((data) => {
-      this.data = data;
-    });
+  constructor(private dataService: DataService, private httpClient: HttpClient) {}
+
+  loadMockData(): Observable<any[]> {
+    const d =  this.dataService.songDetailsMock();
+    return d;
   }
 
-  search(value: string): Observable<any[]> {
-    this.searchResultSource.next(this.searchSplitter(value));
-    return this.currentSearchResult;
+  searchFromDb(value: string): Promise<any> {
+    if (value.length < 1) {
+      return;
+    }
+    return this.dataService.search(value);
+  }
+
+  quickSearchFromDb(value: string): Promise<any> {
+    if (value.length < 1) {
+      return;
+    }
+    return this.dataService.quickSearch(value);
+  }
+
+  songDetailsFromDb(value: string[]): Promise<any> {
+    if (value === undefined) {
+    } else {
+      return this.dataService.songDetails(value);
+    }
+  }
+
+  songTopicsFromDb(value: string[]): Promise<any> {
+    if (value === undefined) {
+    } else {
+      return this.dataService.songTopics(value);
+    }
+  }
+
+  getCommentsFromDb(nbComments: number, order: String, ids: String[], startDate: any, endDate: any): Promise<any> {
+    if (ids === undefined) {
+    } else {
+      return this.dataService.getComments(nbComments, order, ids, startDate, endDate);
+    }
   }
 
   // splits the value and the song title by words and look for each word if it

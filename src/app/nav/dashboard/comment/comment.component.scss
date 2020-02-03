@@ -1,65 +1,288 @@
-@import '~@angular-mdc/theme/material';
+@import '~bootstrap/dist/css/bootstrap.css';
 
-
-// /* unvisited link */
-// a:link {
-//   color: hotpink;
-//   text-decoration: none;
-// }
-
-// /* visited link */
-// a:visited {
-//   color: hotpink;
-//   text-decoration: none;
-// }
-
-// /* mouse over link */
-// a:hover {
-//   color: hotpink;
-//   text-decoration: none;
-// }
-
-// /* selected link */
-// a:active {
-//   color: hotpink;
-//   text-decoration: none;
-// }
-/* Style the buttons that are used to open and close the accordion panel */
-.accordion {
-  background-color: #eee;
-  color: #444;
-  cursor: pointer;
-  padding: 18px;
-  width: 100%;
-  text-align: left;
-  border: none;
-  outline: none;
-  transition: 0.4s;
+.grid-container{
+  height: 50px;
 }
 
-
-/* Add a background color to the button if it is clicked on (add the .active class with JS), and when you move the mouse over it (hover) */
-.active, .accordion:hover {
-  background-color: #ccc;
-}
-
-/* Style the accordion panel. Note: hidden by default */
-.panel {
-  padding: 0 18px;
-  background-color: white;
-  max-height: 0;
-  overflow: hidden;
-  transition: max-height 0.2s ease-out;
-}
-
-.accordion:after {
-  content: '\02795'; /* Unicode character for "plus" sign (+) */
-  font-size: 13px;
-  color: #777;
+.grid-container.headerComp p{
   float: right;
-  margin-left: 5px;
+  margin: 15px 50px 0px 0px
 }
 
-.active:after {
-  content: "\2796"; /* Unicode character for "minus" sign (-) */
+.grid-container h3{
+  font-size: 1rem;
+  margin: 15px 0px;
+  color: #666;
+}
+
+#showCommentsAmmount {
+  width: 15%;
+}
+
+// template css
+body{
+  margin-top:20px;
+  background:#FDFDFD;
+}
+@media (min-width: 0) {
+  .g-mr-15 {
+      margin-right: 1.07143rem !important;
+  }
+}
+@media (min-width: 0){
+  .g-mt-3 {
+      margin-top: 0.21429rem !important;
+  }
+}
+
+.g-height-50 {
+  height: 50px;
+}
+
+.g-width-50 {
+  width: 50px !important;
+}
+
+@media (min-width: 0){
+  .g-pa-30 {
+      padding: 2.14286rem !important;
+  }
+}
+
+.g-bg-secondary {
+  background-color: #fafafa !important;
+}
+
+.u-shadow-v18 {
+  box-shadow: 0 5px 10px -6px rgba(0, 0, 0, 0.15);
+}
+
+.g-color-gray-dark-v4 {
+  color: #777 !important;
+}
+
+.g-font-size-12 {
+  font-size: 0.85714rem !important;
+}
+
+.media-comment {
+  margin-top:20px
+}
+
+//testtest
+
+.panel-shadow {
+  box-shadow: rgba(0, 0, 0, 0.3) 7px 7px 7px;
+}
+.panel-white {
+border: 1px solid #dddddd;
+}
+.panel-white  .panel-heading {
+color: #333;
+background-color: #fff;
+border-color: #ddd;
+}
+.panel-white {
+background-color: #fff;
+border-color: #ddd;
+}
+
+.post .post-heading {
+height: 95px;
+padding: 20px 15px;
+}
+.post .post-heading {
+width: 60px;
+height: 60px;
+display: block;
+margin-right: 15px;
+}
+.post .post-heading  {
+margin-bottom: 0;
+}
+.post .post-heading a {
+color: black;
+}
+.post .post-heading a:hover {
+color: #aaaaaa;
+}
+.post .post-heading .meta .time {
+margin-top: 8px;
+color: #999;
+}
+.post {
+width: 100%;
+height: auto;
+}
+.post .post-description {
+padding: 15px;
+}
+.post .post-description p {
+font-size: 14px;
+}
+.post .post-description .stats {
+margin-top: 20px;
+}
+.post .post-description .stats .stat-item {
+display: inline-block;
+margin-right: 15px;
+}
+.post .post-description .stats .stat-item .icon {
+margin-right: 8px;
+}
+.post .post-footer {
+border-top: 1px solid #ddd;
+padding: 15px;
+}
+.post .post-footer .input-group-addon a {
+color: #454545;
+}
+.post .post-footer .comments-list {
+padding: 0;
+margin-top: 20px;
+list-style-type: none;
+}
+.post .post-footer .comments-list .comment {
+display: block;
+width: 100%;
+margin: 20px 0;
+}
+.post .post-footer .comments-list .comment .avatar {
+width: 35px;
+height: 35px;
+}
+.post .post-footer .comments-list .comment .comment-heading {
+display: block;
+width: 100%;
+}
+.post .post-footer .comments-list .comment .comment-heading .user {
+font-size: 14px;
+font-weight: bold;
+display: inline;
+margin-top: 0;
+margin-right: 10px;
+}
+.post .post-footer .comments-list .comment .comment-heading .time {
+font-size: 12px;
+color: #aaa;
+margin-top: 0;
+display: inline;
+}
+.post .post-footer .comments-list .comment .comment-body {
+margin-left: 50px;
+}
+.post .post-footer .comments-list .comment > .comments-list {
+margin-left: 50px;
+}
+
+.filterComp {
+  margin-top:-5px;
+  float:right;
+  top:0;
+  min-width: 630px;
+}
+
+form {
+  font-size: 1.1em;
+  color: #333333;
+  margin-right: -90px;
+}
+
+input {
+  display: inline;
+  border: none;
+  border-bottom: solid 1px #888888;
+  color: #666666;
+  background: #f5f5f5;
+  padding: 18px 5px 18px 10px;
+}
+
+.tooltInfo:hover .tooltInfo_text {
+  visibility: visible;
+  opacity: 1;
+}
+
+.tooltInfo_text {
+  visibility: hidden;
+  opacity: 0.7;
+  width: 500px;
+  height: fit-content;
+  background-color: #444;
+  color: white;
+  border-radius: 6px;
+  padding: 5px 5px;
+  position: absolute;
+  z-index: 1;
+  top: 0%;
+  margin-left: 0;
+  opacity: 0;
+  transition: opacity 0.3s;
+  top: -30%;
+  left: -20px;
+}
+
+.commentPanel {
+  box-shadow: rgba(0, 0, 0, 0.3) 7px 7px 7px;
+  padding: 20px 5px 30px 5px;
+}
+.userIcon {
+  height: 20px;
+  margin: 0px 5px -5px 0px;
+}
+.dateTime {
+  text-decoration:none;
+  color:#acb4c2;
+}
+
+.songInterpret {
+  float:right;
+  margin-right:30px;
+  font-weight:bold;
+  text-decoration:none;
+  color:#acb4c2;
+}
+
+.sentimentText {
+  display: inline;
+}
+.color_984ea3 { color: #984ea3; }
+.color_999999 { color: #999999; }
+.color_4daf4a { color: #4daf4a; }
+.color_666666 { color: #666666; }
+.color_ff7f00 { color: #ff7f00; }
+
+.correctResetBtn{
+  background: transparent;
+  margin: 10px 0px 15px 15px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  height: 40px;
+  width: 80px;
+  box-shadow: 0px 0px 5px -1px rgba(0, 0, 0, 0.2);
+  color: #444;
+  outline: none;
+  font-size: 0.8em;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.correctResetBtn:active {
+  box-shadow: 0px 0px 0px -1px rgba(0, 0, 0, 0.2);
+  color: #666;
+  border: 1px solid #ccc;
+}
+
+.loadingSignal {
+  margin: auto;
+  width: 40px;
+  padding: 0px;
+  position: absolute;
+  top: 95px;
+  right: 103px;
+  outline: none;
+}
+
+.cardTitle,
+.cardTitleBox {
+  position: absolute;
 }

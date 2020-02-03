@@ -1,0 +1,146 @@
+@import "~@angular-mdc/theme/material";
+
+//$color-change-list: #ff0084 #ffa200 #3d94ff #01ffc8;
+$color-change-list: #7fc97f #cab2d6 #fb9a99 #9932CC #1f78b4 #e31a1c #bf5b17 #666666;
+.maxSize {
+  max-width: 1250px;
+  max-height: 550px;
+}
+
+circle.dot {
+  fill: #9932CC !important;
+  fill-opacity: 1 !important;
+  }
+
+.fab_button {
+  float: left !important;
+  height: 34px !important;
+  margin-right: 2px;
+  margin-top: 8px;
+  margin-left: 2px;
+  font-size: 10px;
+}
+
+.fab_button:last-child {
+  margin-right: 10px;
+}
+
+.fab_button {
+  @include mdc-fab-accessible(#1565C0);
+}
+
+.selection_bar {
+  height: 4em;
+  margin: -20px auto;
+  width: 100%;
+}
+
+.selection_bar button{
+  margin-top: 10px;
+}
+
+.selection_bar h1{
+  float: left;
+  margin: 15px 20px;
+  font-size: 1.5em;
+  font-weight: 100;
+}
+
+#compositeChart {
+  margin-top: 45px;
+}
+
+@mixin coloring {
+  @each $color in $color-change-list {
+    $i: index($color-change-list, $color);
+    &:nth-child(#{$i}) .colorRect {
+      background-color: $color;
+    }
+  }
+}
+
+.legend {
+  width: fit-content;
+  height: fit-content;
+  padding: 5px;
+  position: absolute;
+  top: 60px;
+  right: 20px;
+  background: #f9f9f9;
+}
+
+.legendElement {
+  @include coloring();
+}
+
+.colorRect {
+  width: 10px;
+  height: 10px;
+  margin: 0;
+  float: left;
+  margin-top: 3px;
+}
+
+.legend .rectText {
+  float: left;
+  margin: 0 10px;
+}
+
+.tooltInfo:hover .tooltInfo_text {
+  visibility: visible;
+  opacity: 1;
+}
+
+.tooltInfo_text {
+  text-align: left;
+  visibility: hidden;
+  opacity: 0.7;
+  width: 500px;
+  height: fit-content;
+  background-color: #444;
+  color: white;
+  border-radius: 6px;
+  padding: 5px 5px;
+  position: absolute;
+  z-index: 1;
+  top: 0%;
+  margin-left: 0;
+  opacity: 0;
+  transition: opacity 0.3s;
+  top: -30%;
+  left: -20px;
+}
+
+.filterWarning{
+  width: 12em;
+  float: right;
+  margin: 16px 140px 0px 0px;
+  padding: 5px;
+  color: #FF6700;
+  font-style: italic;
+}
+
+.filterWarning mat-icon{
+  margin: -4px;
+}
+
+.summRect{
+  width: 10px;
+  height: 10px;
+  margin: 0;
+  float: left;
+  margin-top: 3px;
+}
+
+.summRect p{
+  float: left;
+  margin: -5px 0px;
+}
+
+@media (max-width: 1500px) {
+  .selection_bar h1{
+    display: none;
+  }
+}
+
+

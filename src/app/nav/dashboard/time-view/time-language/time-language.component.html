@@ -1,0 +1,21 @@
+<div class="selection_bar" >
+    <button #fab2 mdc-fab class="fab_button" style="background-color:#009688" [extended]="true" label="monthly" disabled></button>
+
+    <h1>Language from Comments (sum of all selected videos)</h1>
+    <div class="wrapper" (mouseover)="setTooltipInfo($event, tooltipinfo);" style="float:right;margin:15px 0 0 25px;" class="tooltInfo">
+        <img height="30px" style="float:right" src="../../assets/000-info.svg">
+        <span #tooltipinfo class="tooltInfo_text">
+          <p><img height="15px" src="../../assets/000-chart.svg">The chart shows the comments of all selected videos/groups of videos. In this chart you see the top three languages in which the comments are written.</p>
+        </span>
+    </div>
+    <span class="filterWarning" *ngIf="appliedFilter"><mat-icon class="timeFilterIcon" title="Applied Time Filter">date_range</mat-icon> Data filtered by time</span> 
+</div>
+
+<div id="languageGraph" class="maxSize aggregationView"></div>
+<p class="notDataWarn" *ngIf="this.notDataWarn">Not enough data to render chart.</p>
+
+<div class="wrapperLangCaption" >
+    <div *ngIf="showLangCaption && chartHeight > 100"> 
+        <p  class="footerLang"> * {{langCaption}} </p>
+    </div>
+</div>

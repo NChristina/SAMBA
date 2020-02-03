@@ -1,3 +1,9 @@
+@import '~bootstrap/dist/css/bootstrap.css';
+
+.sambaDashboard{
+  min-width: 800px;
+}
+
 .contentmargin {
   width: 100vw;
   height: 100vh;
@@ -5,7 +11,9 @@
 
 .demo-content__drawer {
   border: 1px solid rgba(0, 0, 0, 0.1);
-  overflow-x: auto;
+  overflow-x: hidden;
+  overflow-y: scroll;
+  height: 100vh;
 
   &--row {
     display: flex;
@@ -27,10 +35,18 @@
   }
 }
 
+.search_box{
+  width: 360px;
+}
+
 .search_icon {
   position: relative;
   top: 0.01mm;
   right: 20px;
+}
+
+.search_icon:focus, button:focus {
+  outline: none;
 }
 
 .mdc-drawer {
@@ -47,6 +63,12 @@
 
 .song_link {
   cursor: pointer;
+  font-size: 12px;
+  color: #444;
+}
+
+.song_link img{
+  margin: 0px 0px 0px 5px;
 }
 
 .search-list {
@@ -59,7 +81,8 @@
 .tooltip {
   position: relative;
   display: inline-block;
-  border-bottom: 1px dotted black; /* If you want dots under the hoverable text */
+  background-color: red;
+  // border-bottom: 1px dotted black; /* If you want dots under the hoverable text */
 }
 
 /* Tooltip text */
@@ -85,4 +108,272 @@
 /* Show the tooltip text when you mouse over the tooltip container */
 .tooltip:hover .tooltiptext {
   visibility: visible;
+}
+
+#searchFeedback{
+  margin: 0px auto;
+}
+
+#searchFeedback img{
+  display: none;
+  margin: 30px auto;
+}
+
+#searchFeedback p{
+  color: #666666;
+  display: none;
+  margin: 30px auto;
+}
+
+/* Style the buttons that are used to open and close the accordion panel */
+.accordion {
+  background-color: #eee;
+  color: #444;
+  padding: 18px;
+  width: 100%;
+  text-align: left;
+  transition: 1s;
+}
+
+.accordion input,
+.expandAccordion, 
+.videoGroup b,
+.videoName b{
+  cursor: pointer;
+}
+
+.expandAccordion:hover,
+.videoName:hover{
+  color:#000;
+}
+
+/* Add a background color to the button if it is clicked on (add the .active class with JS), and when you move the mouse over it (hover) */
+.active, .accordion:hover {
+  background-color: #ccc;
+}
+
+/* Style the accordion panel. Note: hidden by default */
+.panel {
+  margin-top: 5px;
+  background-color: white;
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.2s ease-out;
+}
+
+.main_button{
+  background-color: #dcdcdc;
+  border-radius: 10px;
+  box-shadow: 0px 3px 5px -1px rgba(0, 0, 0, 0.2);
+  //color: #fff;
+  color: #000;
+  font-size: 1.4em;
+  display: flex;
+  border: none;
+  margin: 0px 30px;
+  cursor: pointer;
+  outline: none;
+  position: absolute;
+}
+
+.main_button:active{
+  background-color: #eee;
+  box-shadow: 0px 0px 5px -1px rgba(0, 0, 0, 0.2);
+  color: #333;
+}
+
+.main_button h1{
+  font-size: 1em;
+  cursor: pointer;
+  margin: 0;
+  padding: 10px 20px 0px 0px;
+}
+
+.flexBtnContainer {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+}
+
+#overlayComment{
+  background-color: #fff;
+  position: absolute;
+  bottom: 15px;
+  width: 95%;
+  height: 70px;
+}
+
+.expandCommentsBtn {
+  background-color: #fff;
+  border-radius: 25px;
+  box-shadow: 0px 0px 5px -1px rgba(0, 0, 0, 0.2);
+  border: 1px solid #888;
+  cursor: pointer;
+  outline: none;
+  position: absolute;
+  top: 51px;
+  right: 42px;
+  height: 25px;
+  width: 25px;
+  z-index: 1;
+}
+
+.expandCommentsBtn img.upBtn {
+  margin: -1px 0px 0px -6.5px;
+}
+
+.expandCommentsBtn img.downBtn {
+  margin: -2px 0px 0px -6.5px;
+}
+
+.correctResetBtn {
+  background-color: #fff;
+  border-radius: 5px;
+  box-shadow: 0px 0px 5px -1px rgba(0, 0, 0, 0.2);
+  color: #888;
+  font-size: 1em;
+  display: flex;
+  border: 1px solid #888;
+  cursor: pointer;
+  outline: none;
+  position: absolute;
+  top: 20px;
+  right: 70px;
+}
+
+.correctResetBtn:active {
+  box-shadow: 0px 0px 0px -1px rgba(0, 0, 0, 0.2);
+  color: #666;
+  border: 1px solid #666;
+}
+
+.correctResetBtn p{
+  margin: 0;
+  padding: 4px 5px 0px 6px;
+}
+
+.iconsVersions {
+  padding:0;
+  margin:1px 5px 0px 0px;
+  width:14px;
+  height:14px;
+  font-size:14px;
+  float:left;
+  color: #888;
+}
+
+
+.mainMenu{
+  width: 680px;
+  margin: 0px auto;
+  border-radius: 10px;
+  box-shadow: 0px 3px 5px -1px rgba(0, 0, 0, 0.2);
+}
+
+.mainMenu button{
+  height: 50px;
+  width: 160px;
+  border-top: 0px;
+  border-bottom: 0px;
+  border-left: 0px;
+  border-right: 2px solid #ccc;
+  background-color: #dcdcdc;
+  font-size: 15px;
+  cursor: pointer;
+  color: #333;
+}
+
+.mainMenu button.first{
+  width: 200px;
+  border-radius: 10px 0px 0px 10px;
+}
+
+.mainMenu button.last{
+  border-right: 0px solid #ddd;
+  border-radius: 0px 10px 10px 0px;
+}
+
+.mainMenu button img{
+  height: 20px;
+  margin: -2px 0px 0px 0px;
+}
+
+.mainMenu button:hover{
+  background: #e6e6e6;
+}
+
+.mainMenu button.active:hover,
+.mainMenu button.active{
+  font-weight: 500;
+  background: #eee;
+  color: #000;
+}
+
+.logoSamba{
+  width: 130px;
+  position: absolute;
+  right: 30px;
+  filter: grayscale(100%);
+}
+
+.logoSamba:hover{
+  filter: grayscale(0%);
+}
+
+/* ---------------------------------------------------------------- */
+.grid-container.gridLeft{
+  margin: 0px 0px 0px 1%;
+  float:left;
+  width: 32%;
+}
+
+.grid-container.gridRight {
+  margin: 0px 1% 0px 0px;
+  float:right;
+  width: 66%;
+}
+
+.dashboard-card {
+  position: absolute;
+  top: 15px;
+  left: 15px;
+  right: 15px;
+  bottom: 15px;
+}
+
+.more-button {
+  position: absolute;
+  top: 5px;
+  right: 10px;
+}
+
+.dashboard-card-content {
+  text-align: center;
+}
+
+.comment-section {
+  overflow-x: hidden;
+  background-color: #f9f9f9;
+}
+
+.grid_title_overflow {
+  overflow: visible;
+}
+
+.gridFooter{
+  text-align: center;
+  float: left;
+  width: inherit;
+  margin: 15px 0px 0px 0px;
+}
+
+@media (max-width: 1200px) {
+  .mainMenu{
+    width: 200px;
+  }
+  
+  .mainMenu button,
+  .mainMenu button.first{
+    width: 50px;
+  }
 }

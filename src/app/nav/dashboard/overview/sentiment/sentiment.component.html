@@ -1,0 +1,41 @@
+<div class="grid-container">
+<mat-grid-list cols="1" rowHeight="40px">
+    <div class="wrapper" (mouseover)="setTooltipInfo($event, tooltipinfo);" style="float:right" class="tooltInfo"> 
+        <img height="24px" style="float:right" src="../../assets/000-info.svg"> 
+        <span #tooltipinfo class="tooltInfo_text">
+            <p><img height="15px" src="../../assets/000-barchart.svg"> The chart shows the percentage of each sentiment extracted from the comments. Each bar represents one video or group of videos.</p> 
+            <p>Sentiment scores are calculated with three sentiment analysis tools 
+                (<a class="tooltipLink" href="https://github.com/fnielsen/afinn">AFINN</a>, <a class="tooltipLink" href="http://www.nltk.org/">NLTK</a>, 
+                and <a class="tooltipLink" href="https://github.com/sloria/TextBlob/blob/dev/textblob/_text.py">TextBlob</a>). Each tool returns a polarity 
+                value when the input text is evaluated as showing positive or negative sentiment. They return neutral
+                when the text contains no sentiment bearing word or when negative and positive words are perfectly balanced.
+                "Mixed sentiment" means that one comment was detected as both positive and negative by different tools.
+                Non-English comments are not assessed by the tools and are shown as N/A (not available).</p>
+        </span>
+    </div>
+    <span class="filterWarning" *ngIf="appliedFilter"><mat-icon class="timeFilterIcon" title="Applied Time Filter">date_range</mat-icon> filtered by time</span> 
+    
+    <h2 class="cardTitleBox">Sentiment</h2>
+    <img class="cardTitleIcon" height="24px" title="Sentiment" src="../../assets/menu_sentiment.svg"> 
+</mat-grid-list>
+</div>
+<hr />
+
+<div id="sentimentChart" class="maxSize comparisonView"></div>
+<p class="notDataWarn" *ngIf="this.notDataWarn">Not enough data to render chart.</p>
+
+<div class="sentEnableNA" *ngIf="this.data && this.data.length">
+    <p>Show N/A</p>
+    <label (click)="toggleNA()" title="Show Not Available Sentiment Data" class="switch">
+        <input id="slider" type="checkbox" checked><span class="slider round"></span>
+    </label>
+</div>
+
+<div class="wrappersentiment" >
+    <div *ngIf="this.data && this.data.length" class="wrapper sentiment" (mouseover)="setTooltipInfo($event, tooltipinfo);" class="tooltInfo"> 
+        <p  class="footerSentiments"> *N/A: Non-Assessed </p>
+        <span #tooltipinfo class="tooltInfo_text">
+            <p><img height="13px" src="../../assets/000-info.svg"> Only comments written in English are assessed for sentiment.</p>
+        </span>
+    </div>
+</div>

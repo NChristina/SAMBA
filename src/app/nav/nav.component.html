@@ -1,48 +1,128 @@
-    <div class="demo-content__drawer demo-content__drawer--persistent">
-      <mdc-drawer #persistent drawer='persistent'>
-        <mdc-drawer-spacer>
-          <mdc-text-field #searchText [box]="false" formControlName="searchTitle" label="search for songs" maxlength="30" (change)="submitSearch(searchText.value)">
-            <mdc-icon class="search_icon" trailing #searchicon type="submit" [clickable]="true">search</mdc-icon>
-          </mdc-text-field>
-        </mdc-drawer-spacer>
-        <mdc-list-group>
-          <mdc-list class="search-list" >
-            <!--List of search results-->
-            <mdc-list-item class="song_list_item" *ngFor="let match of searchMatchList; let i = index" (click)="checkbox1.toggle(); selectSong(i, checkbox1);">
-              <mdc-checkbox #checkbox1 mdcListItemGraphic (change)="selectSong(i, checkbox1)"></mdc-checkbox>
-              <mdc-list-item-text>{{match.displayName}}
-              <mdc-list-item-secondary>{{ match.data.comment.length }} Comments</mdc-list-item-secondary></mdc-list-item-text>
-              <a class="song_link" href="https://www.youtube.com/watch?v={{match.data.data[0].id}}" target="_blank" mdcListItemMeta>
+<div class="demo-content__drawer demo-content__drawer--persistent">
 
-                <div class="tooltip">
-                    <mdc-icon mdcListItemMeta>link</mdc-icon>
-                  <span class="tooltiptext">link to video</span>
-                </div>
-              </a>
-            </mdc-list-item>
-          </mdc-list>
-        </mdc-list-group>
-      </mdc-drawer>
-      <div>
-        <mdc-toolbar>
-          <mdc-toolbar-row>
-            <mdc-toolbar-section [alignStart]="true">
-              <mdc-icon mdc-toolbar-menu-icon (click)="persistent.open()">menu</mdc-icon>
-              <mdc-toolbar-title>Please select a song</mdc-toolbar-title>
-            </mdc-toolbar-section>
-            <mdc-toolbar-section [alignEnd]="true" [shrinkToFit]="true">
-              <img src="../../assets/Samba_Logo_rgb_transparent_cut.png" alt="samba logo" style="width:200px; margin-right: 15px;">
-            </mdc-toolbar-section>
-          </mdc-toolbar-row>
-        </mdc-toolbar>
-        <mdc-chip-set #inputchipset [input]="true">
-          <mdc-chip *ngFor="let element of selectedList; let i = index" label="{{element.data[0].snippet.title}}" (trailingIconInteraction)="removeSelectedSong(i)">
-            <mdc-chip-icon leading>music_note</mdc-chip-icon>
-            <mdc-chip-icon trailing>cancel</mdc-chip-icon>
-          </mdc-chip>
-        </mdc-chip-set>
-        <div class="contentmargin">
-          <app-dashboard></app-dashboard>
+  <mdc-drawer #persistent drawer="persistent">
+    <!-- Search field -->
+    <mdc-drawer-spacer>
+      <mdc-text-field #searchText [box]="false" class="search_box" label="search by artist or song name" maxlength="30" (change)="submitQuickSearch(searchText.value)">
+        <mdc-icon class="search_icon" trailing #searchicon [clickable]="true">search</mdc-icon>
+      </mdc-text-field>
+    </mdc-drawer-spacer>
+    <!-- List of search results -->
+    <div class="search-list list-group">
+      <div id="searchFeedback">
+        <div id="sFimg"><app-loading-modal></app-loading-modal></div>
+        <p id="sFtext">No results were found for this search.</p>
+      </div>
+      <div id="{{'accordion_' + ix}}" class="accordion song_list_item list-group-item list-group-item-action flex-column align-items-start" *ngFor="let match of searchMatchList; let ix = index">
+        <div class="videoGroup d-flex w-100 justify-content-between">
+          <b class="mb-1" (click)="toggleAccordion(ix, $event)"><mat-icon style="font-size:13px;height:13px;width:13px" title="Group of Videos">video_library</mat-icon>  {{ match.artist }} - {{ match.title }}</b>
+          <div class="checkbox" #checkbox1 (change)="selectSong(ix, null, $event)">
+            <label><input type="checkbox" id="{{ 'checkbox_' + ix }}" value="" title="Add all videos in this group"/></label>
+          </div>
+        </div>
+        <div (click)="toggleAccordion(ix, $event)" class="expandAccordion d-flex w-100 justify-content-between">
+          <small *ngIf="match.versions.length > 1">{{ match.versions.length }} Videos matching</small>
+          <small *ngIf="match.versions.length === 1">{{ match.versions.length }} Video matching</small>
+          <img id="{{'img_' + ix}}" height ="10px" src="../../assets/chevron_down.svg">
+        </div>
+        <div class="panel list-group "  id="{{'panel_' + ix}}">
+          <div class="list-group-item flex-column align-items-start" *ngFor="let version of match.versions, let iy = index">
+            <div class="videoName d-flex w-100 justify-content-between">
+              <b (click)="triggerSelection(ix, iy)">{{ version.snippet.title }}</b>
+              <div class="checkbox" (change)="selectSong(ix, iy, $event)">
+                <label><input type="checkbox" class="{{ 'slc' + ix +'_'+ iy }}" id="{{ 'subcheckbox_' + iy }}" value="" title="Add video"/></label>
+              </div>
+            </div>
+            <div class="d-flex w-100 justify-content-between" style="margin-top:7px">
+              <small><mdc-icon class="iconsVersions" mdc-toolbar-menu-icon>mode_comment</mdc-icon> {{shortValues(version.statistics.nbCommentInDb)}} comments  </small>
+              <a class="song_link" href="https://www.youtube.com/watch?v={{ version.id }}" target="_blank">{{reduceString(version.snippet.channelTitle)}}<img height="15px" src="../../assets/002-unlink.svg"/></a>
+            </div>
+            <small>
+                <mdc-icon class="iconsVersions" mdc-toolbar-menu-icon style="margin-top:4px;">trending_up</mdc-icon> 
+                {{shortValues(version.statistics.likeCount)}} likes | {{shortValues(version.statistics.dislikeCount)}} dislikes | {{shortValues(version.statistics.viewCount)}} views
+            </small>
+          </div>
         </div>
       </div>
     </div>
+  </mdc-drawer>
+
+  <div>
+    <mdc-toolbar>
+      <mdc-toolbar-row style="min-height: 64px">
+          <button id="main_buttonAdd" class="main_button" (click)="persistent.open(); setOpen()">
+            <mdc-icon mdc-toolbar-menu-icon *ngIf="openDrawer">keyboard_arrow_left</mdc-icon>
+            <mdc-icon mdc-toolbar-menu-icon *ngIf="!openDrawer">keyboard_arrow_right</mdc-icon>
+            <h1>Add Video(s)</h1>
+          </button>
+          <div class="mainMenu">
+            <button (click)="switchView('Comments');" [className]="showContent == 'Comments' ? 'active menu_Comments first' : 'menu_Comments first'"><img height="24px" title="Comments" src="../../assets/menu_comment.svg"><div class="respHide">Overview & Topics</div></button>
+            <button (click)="switchView('Sentiment');" [className]="showContent == 'Sentiment' ? 'active menu_Sentiment' : 'menu_Sentiment'"><img height="24px" title="Sentiment" src="../../assets/menu_sentiment.svg"><div class="respHide">Sentiment</div></button>
+            <button (click)="switchView('Engagement');" [className]="showContent == 'Engagement' ? 'active menu_Engagement' : 'menu_Engagement'"><img height="24px" title="Engagement" src="../../assets/menu_engagement.svg"><div class="respHide">Engagement</div></button>
+            <button (click)="switchView('Language');" [className]="showContent == 'Language' ? 'active menu_Language last' : 'menu_Language last'"><img height="24px" title="Language" src="../../assets/menu_language.svg"><div class="respHide">Language</div></button>
+          </div>
+          <img class="logoSamba" src="../../assets/Samba_Logo_rgb_transparent_cut.png" alt="samba logo"/>
+      </mdc-toolbar-row>
+    </mdc-toolbar>  
+
+    <!-- Dashboard -->
+    <div class="contentmargin sambaDashboard" (click)="changeFocus()">
+      <div class="grid-container gridLeft">  
+        <mat-grid-list cols="1" rowHeight="200px">
+          <mat-grid-tile [colspan]="1" [rowspan]="2">
+            <mat-card class="dashboard-card">
+              <mat-card-content>
+                <app-hardfacts></app-hardfacts>
+              </mat-card-content>
+            </mat-card>
+          </mat-grid-tile>
+          <mat-grid-tile [colspan]="1" [rowspan]="2">
+            <mat-card class="dashboard-card">
+              <mat-card-content>
+                <app-topic class="view" id="overview_Comments"></app-topic>
+                <app-engagement-comments class="view" id="overview_Engagement"></app-engagement-comments>
+                <app-language class="view" id="overview_Language"></app-language>
+                <app-sentiment class="view" id="overview_Sentiment"></app-sentiment>
+              </mat-card-content>
+            </mat-card>
+          </mat-grid-tile>
+        </mat-grid-list>
+      </div>
+
+      <div class="grid-container gridRight">  
+        <mat-grid-list cols="1" rowHeight="200px">
+          <mat-grid-tile [colspan]="1" [rowspan]=rowTimeSize>
+            <mat-card id="timeCard" class="dashboard-card comment-section" style="overflow-y: overlay">
+              <mat-card-content class="dashboard-card-content">
+                  <button class="correctResetBtn" (click)="resetFilters()"><p>Reset Filters</p> <mat-icon>refresh</mat-icon></button>
+                  <app-mainvis id="timeView_Comments" class="view"></app-mainvis>
+                  <app-time-engagement-comments class="view" id="timeView_Engagement"></app-time-engagement-comments>
+                  <app-time-language class="view" id="timeView_Language"></app-time-language>
+                  <app-time-sentiment class="view" id="timeView_Sentiment"></app-time-sentiment>
+              </mat-card-content>
+              <ng5-slider #slider *ngIf="this.data && this.data.length > 0" [options]="this.options" [(value)]="this.minValue" [(highValue)]="this.maxValue" (valueChange)="setMinRangeValue($event)" (highValueChange)="setMaxRangeValue($event)"></ng5-slider>
+            </mat-card>
+            
+          </mat-grid-tile>
+          <mat-grid-tile [colspan]="1" [rowspan]=rowCommSize>
+            <button class="expandCommentsBtn" (click)="toggleComments()">
+              <img class="upBtn" *ngIf="rowCommSize == 1" height="24px" title="expand" src="../../assets/010-down.svg">
+              <img class="downBtn" *ngIf="rowCommSize == 3" height="24px" title="collapse" src="../../assets/010-up.svg">
+            </button>
+            <mat-card id="commentsCard" class="dashboard-card" style="overflow-y: hidden">
+              <mat-card-content>
+                <app-comment></app-comment>
+              </mat-card-content>
+            </mat-card>
+            <div *ngIf="rowCommSize == 1" id="overlayComment"></div>
+          </mat-grid-tile>
+        </mat-grid-list>
+      </div>
+
+      <div class="gridFooter">  
+        <a id="footlink" href="https://samba.fhstp.ac.at/" target="_blank" style="text-decoration: none; color:#888888; margin-top: -10px;">Smart Data for Music Business Administration (SAMBA)</a>
+      </div>
+    </div>
+  </div>
+
+</div>

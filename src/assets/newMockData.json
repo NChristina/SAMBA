@@ -1,0 +1,38 @@
+[
+	{
+	"commentID": "1",
+	"versionID": "1111",
+	"interpret": "Michael Jackson",
+	"songName": "Wonderbra",
+	"sentiment": [],
+	"commentText": "This is a cool song. I like it.",
+	"commentAuthor": "Bibi Blocksberg",
+	"replies": [],
+	"likes": "2",
+	"dateTime": "Tue Nov 10 2015 20:22:45 GMT+0100 (Central European Standard Time)"
+  },
+  {
+    "commentID": "2",
+    "versionID": "22222",
+    "interpret": "Michael Jackson",
+    "songName": "Wonderbra",
+    "sentiment": [],
+    "commentText": "Dunno about that. but enjoy the lyrics.",
+    "commentAuthor": "Karla Kolumna",
+    "replies": [],
+    "likes": "10",
+    "dateTime": "Tue Nov 10 2015 20:30:20 GMT+0100 (Central European Standard Time)"
+    },
+    {
+      "commentID": "3",
+      "versionID": "3333",
+      "interpret": "Michael Jackson",
+      "songName": "Wonderbra",
+      "sentiment": [],
+      "commentText": "LOOOOOOL this song is sooooo SICK BRO.",
+      "commentAuthor": "Madman",
+      "replies": [],
+      "likes": "5",
+      "dateTime": "Tue Nov 10 2015 20:50:20 GMT+0100 (Central European Standard Time)"
+      }
+]
