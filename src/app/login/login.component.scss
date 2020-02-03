@@ -1,3 +1,8 @@
+.footer,
+.container{
+  min-width: 800px;
+}
+
 .login-container{
   max-width: 400px;
   margin: 15px auto 0;
@@ -5,7 +10,7 @@
 
 h1{
   margin: 25px 5%;
-  color: #3f51b5;
+  color: #555;
 }
 
 .error{
@@ -38,7 +43,7 @@ h1{
 
 .logoFH img,
 .logoSamba img{
-  width: 130px;
+  height: 70px;
 }
 
 .logoFH{
@@ -54,4 +59,14 @@ h1{
 
 .container .sambavis{
   margin-top: 15px; 
+}
+
+.footer{
+  text-align: center;
+  border-top: 1px dashed #ccc;
+  margin: 5% 0px;
+}
+
+.footer p{
+  margin: 15px auto;
 }

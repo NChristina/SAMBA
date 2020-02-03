@@ -1,6 +1,8 @@
 @import '~bootstrap/dist/css/bootstrap.css';
 
-
+.sambaDashboard{
+  min-width: 800px;
+}
 
 .contentmargin {
   width: 100vw;
@@ -311,6 +313,11 @@
   width: 130px;
   position: absolute;
   right: 30px;
+  filter: grayscale(100%);
+}
+
+.logoSamba:hover{
+  filter: grayscale(0%);
 }
 
 /* ---------------------------------------------------------------- */
