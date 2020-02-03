@@ -41,7 +41,7 @@
             <img height="20px" title="Open '{{video.songFull}}' on YouTube" src="https://img.youtube.com/vi/{{video.video_key}}/default.jpg" />
           </a>
         </td>
-        <td class="center"><mat-icon (click)="removeVideo(video.songFull,video.artist,video.video_key,video.group);" style="font-size:18px;height:13px;color:#999;cursor:pointer">cancel</mat-icon></td>
+        <td class="center"><mat-icon title="Remove Video" (click)="removeVideo(video.songFull,video.artist,video.video_key,video.group);" style="font-size:18px;height:13px;color:#999;cursor:pointer">cancel</mat-icon></td>
       </tr>
     </ng-container>
   </table>
