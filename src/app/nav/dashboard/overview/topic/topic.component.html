@@ -11,6 +11,7 @@
     </div>
     <button (click)="switchView('compButton');" class="topicComp compButton" style="float:right"><img height="24px" title="Comparison View" src="../../assets/000-list.svg"> </button>
     <button (click)="switchView('aggrButton');" class="topicAggr aggrButton active" style="float:right"><img height="24px" title="Aggregated View" src="../../assets/000-bubblechart.svg"> </button>
+    <span class="filterWarning" *ngIf="appliedFilter"><mat-icon class="timeFilterIcon" title="Applied Time Filter">date_range</mat-icon> filtered by time</span>
 
     <h2 class="cardTitleBox">Main Topics</h2>
     <img class="cardTitleIcon" height="24px" title="Topic" src="../../assets/notes.svg">     

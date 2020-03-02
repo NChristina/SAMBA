@@ -38,10 +38,10 @@ export class SearchService {
     }
   }
 
-  songTopicsFromDb(value: string[]): Promise<any> {
+  songTopicsFromDb(value: string[], startDate: any, endDate: any): Promise<any> {
     if (value === undefined) {
     } else {
-      return this.dataService.songTopics(value);
+      return this.dataService.songTopics(value, startDate, endDate);
     }
   }
 

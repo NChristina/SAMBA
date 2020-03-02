@@ -20,15 +20,22 @@ export class TopicComponent implements OnInit {
   data: any;
   totalComments = 0;
   isLoading = false;
-
+  gettingFilterData = false;
+  appliedFilter = false;
 
   constructor(private chartService: ChartService, private _element: ElementRef) { }
 
   ngOnInit() {
-
     this.chartService.GetData().subscribe((data) => {
       this.data = data;
-      if (this.data && this.data.length > 0 && this.chartService.GetTopicsRequested()) {
+      if (this.data && this.data.length > 0) {
+        this.isLoading = true;
+        this.appliedFilter = false;
+      }
+    });
+
+    this.chartService.GetTopicsRequested().subscribe((value) => {
+      if (value === true) {
         this.isLoading = true;
       }
     });
@@ -42,11 +49,26 @@ export class TopicComponent implements OnInit {
       if (this.listSongs) {
         this.createLists();
         this.isLoading = false;
+        if (this.gettingFilterData) {
+          this.gettingFilterData = false;
+          this.appliedFilter = true;
+        }
       }
     });
 
     this.chartService.getCrossfilter().subscribe((filter) => {
       this.cfilter = filter;
+      this.appliedFilter = false;
+      this.gettingFilterData = false;
+    });
+
+    // gets the range through the chart service from the mainVis Component
+    this.chartService.getChartRange().subscribe((range) => {
+      if (this.data && range.range) {
+        this.gettingFilterData = true;
+      } else {
+        this.gettingFilterData = false;
+      }
     });
 
     this.setVisibilityofViews();
@@ -63,9 +85,10 @@ export class TopicComponent implements OnInit {
     this.listSongs.forEach((song) => {
       const div = document.createElement('div');
       const b = document.createElement('b');
-      let title = document.createTextNode(song);
-      if (song.length > 20) {
-        title = document.createTextNode(song.substring(0, 15) + '...');
+      const textTitle = song.split('_SAMBASONGID_')[0];
+      let title = document.createTextNode(textTitle);
+      if (textTitle.length > 20) {
+        title = document.createTextNode(textTitle.substring(0, 15) + '...');
       }
 
       b.appendChild(title);
