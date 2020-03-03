@@ -79,8 +79,8 @@
           <mat-grid-tile [colspan]="1" [rowspan]="2">
             <mat-card class="dashboard-card">
               <mat-card-content>
-                <button *ngIf="filterTopic" (click)="filterTopicTime()" title="Filter Topics" class="filterTopicBtn">APPLY TIME FILTER</button>
-                <div *ngIf="filterTopic" class="filterTopicsBox"></div>
+                <button *ngIf="filterTopic && showContent == 'Comments'" (click)="filterTopicTime()" title="Filter Topics" class="filterTopicBtn">APPLY TIME FILTER</button>
+                <div *ngIf="filterTopic && showContent == 'Comments'" class="filterTopicsBox"></div>
                 <app-topic class="view" id="overview_Comments"></app-topic>
                 <app-engagement-comments class="view" id="overview_Engagement"></app-engagement-comments>
                 <app-language class="view" id="overview_Language"></app-language>
