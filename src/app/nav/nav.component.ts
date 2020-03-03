@@ -30,7 +30,11 @@ export class NavComponent implements OnInit {
   protected options: Options;
   chartRange1;
   chartRange2;
+  oldChartRange1;
+  oldChartRange2;
+  oldTopicRes: any;
   data: any[];
+  filterTopic = false;
 
   constructor(private searcher: SearchService, private chartService: ChartService,
     private snackbar: MdcSnackbar, private dataService: DataService, private ngZone: NgZone) {
@@ -57,9 +61,26 @@ export class NavComponent implements OnInit {
   }
 
   requestTopics() {
-    this.searcher.songTopicsFromDb(this.idsForChild).then((topicRes) => {
+    this.filterTopic = false;
+    this.oldChartRange1 = this.chartRange1;
+    this.oldChartRange2 = this.chartRange2;
+
+    this.searcher.songTopicsFromDb(this.idsForChild, this.chartRange1, this.chartRange2).then((topicRes) => {
+      this.oldTopicRes = topicRes.body;
       this.chartService.SetDataTopics(topicRes.body);
     });
+  }
+
+  filterTopicTime() {
+    this.filterTopic = false;
+    this.chartService.SetTopicsRequested(true);
+    this.searcher.songTopicsFromDb(this.idsForChild, this.chartRange1, this.chartRange2).then((topicRes) => {
+      this.chartService.SetDataTopics(topicRes.body);
+    });
+  }
+
+  restoreTopicBackup() {
+    this.chartService.SetDataTopics(this.oldTopicRes);
   }
 
   // Search Accordion /////////////////////////////////////////////////////////////////////////////////////////////////
@@ -325,16 +346,20 @@ export class NavComponent implements OnInit {
     const date = new Date(value);
     this.chartRange1 = date;
     this.chartService.setChartRange({range: [this.chartRange1, this.chartRange2], chart: null});
+    if (this.oldChartRange1 !== this.chartRange1) { this.filterTopic = true; }
   }
 
   setMaxRangeValue(value) {
     const date = new Date(value);
     this.chartRange2 = date;
+    if (this.oldChartRange2 !== this.chartRange2) { this.filterTopic = true; }
   }
 
   resetFilters() {
     if (this.idsForChild && this.idsForChild.length > 0) {
       this.chartService.reloadForResetFilters();
+      this.restoreTopicBackup();
+      this.filterTopic = false;
     }
   }
 

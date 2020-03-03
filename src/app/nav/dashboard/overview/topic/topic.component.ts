@@ -20,15 +20,24 @@ export class TopicComponent implements OnInit {
   data: any;
   totalComments = 0;
   isLoading = false;
-
+  gettingFilterData = false;
+  appliedFilter = false;
 
   constructor(private chartService: ChartService, private _element: ElementRef) { }
 
   ngOnInit() {
-
     this.chartService.GetData().subscribe((data) => {
       this.data = data;
-      if (this.data && this.data.length > 0 && this.chartService.GetTopicsRequested()) {
+      if (this.data && this.data.length > 0) {
+        this.isLoading = true;
+        this.appliedFilter = false;
+      } else if (this.data && this.data.length < 1) {
+        this.eraseLists();
+      }
+    });
+
+    this.chartService.GetTopicsRequested().subscribe((value) => {
+      if (value === true) {
         this.isLoading = true;
       }
     });
@@ -42,11 +51,26 @@ export class TopicComponent implements OnInit {
       if (this.listSongs) {
         this.createLists();
         this.isLoading = false;
+        if (this.gettingFilterData) {
+          this.gettingFilterData = false;
+          this.appliedFilter = true;
+        }
       }
     });
 
     this.chartService.getCrossfilter().subscribe((filter) => {
       this.cfilter = filter;
+      this.appliedFilter = false;
+      this.gettingFilterData = false;
+    });
+
+    // gets the range through the chart service from the mainVis Component
+    this.chartService.getChartRange().subscribe((range) => {
+      if (this.data && range.range) {
+        this.gettingFilterData = true;
+      } else {
+        this.gettingFilterData = false;
+      }
     });
 
     this.setVisibilityofViews();
@@ -54,18 +78,19 @@ export class TopicComponent implements OnInit {
 
   // Topics by song
   createLists() {
-    // Clean div to append new list
-    const list = document.getElementById('topicList');
-    while (list.hasChildNodes()) { list.removeChild(list.firstChild); }
+    this.eraseLists();
     const size = 95 / this.listSongs.length;
 
     // Look in the most frequent words, five topics by artist
     this.listSongs.forEach((song) => {
       const div = document.createElement('div');
       const b = document.createElement('b');
-      let title = document.createTextNode(song);
-      if (song.length > 20) {
-        title = document.createTextNode(song.substring(0, 15) + '...');
+      let textTitle = song;
+      if (song.split('-')[1]) { textTitle = song.split('-')[1]; }
+
+      let title = document.createTextNode(textTitle);
+      if (textTitle.length > 20) {
+        title = document.createTextNode(textTitle.substring(0, 17) + '...');
       }
 
       b.appendChild(title);
@@ -80,11 +105,12 @@ export class TopicComponent implements OnInit {
       while (i < 10 && j < this.wordCounted.length) {
         if (this.wordCounted[j].songs.indexOf(song) !== -1) {
           const p = document.createElement('p');
-          const topic = document.createTextNode((i + 1) + '° - ' + this.wordCounted[j].text);
+          const topic = document.createTextNode((i + 1) + '° ' + this.wordCounted[j].text);
           p.appendChild(topic);
           const sentcolor = this.getColor(this.wordCounted[j].sentiment / this.wordCounted[j].count);
           p.style.color = sentcolor;
           p.style.marginBottom = '-10px';
+          if (this.listSongs.length > 3) { p.style.fontSize = '12px'; }
           div.appendChild(p);
           i++;
         }
@@ -94,6 +120,12 @@ export class TopicComponent implements OnInit {
       // Add the lists to the comparison view
       document.getElementById('topicList').appendChild(div);
     });
+  }
+
+  eraseLists() {
+    // Clean div to append new list
+    const list = document.getElementById('topicList');
+    while (list.hasChildNodes()) { list.removeChild(list.firstChild); }
   }
 
   reDraw() {

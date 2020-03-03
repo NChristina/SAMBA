@@ -90,5 +90,18 @@ p.footerTopics{
 .colorRect.neg {
   background: #ff7f00;
 }
+
+.filterWarning{
+  width: 8.5em;
+  float: right;
+  margin: -1px 15px 0px 0px;
+  padding: 5px;
+  color: #FF6700;
+  font-style: italic;
+}
+
+.filterWarning mat-icon{
+  margin: -4px;
+}
   
 

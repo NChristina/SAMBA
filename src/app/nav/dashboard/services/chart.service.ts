@@ -27,7 +27,9 @@ export class ChartService {
   private spinner = false;
   private dataForReset: any;
   private videoIds = [];
-  private topicsRequested = false;
+
+  private topicsRequested = new BehaviorSubject([]);
+  private currentTopicsRequested = this.topicsRequested.asObservable();
 
   constructor() {
     this.GetData().subscribe((data) => {
@@ -45,7 +47,7 @@ export class ChartService {
 
   public setSpinner(value) {
     if (value) {
-      this.SetTopicsRequested();
+      this.SetTopicsRequested(value);
     }
     this.spinner = value;
   }
@@ -92,23 +94,18 @@ export class ChartService {
 
   SetDataTopics(topicData: any) {
     this.chartTopicsSource.next(topicData);
-    this.ResetTopicsRequested();
   }
 
   GetDataTopics(): Observable<any> {
     return this.currentChartTopics;
   }
 
-  GetTopicsRequested() {
+  GetTopicsRequested(): Observable<any> {
     return this.topicsRequested;
   }
 
-  SetTopicsRequested() {
-    this.topicsRequested = true;
-  }
-
-  ResetTopicsRequested() {
-    this.topicsRequested = false;
+  public SetTopicsRequested(value: any) {
+    this.topicsRequested.next(value);
   }
 
   reloadForResetFilters() {

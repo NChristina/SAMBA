@@ -49,7 +49,19 @@ export class DataService {
     // return this.httpClient.get('https://jukebox.fhstp.ac.at/quickSearch' + search);
   }
 
-  songTopics(value: string[]): Promise<any> {
+  /*songTopics(value: string[]): Promise<any> {
+    return this.requestService.get('songTopics/' + JSON.stringify(value));
+  }*/
+
+  songTopics(ids: String[], startDate: any, endDate: any): Promise<any> {
+    if (!startDate) { startDate = '2000-01-29T15:48:52.000Z'; }
+    if (!endDate) { endDate = '3000-12-29T15:48:52.000Z'; }
+
+    const value = {
+      'idArray': ids,
+      'startDate': startDate ,
+      'endDate': endDate};
+
     return this.requestService.get('songTopics/' + JSON.stringify(value));
   }
 
