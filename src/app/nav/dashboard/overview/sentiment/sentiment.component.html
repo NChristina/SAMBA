@@ -1,9 +1,9 @@
 <div class="grid-container">
 <mat-grid-list cols="1" rowHeight="40px">
     <div class="wrapper" (mouseover)="setTooltipInfo($event, tooltipinfo);" style="float:right" class="tooltInfo"> 
-        <img height="24px" style="float:right" src="../../assets/000-info.svg"> 
+        <img aria-label="info" height="24px" style="float:right" src="../../assets/000-info.svg"> 
         <span #tooltipinfo class="tooltInfo_text">
-            <p><img height="15px" src="../../assets/000-barchart.svg"> The chart shows the percentage of each sentiment extracted from the comments. Each bar represents one video or group of videos.</p> 
+            <p><img alt="" height="15px" src="../../assets/000-barchart.svg"> The chart shows the percentage of each sentiment extracted from the comments. Each bar represents one video or group of videos.</p> 
             <p>Sentiment scores are calculated with three sentiment analysis tools 
                 (<a class="tooltipLink" href="https://github.com/fnielsen/afinn">AFINN</a>, <a class="tooltipLink" href="http://www.nltk.org/">NLTK</a>, 
                 and <a class="tooltipLink" href="https://github.com/sloria/TextBlob/blob/dev/textblob/_text.py">TextBlob</a>). Each tool returns a polarity 
@@ -35,7 +35,7 @@
     <div *ngIf="this.data && this.data.length" class="wrapper sentiment" (mouseover)="setTooltipInfo($event, tooltipinfo);" class="tooltInfo"> 
         <p  class="footerSentiments"> *N/A: Non-Assessed </p>
         <span #tooltipinfo class="tooltInfo_text">
-            <p><img height="13px" src="../../assets/000-info.svg"> Only comments written in English are assessed for sentiment.</p>
+            <p><img aria-label="info" height="13px" src="../../assets/000-info.svg"> Only comments written in English are assessed for sentiment.</p>
         </span>
     </div>
 </div>

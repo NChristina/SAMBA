@@ -2,10 +2,10 @@
 <div class="grid-container">
   <mat-grid-list cols="1" rowHeight="40px">
     <div class="wrapper" (mouseover)="setTooltipInfo($event, tooltipinfo);" style="float:right" class="tooltInfo"> 
-        <img height="24px" style="float:right" src="../../assets/000-info.svg"> 
+        <img aria-label="info" height="24px" style="float:right" src="../../assets/000-info.svg"> 
         <span #tooltipinfo class="tooltInfo_text">
-            <p><img height="15px" src="../../assets/000-bubblechart.svg"> The word cloud shows the most used words in the comments of the selected videos.</p>
-            <p><img height="15px" src="../../assets/000-list.svg"> For the comparison view, you see a list of the ten most used words in the comments for each video/group of videos.</p> 
+            <p><img alt="" height="15px" src="../../assets/000-bubblechart.svg"> The word cloud shows the most used words in the comments of the selected videos.</p>
+            <p><img alt="" height="15px" src="../../assets/000-list.svg"> For the comparison view, you see a list of the ten most used words in the comments for each video/group of videos.</p> 
             <p>The color of each word shows the mean sentiment of comments containing this word (positive, neutral, or negative).</p>
         </span>
     </div>
@@ -45,7 +45,7 @@
   <div *ngIf="dataCloud" class="wrapper dataCloud" (mouseover)="setTooltipInfo($event, tooltipinfo);" class="tooltInfo"> 
     <p  class="footerTopics"> *Most frequent words on {{totalComments}}% of comments </p>
     <span #tooltipinfo class="tooltInfo_text">
-        <p><img height="13px" src="../../assets/000-info.svg"> Only comments written in German and English are processed.</p>
+        <p><img aria-label="info" height="13px" src="../../assets/000-info.svg"> Only comments written in German and English are processed.</p>
     </span>
   </div>
 </div>

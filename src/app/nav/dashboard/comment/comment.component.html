@@ -18,20 +18,20 @@
       </form>
       
       <div class="wrapper" (mouseover)="setTooltipInfo($event, tooltipinfo);" style="float:right;margin:15px 0 0 15px;" class="tooltInfo">
-          <img height="30px" style="float:right" src="../../assets/000-info.svg">
+          <img aria-label="info" height="30px" style="float:right" src="../../assets/000-info.svg">
           <span #tooltipinfo class="tooltInfo_text">
             <p>Based on your selected videos and the time span you selected, you see the comments. You can order the comments by replies, likes and date - ascending or descending. You can also chose the ammount of comments to be rendered.</p>
             <p>On top of each comment there is the user who wrote it and the date. At the bottom you also see the number of likes, number of replies and the information about the sentiment. You can click on the replies icon to open all replies to a specific comment. The sentiment shows if the comment is positive, neutral, negative or mixed when the same comment is rated as both positive and negative. In general, the sentiment is assessed only for English comments.</p>
-            <p><img height="15px" src="../../assets/010-warning.svg">  The more comments you fetch, the longer it will take to load them.</p>
+            <p><img aria-label="attention" height="15px" src="../../assets/010-warning.svg">  The more comments you fetch, the longer it will take to load them.</p>
           </span>
       </div>
       <button (click)="runFetchComments()" title="Get Comments" class="correctResetBtn" style="float:right;" [disabled]="ids && ids.length === 0"><span *ngIf="!isLoading">APPLY FILTERS</span></button>
-      <mdc-select #select placeholder="replies desc" ngModel #demoSelectModel="ngModel" name="filter" style="float:right;" (selectionChange)="onSelectionChange($event)">
+      <mdc-select aria-labelledby="filterSelectLabel" #select placeholder="replies desc" ngModel #demoSelectModel="ngModel" name="filter" style="float:right;" (selectionChange)="onSelectionChange($event)">
         <option *ngFor="let fi of filter" [value]="fi.value"> {{ fi.value }} </option>
       </mdc-select>
     </div>
       
-    <h3 class="cardTitle">Filters:</h3>
+    <h3 id="filterSelectLabel" class="cardTitle">Filters:</h3>
   </div>
   <hr />
 
@@ -40,7 +40,7 @@
         <div class="post-heading">
             <div class="comment-author">
               <a href="{{'https://www.youtube.com/watch?v=' + comment.versionID + '&lc=' + comment.commentID}}" class="dateTime" target="_blank">
-              <img src="../../../../assets/user.svg" class="userIcon">
+              <img alt="" src="../../../../assets/user.svg" class="userIcon">
               {{comment.commentAuthor}} |
               {{dateTimeParser(comment.dateTime)}} </a>
               <a href="{{'https://www.youtube.com/watch?v=' + comment.versionID}}" class="songInterpret" target="_blank">
@@ -50,24 +50,24 @@
           </div>
           <p class="comment-text">{{comment.commentText}}</p>
           <div class="bottom-comment" style="float: left; margin-left: 15px">{{comment.likes}}
-            <img src="../../../../assets/002-like.svg" height="13px" class="iconStyle" style="margin: 0px 5px"> |
+            <img alt="likes" src="../../../../assets/002-like.svg" height="13px" class="iconStyle" style="margin: 0px 5px"> |
           
             <a *ngIf="comment" style="text-decoration: none; cursor: pointer;" (click)="displayReplyDetails(comment.commentID)" class="accordion" id="{{'replyCount_' + comment.commentID }}">
                 {{comment.replies.length}}
-              <img src="../../../../assets/001-reply.svg" height="13px" class="iconStyle" style="margin: 0px 5px">
-              <img *ngIf="displayReplies != comment.commentID" src="../../../../assets/010-down.svg" height="13px" id="{{'iDown_' + comment.commentID}}" style="display:inline;margin: 0px 3px">
-              <img *ngIf="displayReplies == comment.commentID" src="../../../../assets/010-up.svg" height="13px" id="{{'iUp_' + comment.commentID}}" style="display:inline;margin: 0px 3px">
+              <img alt="replies" src="../../../../assets/001-reply.svg" height="13px" class="iconStyle" style="margin: 0px 5px">
+              <img aria-label="expand replies" *ngIf="displayReplies != comment.commentID" src="../../../../assets/010-down.svg" height="13px" id="{{'iDown_' + comment.commentID}}" style="display:inline;margin: 0px 3px">
+              <img aria-label="collapse replies" *ngIf="displayReplies == comment.commentID" src="../../../../assets/010-up.svg" height="13px" id="{{'iUp_' + comment.commentID}}" style="display:inline;margin: 0px 3px">
             </a> |
             <a style="text-decoration: none; cursor: pointer;" (click)="displaySentimentDetails(comment.commentID)" class="sentBttn" id="{{'sentBttn_' + comment.commentID }}">
                 <div class="sentimentText color_{{this.getSentiment(comment.sentiment, 'mean').color }}">
                   {{this.getSentiment(comment.sentiment, 'mean').sent }} 
                 </div>
-                <img src="../../../../assets/{{this.getSentiment(comment.sentiment, 'mean').icon }}" height="13px" class="iconStyle" style="margin: 0px 5px">
+                <img alt="" src="../../../../assets/{{this.getSentiment(comment.sentiment, 'mean').icon }}" height="13px" class="iconStyle" style="margin: 0px 5px">
             </a>
             <div *ngIf="displaySent == comment.commentID" (mouseover)="setTooltipInfoSent($event, tooltipinfo);" class="pSt tooltInfo" id="{{'pSt_' + comment.commentID }}" style="display:inline; background:#aaa; color:#fff; font-size:0.8em; padding:1px 5px;">
               NLTK: {{this.getSentiment(comment.sentiment, 'nltk').sent}} | TextBlob: {{this.getSentiment(comment.sentiment, 'blob').sent}} | AFINN: {{this.getSentiment(comment.sentiment, 'afinn').sent}} &nbsp;&nbsp;
               <span #tooltipinfo class="tooltInfo_text">
-                <p><img height="13px" src="../../assets/000-info.svg"> Sentiment scores are calculated with three sentiment analysis tools (AFINN, NLTK, and TextBlob). Non-English comments are not assessed by the tools.</p>
+                <p><img aria-label="info" height="13px" src="../../assets/000-info.svg"> Sentiment scores are calculated with three sentiment analysis tools (AFINN, NLTK, and TextBlob). Non-English comments are not assessed by the tools.</p>
               </span>
             </div>
           </div>
