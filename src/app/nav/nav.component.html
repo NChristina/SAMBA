@@ -61,7 +61,7 @@
             <button (click)="switchView('Engagement');" [className]="showContent == 'Engagement' ? 'active menu_Engagement' : 'menu_Engagement'"><img height="24px" title="Engagement" src="../../assets/menu_engagement.svg"><div class="respHide">Engagement</div></button>
             <button (click)="switchView('Language');" [className]="showContent == 'Language' ? 'active menu_Language last' : 'menu_Language last'"><img height="24px" title="Language" src="../../assets/menu_language.svg"><div class="respHide">Language</div></button>
           </div>
-          <img class="logoSamba" src="../../assets/Samba_Logo_rgb_transparent_cut.png" alt="SAMBA Vis"/>
+          <img (click)="openDialog()" class="logoSamba" src="../../assets/Samba_Logo_rgb_transparent_cut.png" alt="SAMBA Vis"/>
       </mdc-toolbar-row>
     </mdc-toolbar>  
 

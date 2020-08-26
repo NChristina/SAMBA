@@ -13,6 +13,7 @@ import { AppRoutingModule } from './/app-routing.module';
 import { NavComponent } from './nav/nav.component';
 import { MatGridListModule,
         MatCardModule,
+        MatDialogModule,
         MatMenuModule,
         MatIconModule,
         MatButtonModule,
@@ -59,6 +60,7 @@ import { MainvisComponent } from './nav/dashboard/time-view/mainvis/mainvis.comp
 import { TimeEngagementCommentsComponent } from './nav/dashboard/time-view/time-engagement-comments/time-engagement-comments.component';
 import { TimeLanguageComponent } from './nav/dashboard/time-view/time-language/time-language.component';
 import { TimeSentimentComponent } from './nav/dashboard/time-view/time-sentiment/time-sentiment.component';
+import { HelpComponent } from './help/help.component';
 
 @NgModule({
   declarations: [
@@ -77,6 +79,7 @@ import { TimeSentimentComponent } from './nav/dashboard/time-view/time-sentiment
     TimeSentimentComponent,
     TimeLanguageComponent,
     TimeEngagementCommentsComponent,
+    HelpComponent,
   ],
   imports: [
     AppRoutingModule,
@@ -86,6 +89,7 @@ import { TimeSentimentComponent } from './nav/dashboard/time-view/time-sentiment
     ReactiveFormsModule,
     MatGridListModule,
     MatCardModule,
+    MatDialogModule,
     MatMenuModule,
     MatIconModule,
     MatButtonModule,
@@ -118,6 +122,9 @@ import { TimeSentimentComponent } from './nav/dashboard/time-view/time-sentiment
     MatFormFieldModule
   ],
   providers: [SearchService, DataService, ChartService, AuthGuardService],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  entryComponents: [
+    HelpComponent
+  ]
 })
 export class AppModule { }
