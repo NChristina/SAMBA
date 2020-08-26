@@ -23,7 +23,7 @@
         <div (click)="toggleAccordion(ix, $event)" class="expandAccordion d-flex w-100 justify-content-between">
           <small *ngIf="match.versions.length > 1">{{ match.versions.length }} Videos matching</small>
           <small *ngIf="match.versions.length === 1">{{ match.versions.length }} Video matching</small>
-          <img id="{{'img_' + ix}}" height ="10px" src="../../assets/chevron_down.svg">
+          <button aria-label="expand video group" class="expandAccordionBtn"><img id="{{'img_' + ix}}" height ="10px" src="../../assets/chevron_down.svg"></button>
         </div>
         <div class="panel list-group "  id="{{'panel_' + ix}}">
           <div class="list-group-item flex-column align-items-start" *ngFor="let version of match.versions, let iy = index">
