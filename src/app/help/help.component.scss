@@ -2,13 +2,19 @@ p, li{
     font-weight: 100;
 }
 
-h2 {
+h2, h3 {
     color: #444;
 }
 
-.btnCancel{
-    margin: 0px;
+.btnCancel {
     float: right;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+}
+
+.btnCancel img{
+    margin: 0px;
     cursor: pointer;
     height: 35px;
 }
@@ -89,7 +95,7 @@ h2 {
 }
 
 .logoSamba{
-  width: 130px;
+  width: 200px;
 }
 
 .backtomenu{
@@ -104,4 +110,8 @@ h2 {
     cursor: pointer;
     outline: none;
     padding: 10px;
+}
+
+button:focus {
+  outline: #333 dotted 1px;
 }

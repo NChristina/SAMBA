@@ -314,12 +314,32 @@
   color: #000;
 }
 
+.close_icon {
+  float: right;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+.close_icon img{
+  margin: 0px;
+  cursor: pointer;
+  height: 24px;
+}
+
+#helpButton {
+  position: absolute;
+  right: 180px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+}
+
 .logoSamba{
   width: 130px;
   position: absolute;
-  right: 30px;
+  right: 35px;
   filter: grayscale(100%);
-  cursor: pointer;
 }
 
 .logoSamba:hover{

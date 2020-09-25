@@ -1,4 +1,4 @@
-<img class="btnCancel" (click)="cancelDialog()" src="../../assets/close.svg" aria-label="close" />
+<button class="btnCancel" (click)="cancelDialog()"><img src="../../assets/close.svg" aria-label="close" /></button>
 <h1 matDialogTitle><img (click)="show('showMenu')" class="logoSamba" src="../../assets/Samba_Logo_rgb_transparent_cut.png" aria-label="SAMBA Vis"/></h1>
 
 <div mat-dialog-content>
@@ -15,6 +15,8 @@
 
     <p>SAMBAVis is an open-source visual analytics tool focused on time-oriented and user-generated content. The online tool is powered by user comments from YouTube music videos. From these comments, we produce extra data analytics, such as sentiment analysis and keyword extraction. SAMBAVis will allow you to assess the main key performance indexes of music videos, their life cycle, the how users engage with these videos and their comments.</p>
     <img alt="SAMBA Vis" class="helpImg" src="../../assets/help/teaser.png" title="SAMBAVis is powered by user comments from YouTube music videos and data analytics." />
+
+    <h3>The SAMBA Project</h3>
     <p>SAMBAVis was developed as part of the research project <a href="https://research.fhstp.ac.at/projekte/samba-smart-data-for-music-business-administration">SAMBA (smart data for music business administration)</a> from the University of Applied Sciences St. Pölten (St. Pölten UAS). The goal of SAMBA is to explore the economic value of social media data for the music industry. The Austrian Research Promotion Agency (FFG) funds the SAMBA project within the funding line COIN Aufbau (capacity building). </p>
   </div>
 
@@ -23,17 +25,25 @@
 
     <p>SAMBAVis is organized in cards. Each card contains its own set of controls and an info tooltip. After adding a video or group of videos to the dashboard, you can navigate through different analytics by using the menu on the top of the page.</p>
     <img alt="SAMBA Vis" class="helpImg" src="../../assets/help/cardmenu.png" title="Cards group different analytics, which are available through the main menu."/>
-    <hr/>
-    <p>Each page has four main cards:</p>
-    <p>1.	The first card on the top-left side of the page shows the selected videos and their main key performance indexes (e.g. views, comments, likes, and dislikes). You can remove videos from the dashboard by clicking the corresponding close button in the list of videos.</p>
+    <p>Each page has four main cards: Selected Videos, Time View, Overview, and Comments.</p>
+
+    <h3>Selected Videos</h3>
+    <p>The first card on the top-left side of the page shows the selected videos and their main key performance indexes (e.g. views, comments, likes, and dislikes). You can remove videos from the dashboard by clicking the corresponding close button in the list of videos.</p>
     <img alt="SAMBA Vis" class="helpImg" src="../../assets/help/hardfacts.png" title="Selected videos card and its KPIs." />
-    <p>2. The second card on the top-right side is larger and displays the number of comments from the selected videos over time. When selecting other analytics in the main menu, the content of this card changes to display the corresponding analytics over time.</p>
+
+    <h3>Time View</h3>
+    <p>The second card on the top-right side is larger and displays the number of comments from the selected videos over time. When selecting other analytics in the main menu, the content of this card changes to display the corresponding analytics over time.</p>
     <img alt="SAMBA Vis" class="helpImg" src="../../assets/help/time.png" title="Time view cards." />
-    <p>3.	The third card on the bottom-left side displays an overview of the main analytics. It can be the main keywords (topics) from the comments, or the main sentiment or language for each video. When hovering the bar charts, a tooltip shows the main results for each video.</p>
+
+    <h3>Overview</h3>
+    <p>The third card on the bottom-left side displays an overview of the main analytics. It can be the main keywords (topics) from the comments, or the main sentiment or language for each video. When hovering the bar charts, a tooltip shows the main results for each video.</p>
     <img alt="SAMBA Vis" class="helpImg" src="../../assets/help/overview.png" title="Overview cards." />
-    <p>4.	The fourth card on the bottom-right side of the screen shows the comments. You can expand the card to navigate through the comments. You can request a different number of comments, filter, see replies, and go to the corresponding comment on the YouTube page.</p>
+
+    <h3>Comments</h3>
+    <p>The fourth card on the bottom-right side of the screen shows the comments. You can expand the card to navigate through the comments. You can request a different number of comments, filter, see replies, and go to the corresponding comment on the YouTube page.</p>
     <img alt="SAMBA Vis" class="helpImg" src="../../assets/help/comments.png" title="Comments card. It is collapsible to present the comments on demand." />
-    <hr/>
+    
+    <h3>Time Filter</h3>
     <p>Filters connect the visualizations on different cards. Thus, you can use the slider on the time visualizations to filter comments and overviews by time. To remove the filters, you can use the button “reset filters” in the time visualization card.</p>
     <img alt="SAMBA Vis" class="helpImg" src="../../assets/help/timefilter.png" title="Time filter. By moving the slider under the time view, it applies the filter to every other card." />
   </div>
@@ -62,6 +72,6 @@
 
 <mat-dialog-actions align="end">
   <div *ngIf="!showMenu">  
-    <button id="backtomenu" class="backtomenu" (click)="show('showMenu')">Back to Menu</button>
+    <button id="backtomenu" class="backtomenu" (click)="show('showMenu')">Back to Help Menu</button>
   </div>
 </mat-dialog-actions>
