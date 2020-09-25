@@ -2,6 +2,8 @@ import { Component, ViewChild , OnInit, ElementRef } from '@angular/core';
 import { CloudData, CloudOptions, TagCloudComponent } from 'angular-tag-cloud-module';
 import { ChartService } from '../../services/chart.service';
 import * as sw from 'stopword';
+import * as d3 from 'd3';
+import * as dc from 'dc';
 
 @Component({
   selector: 'app-topic',
@@ -17,6 +19,7 @@ export class TopicComponent implements OnInit {
   cfilter: CrossFilter.CrossFilter<{}>;
   listSongs = [];
   wordCounted = [];
+  protected songs = [];
   data: any;
   totalComments = 0;
   isLoading = false;
@@ -31,6 +34,7 @@ export class TopicComponent implements OnInit {
       if (this.data && this.data.length > 0) {
         this.isLoading = true;
         this.appliedFilter = false;
+        this.songs = d3.nest().key((d: any) => d.song_key).key((d: any) => d.song).entries(this.data);
       } else if (this.data && this.data.length < 1) {
         this.eraseLists();
       }
@@ -79,50 +83,48 @@ export class TopicComponent implements OnInit {
   // Topics by song
   createLists() {
     this.eraseLists();
-    const size = 95 / this.listSongs.length;
+    const size = 95 / this.songs.length;
 
     // Look in the most frequent words, ten topics by artist
-    this.listSongs.forEach((song) => {
-      const div = document.createElement('div');
-      const b = document.createElement('b');
-      let textTitle = song;
-      if (song.split('-')[1]) { textTitle = song.split('-')[1]; }
+    this.listSongs.forEach((song, index) => {
+      // cutting the list to display only the first item
+      if (index < this.songs.length) {
+        const div = document.createElement('div');
+        const b = document.createElement('b');
+        let textTitle = song;
+        if (song.split(' - ')[1]) { textTitle = song.split(' - ')[1]; }
 
-      let title = document.createTextNode(textTitle);
-      if (textTitle.length > 20) {
-        title = document.createTextNode(textTitle.substring(0, 17) + '...');
-      }
-
-      b.appendChild(title);
-      div.appendChild(b);
-      div.style.cssFloat = 'left';
-      div.style.width = size + '%';
-      div.style.wordWrap = 'break-word';
-      div.style.textAlign = 'center';
-
-      let i = 0;
-      let j = 0;
-      while (i < 10 && j < this.wordCounted.length) {
-        if (this.wordCounted[j].songs.indexOf(song) !== -1) {
-          const p = document.createElement('p');
-          const topic = document.createTextNode((i + 1) + '° ' + this.wordCounted[j].text);
-          p.appendChild(topic);
-          const sentcolor = this.getColor(this.wordCounted[j].sentiment / this.wordCounted[j].count);
-          p.style.color = sentcolor;
-          p.style.marginBottom = '-10px';
-          if (this.listSongs.length > 3) { p.style.fontSize = '12px'; }
-          div.appendChild(p);
-          i++;
+        let title = document.createTextNode(textTitle);
+        if (textTitle.length > 20) {
+          title = document.createTextNode(textTitle.substring(0, 17) + '...');
         }
-        j++;
+
+        b.appendChild(title);
+        div.appendChild(b);
+        div.style.cssFloat = 'left';
+        div.style.width = size + '%';
+        div.style.wordWrap = 'break-word';
+        div.style.textAlign = 'center';
+
+        let i = 0;
+        let j = 0;
+        while (i < 10 && j < this.wordCounted.length) {
+          if (this.wordCounted[j].songs.indexOf(song) !== -1) {
+            const p = document.createElement('p');
+            const topic = document.createTextNode((i + 1) + '° ' + this.wordCounted[j].text);
+            p.appendChild(topic);
+            const sentcolor = this.getColor(this.wordCounted[j].sentiment / this.wordCounted[j].count);
+            p.style.color = sentcolor;
+            p.style.marginBottom = '-10px';
+            if (this.listSongs.length > 3) { p.style.fontSize = '12px'; }
+            div.appendChild(p);
+            i++;
+          }
+          j++;
+        }
+
+        document.getElementById('topicList').appendChild(div);
       }
-
-      // VAJO: check here which songs are part of a group
-      // display the offcial video
-      // and expand group in a modal (?)
-
-      // Add the lists to the comparison view
-      document.getElementById('topicList').appendChild(div);
     });
   }
 
