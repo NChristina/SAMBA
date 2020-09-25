@@ -3,9 +3,9 @@
 
     <h1>Language from Comments (all videos)</h1>
     <div class="wrapper" (mouseover)="setTooltipInfo($event, tooltipinfo);" style="float:right;margin:15px 0 0 25px;" class="tooltInfo">
-        <img height="30px" style="float:right" src="../../assets/000-info.svg">
+        <img aria-label="info" height="30px" style="float:right" src="../../assets/000-info.svg">
         <span #tooltipinfo class="tooltInfo_text">
-          <p><img height="15px" src="../../assets/000-chart.svg">The chart shows the comments of all selected videos/groups of videos. In this chart you see the top three languages in which the comments are written.</p>
+          <p><img alt="" height="15px" src="../../assets/000-chart.svg">The chart shows the comments of all selected videos/groups of videos. In this chart you see the top three languages in which the comments are written.</p>
         </span>
     </div>
     <span class="filterWarning" *ngIf="appliedFilter"><mat-icon class="timeFilterIcon" title="Applied Time Filter">date_range</mat-icon> Data filtered by time</span> 

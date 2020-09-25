@@ -211,6 +211,7 @@ body {
   background:#eeeeee;
   outline: none;
   cursor: pointer;
+  border-color: #ccc;
 }
 
 .aggrButton.active,
@@ -412,3 +413,6 @@ div.respHide {
   }
 }
 
+button:focus {
+  outline: #333 dotted 1px;
+}

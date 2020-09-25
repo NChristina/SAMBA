@@ -3,6 +3,8 @@ import { SearchService } from './services/search.service';
 import { MdcSnackbar, MdcSnackbarConfig } from '@angular-mdc/web';
 import { ChartService } from './dashboard/services/chart.service';
 import { DataService } from './services/data.service';
+import { MatDialog, MatDialogConfig} from '@angular/material';
+import { HelpComponent } from '../help/help.component';
 import {SliderComponent} from '../../../node_modules/ng5-slider/slider.component';
 import {Options, LabelType} from 'ng5-slider';
 import * as d3 from 'd3';
@@ -12,6 +14,7 @@ import * as d3 from 'd3';
   templateUrl: './nav.component.html',
   styleUrls: ['./nav.component.scss']
 })
+
 export class NavComponent implements OnInit {
   config: MdcSnackbarConfig = { align: 'top'};
   searchMatchList: any[] = [];
@@ -36,7 +39,7 @@ export class NavComponent implements OnInit {
   data: any[];
   filterTopic = false;
 
-  constructor(private searcher: SearchService, private chartService: ChartService,
+  constructor(private searcher: SearchService, private chartService: ChartService, private dialog: MatDialog,
     private snackbar: MdcSnackbar, private dataService: DataService, private ngZone: NgZone) {
   }
 
@@ -424,6 +427,20 @@ export class NavComponent implements OnInit {
         if (commCard) { commCard.scrollTo(0, 0); commCard.style.overflowY = 'hidden'; }
         this.chartService.SetChartMode('big');
       }
+    });
+  }
+
+  openDialog() {
+    const dialogConfig = new MatDialogConfig();
+
+    dialogConfig.disableClose = true;
+    dialogConfig.autoFocus = false;
+
+    const dialogRef = this.dialog.open(HelpComponent,
+      {data: { },
+      width: '900px',
+      disableClose: true,
+      autoFocus: false
     });
   }
 }

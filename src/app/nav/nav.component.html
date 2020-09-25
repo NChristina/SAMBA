@@ -6,6 +6,7 @@
       <mdc-text-field #searchText [box]="false" class="search_box" label="search by artist or song name" maxlength="30" (change)="submitQuickSearch(searchText.value)">
         <mdc-icon class="search_icon" trailing #searchicon [clickable]="true">search</mdc-icon>
       </mdc-text-field>
+      <button class="close_icon" (click)="changeFocus()"><img src="../../assets/close.svg" aria-label="close" /></button>
     </mdc-drawer-spacer>
     <!-- List of search results -->
     <div class="search-list list-group">
@@ -23,7 +24,7 @@
         <div (click)="toggleAccordion(ix, $event)" class="expandAccordion d-flex w-100 justify-content-between">
           <small *ngIf="match.versions.length > 1">{{ match.versions.length }} Videos matching</small>
           <small *ngIf="match.versions.length === 1">{{ match.versions.length }} Video matching</small>
-          <img id="{{'img_' + ix}}" height ="10px" src="../../assets/chevron_down.svg">
+          <button aria-label="expand video group" class="expandAccordionBtn"><img id="{{'img_' + ix}}" height ="10px" src="../../assets/chevron_down.svg"></button>
         </div>
         <div class="panel list-group "  id="{{'panel_' + ix}}">
           <div class="list-group-item flex-column align-items-start" *ngFor="let version of match.versions, let iy = index">
@@ -61,7 +62,9 @@
             <button (click)="switchView('Engagement');" [className]="showContent == 'Engagement' ? 'active menu_Engagement' : 'menu_Engagement'"><img height="24px" title="Engagement" src="../../assets/menu_engagement.svg"><div class="respHide">Engagement</div></button>
             <button (click)="switchView('Language');" [className]="showContent == 'Language' ? 'active menu_Language last' : 'menu_Language last'"><img height="24px" title="Language" src="../../assets/menu_language.svg"><div class="respHide">Language</div></button>
           </div>
-          <img class="logoSamba" src="../../assets/Samba_Logo_rgb_transparent_cut.png" alt="samba logo"/>
+
+          <button id="helpButton" (click)="openDialog()"><img height="30px" title="Help" src="../../assets/help_help.svg"></button>
+          <img (click)="openDialog()" class="logoSamba" src="../../assets/Samba_Logo_rgb_transparent_cut.png" alt="SAMBA Vis"/>
       </mdc-toolbar-row>
     </mdc-toolbar>  
 

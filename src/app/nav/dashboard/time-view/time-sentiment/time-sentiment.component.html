@@ -3,9 +3,9 @@
 
     <h1>Sentiment from Comments (all videos)</h1>
     <div class="wrapper" (mouseover)="setTooltipInfo($event, tooltipinfo);" style="float:right;margin:15px 0 0 25px;" class="tooltInfo">
-        <img height="30px" style="float:right" src="../../assets/000-info.svg">
+        <img aria-label="info" height="30px" style="float:right" src="../../assets/000-info.svg">
         <span #tooltipinfo class="tooltInfo_text">
-            <p><img height="15px" src="../../assets/000-chart.svg"> The chart shows the comments of all selected videos/groups of videos. It also shows the polarity/sentiment extracted from these comments.</p>
+            <p><img alt="" height="15px" src="../../assets/000-chart.svg"> The chart shows the comments of all selected videos/groups of videos. It also shows the polarity/sentiment extracted from these comments.</p>
             <p>Sentiment scores are calculated with three sentiment analysis tools 
                 (<a class="tooltipLink" href="https://github.com/fnielsen/afinn">AFINN</a>, <a class="tooltipLink" href="http://www.nltk.org/">NLTK</a>, 
                 and <a class="tooltipLink" href="https://github.com/sloria/TextBlob/blob/dev/textblob/_text.py">TextBlob</a>). Each tool returns a polarity 

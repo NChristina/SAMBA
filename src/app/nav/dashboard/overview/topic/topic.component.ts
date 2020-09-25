@@ -81,7 +81,7 @@ export class TopicComponent implements OnInit {
     this.eraseLists();
     const size = 95 / this.listSongs.length;
 
-    // Look in the most frequent words, five topics by artist
+    // Look in the most frequent words, ten topics by artist
     this.listSongs.forEach((song) => {
       const div = document.createElement('div');
       const b = document.createElement('b');
@@ -116,6 +116,10 @@ export class TopicComponent implements OnInit {
         }
         j++;
       }
+
+      // VAJO: check here which songs are part of a group
+      // display the offcial video
+      // and expand group in a modal (?)
 
       // Add the lists to the comparison view
       document.getElementById('topicList').appendChild(div);

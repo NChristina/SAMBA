@@ -46,7 +46,7 @@
 }
 
 .search_icon:focus, button:focus {
-  outline: none;
+  outline: #333 dotted 1px;
 }
 
 .mdc-drawer {
@@ -145,6 +145,11 @@
 .expandAccordion:hover,
 .videoName:hover{
   color:#000;
+}
+
+.expandAccordionBtn{
+  padding: 0;
+  border: none;
 }
 
 /* Add a background color to the button if it is clicked on (add the .active class with JS), and when you move the mouse over it (hover) */
@@ -309,10 +314,31 @@
   color: #000;
 }
 
+.close_icon {
+  float: right;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+.close_icon img{
+  margin: 0px;
+  cursor: pointer;
+  height: 24px;
+}
+
+#helpButton {
+  position: absolute;
+  right: 180px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+}
+
 .logoSamba{
   width: 130px;
   position: absolute;
-  right: 30px;
+  right: 35px;
   filter: grayscale(100%);
 }
 
@@ -369,7 +395,7 @@
 
 .filterTopicsBox{
   background: #fff;
-  width: 90%;
+  width: 92%;
   height: 75%;
   position: absolute;
   z-index: 12;

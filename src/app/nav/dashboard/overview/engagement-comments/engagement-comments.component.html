@@ -1,9 +1,9 @@
 <div class="grid-container">
     <mat-grid-list cols="1" rowHeight="40px">
         <div class="wrapper" (mouseover)="setTooltipInfo($event, tooltipinfo);" style="float:right" class="tooltInfo"> 
-            <img height="24px" style="float:right" src="../../assets/000-info.svg"> 
+            <img aria-label="info" height="24px" style="float:right" src="../../assets/000-info.svg"> 
             <span #tooltipinfo class="tooltInfo_text">
-              <p><img height="15px" src="../../assets/000-barchart.svg"> Each bar of the chart shows the number of likes on comments for each video/group of videos. By hovering over the bar you see the proportion of liked comments.</p>
+              <p><img alt="" height="15px" src="../../assets/000-barchart.svg"> Each bar of the chart shows the number of likes on comments for each video/group of videos. By hovering over the bar you see the proportion of liked comments.</p>
             </span>
         </div>
         <span class="filterWarning" *ngIf="appliedFilter"><mat-icon class="timeFilterIcon" title="Applied Time Filter">date_range</mat-icon> filtered by time</span>
